@@ -1,5 +1,5 @@
 FROM ubuntu:bionic
-MAINTAINER Geotrek "contact@geotrek.fr"
+MAINTAINER Makina Corpus "contact@geotrek.fr"
 
 RUN apt-get update && apt-get upgrade -qq -y
 RUN apt-get install -y -qq libfreetype6 fontconfig wget unzip python-pip python-virtualenv
