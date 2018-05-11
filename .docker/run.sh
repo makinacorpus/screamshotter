@@ -4,13 +4,9 @@ ALLOWED_HOSTS=${ALLOWED_HOSTS:-*}
 DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE:-screamshotter.settings}
 
 APP_ROOT=/opt/apps/screamshotter
-BRANCH=screamshotter
 WSGI=screamshotter.wsgi
 
-
-
 cd $APP_ROOT
-git pull origin $BRANCH
 
 bin/uwsgi \
     --http-socket 0.0.0.0:8000 \
