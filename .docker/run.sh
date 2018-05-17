@@ -12,5 +12,4 @@ bin/gunicorn \
     $WSGI:application \
     --workers 4 \
     --bind 0.0.0.0:8000 \
-    --buffer-size 32768 \
     --max-requests 5000
