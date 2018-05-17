@@ -8,12 +8,9 @@ WSGI=screamshotter.wsgi
 
 cd $APP_ROOT
 
-bin/uwsgi \
-    --http-socket 0.0.0.0:8000 \
-    --processes 4 \
+bin/gunicorn \
+    $WSGI:application \
+    --workers 4 \
+    --bind 0.0.0.0:8000 \
     --buffer-size 32768 \
-    --enable-threads \
-    --master \
-    --max-requests 5000 \
-    --virtualenv $APP_ROOT \
-    --module $WSGI
+    --max-requests 5000

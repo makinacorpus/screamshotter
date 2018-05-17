@@ -1,5 +1,5 @@
 FROM ubuntu:bionic
-MAINTAINER Makina Corpus "contact@geotrek.fr"
+MAINTAINER Makina Corpus "contact@makina-corpus.com"
 
 RUN apt-get update && apt-get upgrade -qq -y
 RUN apt-get install -y -qq libfreetype6 fontconfig wget unzip python-pip python-virtualenv
@@ -31,7 +31,7 @@ WORKDIR /opt/apps/screamshotter
 RUN  make install deploy
 RUN /opt/apps/screamshotter/bin/pip install Pillow
 
-RUN /opt/apps/screamshotter/bin/pip install uwsgi
+RUN /opt/apps/screamshotter/bin/pip install gunicorn
 ADD .docker/run.sh /usr/local/bin/run
 
 #
