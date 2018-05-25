@@ -7,8 +7,8 @@ bin/python:
 serve: bin/python
 	bin/python ./manage.py runserver 8888
 
-uwsgi: bin/python
-	bin/pip install uwsgi
+gunicorn: bin/python
+	bin/pip install gunicorn
 
 deploy: bin/python
 	touch screamshotter/wsgi.py  # trigger reload
