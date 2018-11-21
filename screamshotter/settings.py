@@ -14,7 +14,8 @@ INSTALLED_APPS = (
 DISK_CACHE_SIZE = 50 * 1000
 
 SCREAMSHOT_CONFIG = {
-    'CLI_ARGS': ['--disk-cache=true',
+    'CLI_ARGS': ['--ssl-protocol=any',
+                 '--disk-cache=true',
                  '--max-disk-cache-size=%s' % DISK_CACHE_SIZE],
 }
 
