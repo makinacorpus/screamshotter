@@ -1,0 +1,14 @@
+[Unit]
+Description=Microservice to capture screenshots of web pages
+After=network.target
+
+[Service]
+ExecStart=/opt/screamshotter/bin/gunicorn --pid /var/run/screamshotter/creamshotter.pid screamshotter.wsgi
+Environment=LOG_FILE=/var/log/screamshotter/screamshotter.log
+Restart=on-failure
+User=screamshotter
+Group=screamshotter
+UMask=007
+
+[Install]
+WantedBy=multi-user.target

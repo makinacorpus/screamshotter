@@ -1,0 +1,22 @@
+Source: screamshotter
+Maintainer: Gaël UTARD <gael.utard@makina-corpus.com>
+Section: misc
+Priority: optional
+Standards-Version: 3.9.2
+Build-Depends:
+ debhelper (>= 9),
+ dh-virtualenv (>= 1.0),
+ python3-all (>= 3.5),
+ python3-venv (>= 3.5),
+ wget,
+ libfontconfig1,
+ libfreetype6
+
+Package: screamshotter
+Architecture: any
+Depends:
+ ${misc:Depends}
+ ${shlibs:Depends}
+Conflicts:
+ phantomjs
+Description: Microservice to capture screenshots of web pages

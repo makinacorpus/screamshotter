@@ -1,0 +1,12 @@
+/var/log/screamshotter/log/screamshotter/*.log {
+    rotate 4
+    su root root
+    weekly
+    create
+    compress
+    delaycompress
+    sharedscripts
+    postrotate
+        kill -USR1 `cat /var/run/screamshotter.pid`; done
+    endscript
+}

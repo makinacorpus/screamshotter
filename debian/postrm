@@ -1,0 +1,8 @@
+#!/bin/sh -e
+
+if [ "$1" = "purge" ]; then
+	rm -rf /var/log/screamshotter /var/run/screamshotter || true
+	deluser --quiet screamshotter || true
+fi
+
+#DEBHELPER#

@@ -15,7 +15,7 @@ setup(
     long_description='',
     install_requires=[
         'django-screamshot',
-        'django==1.11.16',
+        'django',
     ],
     packages=find_packages(),
     include_package_data=True,

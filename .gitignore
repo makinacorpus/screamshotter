@@ -4,3 +4,7 @@
 /build/
 /dist/
 /*.egg-info/
+/debian/*debhelper*
+/debian/files
+/debian/screamshotter/
+/debian/screamshotter.substvars

@@ -1,0 +1,7 @@
+#!/bin/sh -e
+
+adduser --system --group --no-create-home --quiet screamshotter || true
+mkdir -p /var/log/screamshotter /var/run/screamshotter || true
+chown screamshotter.screamshotter /var/log/screamshotter /var/run/screamshotter || true
+
+#DEBHELPER#
