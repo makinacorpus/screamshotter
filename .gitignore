@@ -8,3 +8,5 @@
 /debian/files
 /debian/screamshotter/
 /debian/screamshotter.substvars
+/phantomjs-*.tar.bz2
+/casperjs-*.tar.gz
