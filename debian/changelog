@@ -1,3 +1,9 @@
+screamshotter (1.1.4~dev0) bionic; urgency=medium
+
+  * New release
+
+ -- Gaël UTARD <gael.utard@makina-corpus.com>  Thu, 20 Feb 2020 12:09:50 +0100
+
 screamshotter (1.1.3) bionic; urgency=medium
 
   * Initial Ubuntu release.
