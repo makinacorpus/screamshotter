@@ -14,8 +14,8 @@ setup(
     description='Web pages capture server',
     long_description='',
     install_requires=[
-        'django-screamshot',
-        'django',
+        'django-screamshot==0.8.5',
+        'django<=2.2',
     ],
     packages=find_packages(),
     include_package_data=True,

@@ -17,6 +17,7 @@ SCREAMSHOT_CONFIG = {
     'CLI_ARGS': ['--ssl-protocol=any',
                  '--disk-cache=true',
                  '--max-disk-cache-size=%s' % DISK_CACHE_SIZE],
+    'TIMEOUT': os.getenv('SCREAMSHOT_TIMEOUT', 5000),
 }
 
 LOGGING = {

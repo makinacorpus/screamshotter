@@ -1,7 +1,7 @@
 install: bin/python
 
 bin/python:
-	virtualenv .
+	virtualenv -p python3 .
 	bin/python setup.py develop
 
 serve: bin/python
