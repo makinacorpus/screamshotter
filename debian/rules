@@ -13,6 +13,7 @@ override_dh_clean:
 override_dh_virtualenv:
 	dh_virtualenv \
 	--python /usr/bin/python3 \
+	--extra-pip-arg --no-cache-dir \
 	--builtin-venv
 	mkdir -p debian/screamshotter/usr/bin
 	wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2 -O phantomjs-2.1.1-linux-x86_64.tar.bz2
@@ -21,3 +22,6 @@ override_dh_virtualenv:
 	wget https://github.com/casperjs/casperjs/archive/1.1.4-2.tar.gz -O casperjs-1.1.4-2.tar.gz
 	tar xzf casperjs-1.1.4-2.tar.gz --directory debian/screamshotter/opt/screamshotter
 	ln -s /opt/screamshotter/casperjs-1.1.4-2/bin/casperjs debian/screamshotter/usr/bin/
+
+override_dh_strip:
+	dh_strip --no-automatic-dbgsym

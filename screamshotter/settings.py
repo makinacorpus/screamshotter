@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'booh!')
 ALLOWED_HOSTS = [os.getenv('ALLOWED_HOSTS', '*')]
@@ -43,3 +44,9 @@ LOGGING = {
         },
     }
 }
+
+# Override with custom settings
+custom_settings_file = Path('/opt/screamshotter/etc/local_settings.py')
+if custom_settings_file.is_file():
+    with custom_settings_file.open() as f:
+        exec(f.read())

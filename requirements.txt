@@ -1,5 +1,5 @@
-django==1.11.28
-django-screamshot==0.8.2
+django==2.2.12
+django-screamshot==0.8.5
 django-timedeltafield==0.7.10
 gunicorn==20.0.4
-pytz==2019.3
+pytz==2020.1
