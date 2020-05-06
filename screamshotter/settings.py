@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'booh!')
 ALLOWED_HOSTS = [os.getenv('ALLOWED_HOSTS', '*')]
@@ -17,6 +18,7 @@ SCREAMSHOT_CONFIG = {
     'CLI_ARGS': ['--ssl-protocol=any',
                  '--disk-cache=true',
                  '--max-disk-cache-size=%s' % DISK_CACHE_SIZE],
+    'TIMEOUT': os.getenv('SCREAMSHOT_TIMEOUT', 5000),
 }
 
 LOGGING = {
@@ -42,3 +44,9 @@ LOGGING = {
         },
     }
 }
+
+# Override with custom settings
+custom_settings_file = Path('/opt/screamshotter/etc/local_settings.py')
+if custom_settings_file.is_file():
+    with custom_settings_file.open() as f:
+        exec(f.read())

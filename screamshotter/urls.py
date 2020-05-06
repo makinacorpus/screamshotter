@@ -1,6 +1,6 @@
-from django.conf.urls import include, url
+from django.urls import path, include
 
 
 urlpatterns = [
-    url(r'',  include('screamshot.urls', namespace='screamshot', app_name='screamshot')),
+    path(r'',  include('screamshot.urls'), name='screamshot'),
 ]

@@ -10,3 +10,9 @@
 /debian/screamshotter.substvars
 /phantomjs-*.tar.bz2
 /casperjs-*.tar.gz
+/bin/
+/lib/
+/lib64
+/share/
+/pyvenv.cfg
+/screamshotter.log

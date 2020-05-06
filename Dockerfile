@@ -6,14 +6,15 @@ ENV CASPER_VER 1.1.4-1
 
 RUN apt-get update && \
     apt-get install -y -qq \
+    python \
+    python3 \
+    python3-venv \
     libfreetype6 \
     fontconfig \
     wget \
     unzip \
     curl \
     ca-certificates \
-    python-pip \
-    python-virtualenv \
     && apt-get autoclean && apt-get clean all && rm -rf /var/apt/lists/* && rm -rf /var/cache/apt/*
 
 # PhantomJS
@@ -30,15 +31,15 @@ ADD .docker/run.sh /usr/local/bin/run
 #
 #  Screamshotter
 #...
-ADD . /opt/apps/screamshotter
-WORKDIR /opt/apps/screamshotter
+ADD . /opt/screamshotter
+WORKDIR /opt/screamshotter
 
 # add user django
-RUN useradd -ms /bin/bash django && chown -R django:django /opt/apps/screamshotter
+RUN useradd -ms /bin/bash django && chown -R django:django /opt/screamshotter
 USER django
 
-RUN  make install deploy
-RUN /opt/apps/screamshotter/bin/pip install Pillow gunicorn
+RUN python3 -m venv .
+RUN bin/pip install -r requirements.txt --no-cache-dir
 
 #
 #  Run !
