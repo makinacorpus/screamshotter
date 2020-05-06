@@ -7,10 +7,10 @@ here = os.path.abspath(os.path.dirname(__file__))
 
 setup(
     name='screamshotter',
-    version='1.1.5.dev0',
+    version='1.1.5',
     author='Mathieu Leplatre',
-    author_email='mathieu.leplatre@makina-corpus.com',
-    url='https://github.com/makinacorpus/django-screamshot',
+    author_email='support.geotrek@makina-corpus.com',
+    url='https://github.com/makinacorpus/screamshotter',
     description='Web pages capture server',
     long_description='',
     install_requires=[
@@ -23,5 +23,5 @@ setup(
                  'Operating System :: OS Independent',
                  'Environment :: Web Environment',
                  'Framework :: Django',
-                 'Programming Language :: Python :: 2.7'],
+                 'Programming Language :: Python :: 3'],
 )

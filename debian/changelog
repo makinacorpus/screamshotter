@@ -1,8 +1,8 @@
-screamshotter (1.1.5~dev0) bionic; urgency=medium
+screamshotter (1.1.5) bionic; urgency=medium
 
-  * ...
+  * Add timeout setting
 
- -- Gaël UTARD <gael.utard@makina-corpus.com>  Tue, 25 Feb 2020 17:13:00 +0100
+ -- Gaël UTARD <gael.utard@makina-corpus.com>  Wed, 06 May 2020 11:56:12 +0200
 
 screamshotter (1.1.4) bionic; urgency=medium
 
