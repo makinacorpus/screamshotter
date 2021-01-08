@@ -9,7 +9,24 @@ jobs:
       - checkout
       - run: pip install flake8
       - run: flake8 screamshotter
-  package:
+  package_20_04:
+    docker:
+      - image: ubuntu:focal
+    environment:
+      LANG: C.UTF-8
+      DEBIAN_FRONTEND: noninteractive
+    steps:
+      - checkout
+      - run: sed -i 's/screamshotter (\([0-9]\+\.[0-9]\+\.[0-9]\+\)\(.*\)) RELEASED;/screamshotter (\1.ubuntu20.04\2) focal;/' debian/changelog
+      - run: apt-get update -q
+      - run: DEBIAN_FRONTEND=noninteractive apt-get install -q -y software-properties-common
+      - run: add-apt-repository ppa:jyrki-pulliainen/dh-virtualenv
+      - run: apt-get install -y dpkg-dev debhelper dh-virtualenv wget python3-all python3-venv libfontconfig1 libfreetype6 openssh-client
+      - run: dpkg-buildpackage -uc -us -b
+      - persist_to_workspace:
+          root: /root
+          paths: screamshotter_*_amd64.deb
+  package_18_04:
     docker:
       - image: ubuntu:bionic
     environment:
@@ -17,16 +34,53 @@ jobs:
       DEBIAN_FRONTEND: noninteractive
     steps:
       - checkout
+      - run: sed -i 's/screamshotter (\([0-9]\+\.[0-9]\+\.[0-9]\+\)\(.*\)) RELEASED;/screamshotter (\1.ubuntu18.04\2) bionic;/' debian/changelog
       - run: >
           apt-get update && apt-get install -y dpkg-dev debhelper dh-virtualenv
           wget python3-all python3-venv libfontconfig1 libfreetype6 openssh-client
       - run: dpkg-buildpackage -uc -us -b
-      # - run:
-      #     command: scp ../screamshotter_*.deb server4.geotrek.ovh:www/ubuntu/bionic/
-      #     when: on_success
+      - persist_to_workspace:
+          root: /root
+          paths: screamshotter_*_amd64.deb
+  ubuntu_publish:
+    docker:
+      - image: ubuntu:bionic
+    environment:
+      LANG: C.UTF-8
+    steps:
+      - checkout
+      - run: apt-get update -q && apt-get install -q -y ca-certificates openssh-client
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          command: |
+            export DEB_COMPONENT=main
+            scp -P $SSH_PORT -o StrictHostKeyChecking=no /tmp/workspace/screamshotter_*_amd64.deb $SSH_USER@$SSH_HOST:/srv/packages/incoming/$DEB_COMPONENT/
+      - run: ssh -p $SSH_PORT -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST make -C /srv/packages
+
 workflows:
   version: 2
   all:
     jobs:
-      - codestyle
-      - package
+      - codestyle:
+          filters:
+            tags:
+              only: /[0-9]+\.[0-9]+\.[0-9]+/
+      - package_20_04:
+          filters:
+            tags:
+              only: /[0-9]+\.[0-9]+\.[0-9]+/
+      - package_18_04:
+          filters:
+            tags:
+              only: /[0-9]+\.[0-9]+\.[0-9]+/
+      - ubuntu_publish:
+          requires:
+            - codestyle
+            - package_20_04
+            - package_18_04
+          filters:
+            tags:
+              only: /[0-9]+\.[0-9]+\.[0-9]+/
+            branches:
+              ignore: /.*/
