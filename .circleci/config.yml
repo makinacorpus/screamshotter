@@ -22,9 +22,9 @@ jobs:
           apt-get update && apt-get install -y dpkg-dev debhelper dh-virtualenv
           wget python3-all python3-venv libfontconfig1 libfreetype6 openssh-client
       - run: dpkg-buildpackage -uc -us -b
-    persist_to_workspace:
-        root: /root
-        paths: screamshotter_*_amd64.deb
+      - persist_to_workspace:
+          root: /root
+          paths: screamshotter_*_amd64.deb
   package_18_04:
     docker:
       - image: ubuntu:bionic
@@ -38,9 +38,9 @@ jobs:
           apt-get update && apt-get install -y dpkg-dev debhelper dh-virtualenv
           wget python3-all python3-venv libfontconfig1 libfreetype6 openssh-client
       - run: dpkg-buildpackage -uc -us -b
-    persist_to_workspace:
-      root: /root
-      paths: screamshotter_*_amd64.deb
+      - persist_to_workspace:
+          root: /root
+          paths: screamshotter_*_amd64.deb
   ubuntu_publish:
     docker:
       - image: ubuntu:bionic
