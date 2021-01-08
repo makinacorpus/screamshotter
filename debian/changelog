@@ -1,8 +1,8 @@
-screamshotter (1.1.6~dev0) bionic; urgency=medium
+screamshotter (1.1.6) RELEASED; urgency=medium
 
-  * ...
+  * Fix focal package
 
- -- Gaël UTARD <gael.utard@makina-corpus.com>  Thi, 03 Dec 2020 11:45:00 +0100
+ -- Gaël UTARD <gael.utard@makina-corpus.com>  Fri, 08 Jan 2021 13:49:50 +0100
 
 screamshotter (1.1.5) bionic; urgency=medium
 
