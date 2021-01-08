@@ -61,26 +61,29 @@ workflows:
   version: 2
   all:
     jobs:
-      - codestyle
+      - codestyle:
+          filters:
+            tags:
+              only: /[0-9]+\.[0-9]+\.[0-9]+/
       - package_20_04:
-        filters:
-          tags:
-            only: /[0-9]+\.[0-9]+\.[0-9]+/
-          branches:
-            ignore: /.*/
+          filters:
+            tags:
+              only: /[0-9]+\.[0-9]+\.[0-9]+/
+            branches:
+              ignore: /.*/
       - package_18_04:
-        filters:
-          tags:
-            only: /[0-9]+\.[0-9]+\.[0-9]+/
-          branches:
-            ignore: /.*/
+          filters:
+            tags:
+              only: /[0-9]+\.[0-9]+\.[0-9]+/
+            branches:
+              ignore: /.*/
       - ubuntu_publish:
-        requires:
-          - codestyle
-          - package_20_04
-          - package_18_04
-        filters:
-          tags:
-            only: /[0-9]+\.[0-9]+\.[0-9]+/
-          branches:
-            ignore: /.*/
+          requires:
+            - codestyle
+            - package_20_04
+            - package_18_04
+          filters:
+            tags:
+              only: /[0-9]+\.[0-9]+\.[0-9]+/
+            branches:
+              ignore: /.*/
