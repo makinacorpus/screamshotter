@@ -62,19 +62,19 @@ workflows:
   all:
     jobs:
       - codestyle
-      - package_20_04
+      - package_20_04:
         filters:
           tags:
             only: /[0-9]+\.[0-9]+\.[0-9]+/
           branches:
             ignore: /.*/
-      - package_18_04
+      - package_18_04:
         filters:
           tags:
             only: /[0-9]+\.[0-9]+\.[0-9]+/
           branches:
             ignore: /.*/
-      - ubuntu_publish
+      - ubuntu_publish:
         requires:
           - codestyle
           - package_20_04
