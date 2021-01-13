@@ -1,3 +1,9 @@
+screamshotter (1.1.8~dev0) bionic; urgency=medium
+
+  * ...
+
+ -- Gaël UTARD <gael.utard@makina-corpus.com>  Wed, 13 Jan 2021 17:22:10 +0100
+
 screamshotter (1.1.7) RELEASED; urgency=medium
 
   * Fix casperjs use python3
