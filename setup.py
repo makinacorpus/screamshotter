@@ -7,7 +7,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 
 setup(
     name='screamshotter',
-    version='1.1.7.dev0',
+    version='1.1.7',
     author='Mathieu Leplatre',
     author_email='support.geotrek@makina-corpus.com',
     url='https://github.com/makinacorpus/screamshotter',
