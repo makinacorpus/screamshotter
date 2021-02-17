@@ -1,0 +1,2 @@
+class ScreenshotterException(Exception):
+    pass

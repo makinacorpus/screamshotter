@@ -1,0 +1,14 @@
+version: '3'
+services:
+  web:
+    build:
+      context: .
+      args:
+        - NODE_ENV=development
+    volumes:
+      - ./src/:/app/src/
+    command: ./manage.py runserver 0.0.0.0:8000
+    ports:
+      - 8000:8000
+    environment:
+      - DJANGO_SETTINGS_MODULE=project.settings.dev

@@ -1,0 +1,41 @@
+# Python
+*pyc
+__pycache__
+/develop_eggs
+/cache
+/venv
+\.venv
+
+*.log
+CACHE
+
+# BDD
+*.sqlite3
+
+# Tests, docs, etc
+.coverage
+.tox
+docs/_build/
+
+# IDE settings
+.idea
+*.iml
+.env
+/node_modules/
+*.min.js
+*.map
+.cache
+
+/.vscode/
+/coverage/
+/public/media/
+!/public/media/industry-markers/
+!/public/media/industry-pictos/
+/public/static/
+!/public/static/.gitkeep
+/debian/.debhelper/
+/debian/debhelper-build-stamp
+/debian/django-screenshot/
+/debian/django-screenshot.substvars
+/debian/django-screenshot.*.debhelper
+/debian/files

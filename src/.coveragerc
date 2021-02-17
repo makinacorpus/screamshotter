@@ -1,0 +1,14 @@
+[paths]
+source =
+    .
+
+[report]
+omit =
+    *project/*
+    manage.py
+    */tests*
+    */migrations*
+    */settings/*
+    */lib/*
+
+ignore_errors = true

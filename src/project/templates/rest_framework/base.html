@@ -1,0 +1,41 @@
+{% extends "rest_framework/base.html" %}
+{% load i18n %}
+{% load static %}
+{% load rest_framework %}
+
+{% block bootstrap_theme %}
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+          crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css"
+          crossorigin="anonymous">
+{% endblock %}
+
+{% block navbar %}
+    <div class="navbar navbar-static-top {% block bootstrap_navbar_variant %}navbar-inverse{% endblock %}"
+         role="navigation" aria-label="{% trans "navbar" %}">
+        <div class="container">
+            <span>
+              {% block branding %}
+                  <a class="navbar-brand" rel="nofollow" href="#">
+                    <img src="{% static 'img/logo.svg' %}" style="height: 20px;"/>
+                  </a>
+                  <a class="navbar-brand" rel="nofollow" href="#">
+                    Screenshotter &#x1f4f7;&#x1f5bc;
+                  </a>
+              {% endblock %}
+            </span>
+            <ul class="nav navbar-nav pull-right">
+                {% block userlinks %}
+                    {% if user.is_authenticated %}
+                        {% optional_logout request user %}
+                    {% else %}
+                        {% optional_login request %}
+                    {% endif %}
+                {% endblock %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}
