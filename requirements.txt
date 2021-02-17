@@ -1,4 +1,4 @@
-django==2.2.12
+django==2.2.13
 django-screamshot==0.8.5
 django-timedeltafield==0.7.10
 gunicorn==20.0.4
