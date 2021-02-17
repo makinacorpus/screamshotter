@@ -1,6 +1,6 @@
 version: 2.1
-orbs:
-  codecov: codecov/codecov@1.0.5
+# orbs:
+#   codecov: codecov/codecov@1.0.5
 jobs:
   codestyle:
     docker:
@@ -31,10 +31,10 @@ jobs:
       - run: docker tag geotrekce/circleci-screamshotter:$CIRCLE_WORKFLOW_ID geotrekce/screamshotter:latest
       - run: docker-compose run web coverage run ./manage.py test -v2
       - run: docker-compose run web coverage xml -o var/coverage.xml
-      - codecov/upload:
-          file: var/coverage.xml
-          flags: test
-          when: on_success
+      # - codecov/upload:
+      #     file: var/coverage.xml
+      #     flags: test
+      #     when: on_success
   docker_test_integration:
     machine: true
     environment:
