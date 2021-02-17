@@ -1,0 +1,163 @@
+version: 2.1
+orbs:
+  codecov: codecov/codecov@1.0.5
+jobs:
+  codestyle:
+    docker:
+      - image: ubuntu:focal
+    environment:
+      LANG: C.UTF-8
+    steps:
+      - run: apt update
+      - run: apt install -y python3-pip
+      - checkout
+      - run: pip3 install flake8
+      - run: flake8
+  docker_image:
+    machine: true
+    steps:
+      - checkout
+      - run: docker build -t screamshotter
+      - run: echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_LOGIN" --password-stdin
+      - run: docker tag screamshotter:latest geotrekce/circleci-screamshotter:$CIRCLE_WORKFLOW_ID
+      - run: docker push geotrekce/circleci-screamshotter:$CIRCLE_WORKFLOW_ID
+  docker_test:
+    machine: true
+    environment:
+      LANG: C.UTF-8
+    steps:
+      - checkout
+      - run: docker pull geotrekce/circleci-screamshotter:$CIRCLE_WORKFLOW_ID
+      - run: docker tag geotrekce/circleci-screamshotter:$CIRCLE_WORKFLOW_ID geotrekce/screamshotter:latest
+      - run: docker-compose run web coverage run ./manage.py test -v2
+      - run: docker-compose run web coverage xml -o var/coverage.xml
+      - codecov/upload:
+          file: var/coverage.xml
+          flags: test
+          when: on_success
+  docker_test_integration:
+    machine: true
+    environment:
+      LANG: C.UTF-8
+    steps:
+      - checkout
+      - run: docker pull geotrekce/circleci-screamshotter:$CIRCLE_WORKFLOW_ID
+      - run: docker tag geotrekce/circleci-screamshotter:$CIRCLE_WORKFLOW_ID geotrekce/screamshotter:latest
+      - run: docker-compose up -d
+      - run: curl -d url=https://google.com http://localhost:8000 > google.png 
+      - store_artifacts:
+          path: /home/circleci/project/screamshotter/google.png
+          destination: test-screenshot
+  docker_publish:
+    machine: true
+    environment:
+      LANG: C.UTF-8
+    steps:
+      - checkout
+      - run: docker pull geotrekce/circleci-screamshotter:$CIRCLE_WORKFLOW_ID
+      - run: docker tag geotrekce/circleci-screamshotter:$CIRCLE_WORKFLOW_ID geotrekce/screamshotter:$CIRCLE_TAG
+      - run: docker tag geotrekce/circleci-screamshotter:$CIRCLE_WORKFLOW_ID geotrekce/screamshotter:latest
+      - run: echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_LOGIN" --password-stdin
+      - run: docker push geotrekce/screamshotter:$CIRCLE_TAG
+      - run: docker push geotrekce/screamshotter:latest
+  ubuntu_package:
+    docker:
+      - image: ubuntu:focal
+    environment:
+      LANG: C.UTF-8
+    steps:
+      - checkout
+      - run: grep '^[0-9]\+\.[0-9]\+\.[0-9]\+$' VERSION || sed -i 's/+dev/.ubuntu20.04+dev<< pipeline.number >>/' debian/changelog
+      - run: sed -i 's/screamshotter (\([0-9]\+\.[0-9]\+\.[0-9]\+\)\(.*\)) RELEASED;/screamshotter (\1.ubuntu20.04\2) focal;/' debian/changelog
+      - run: apt-get update -q
+      - run: DEBIAN_FRONTEND=noninteractive apt-get install -q -y software-properties-common
+      - run: add-apt-repository ppa:jyrki-pulliainen/dh-virtualenv
+      - run: apt-get install -q -y dpkg-dev debhelper dh-virtualenv git python3 python3-venv python3-dev pkg-js-tools
+      - run: dpkg-buildpackage -uc -us -b
+      - persist_to_workspace:
+          root: /root
+          paths: screamshotter_*_amd64.deb
+  ubuntu_package_18_04:
+    docker:
+      - image: ubuntu:bionic
+    environment:
+      LANG: C.UTF-8
+    steps:
+      - checkout
+      - run: grep '^[0-9]\+\.[0-9]\+\.[0-9]\+$' VERSION || sed -i 's/~dev0/.ubuntu18.04~dev<< pipeline.number >>/' debian/changelog
+      - run: sed -i 's/screamshotter (\([0-9]\+\.[0-9]\+\.[0-9]\+\)\(.*\)) RELEASED;/screamshotter (\1.ubuntu18.04\2) bionic;/' debian/changelog
+      - run: apt-get update -q
+      - run: apt-get install -q -y dpkg-dev debhelper dh-virtualenv git python3 python3-venv python3-dev nodejs-dev
+      - run: dpkg-buildpackage -uc -us -b
+      - persist_to_workspace:
+          root: /root
+          paths: screamshotter_*_amd64.deb
+  ubuntu_publish:
+    docker:
+      - image: ubuntu:focal
+    environment:
+      LANG: C.UTF-8
+    steps:
+      - checkout
+      - run: apt-get update -q && apt-get install -q -y ca-certificates openssh-client
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          command: |
+            grep '^[0-9]\+\.[0-9]\+\.[0-9]\+$' VERSION && export DEB_COMPONENT=main || export DEB_COMPONENT=dev
+            scp -P $SSH_PORT -o StrictHostKeyChecking=no /tmp/workspace/screamshotter_*_amd64.deb $SSH_USER@$SSH_HOST:/srv/packages/incoming/$DEB_COMPONENT/
+      - run: ssh -p $SSH_PORT -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST make -C /srv/packages
+workflows:
+  version: 2
+  all:
+    jobs:
+      - codestyle:
+          filters:
+            tags:
+              only: /[0-9]+\.[0-9]+\.[0-9]+/
+      - docker_image:
+          filters:
+            tags:
+              only: /[0-9]+\.[0-9]+\.[0-9]+/
+      - docker_test:
+          requires:
+            - docker_image
+          filters:
+            tags:
+              only: /[0-9]+\.[0-9]+\.[0-9]+/
+      - docker_test_integration:
+          requires:
+            - docker_image
+          filters:
+            tags:
+              only: /[0-9]+\.[0-9]+\.[0-9]+/
+      - docker_publish:
+          requires:
+            - codestyle
+            - docker_test
+            - docker_test_integration
+          filters:
+            tags:
+              only: /[0-9]+\.[0-9]+\.[0-9]+/
+            branches:
+              ignore: /.*/
+      - ubuntu_package:
+          filters:
+            tags:
+              only: /[0-9]+\.[0-9]+\.[0-9]+/
+      - ubuntu_package_18_04:
+          filters:
+            tags:
+              only: /[0-9]+\.[0-9]+\.[0-9]+/
+      - ubuntu_publish:
+          requires:
+            - codestyle
+            - ubuntu_package
+            - ubuntu_package_18_04
+            - docker_test
+            - docker_test_integration
+          filters:
+            tags:
+              only: /[0-9]+\.[0-9]+\.[0-9]+/
+            branches:
+              ignore: /.*/
