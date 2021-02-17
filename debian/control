@@ -9,7 +9,8 @@ Build-Depends:
  python3 (>= 3.5),
  python3-venv (>= 3.5),
  python3-dev (>= 3.5),
- nodejs-dev | pkg-js-tools
+ nodejs,
+ npm
 
 Package: screamshotter2
 Architecture: any

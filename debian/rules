@@ -3,7 +3,7 @@
 export DH_VIRTUALENV_INSTALL_ROOT=/opt
 
 %:
-	dh $@ --with python-virtualenv --with nodejs
+	dh $@ --with python-virtualenv
 
 override_dh_virtualenv:
 	dh_virtualenv --python /usr/bin/python3 --builtin-venv --install-suffix screamshotter
