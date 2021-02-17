@@ -1,4 +1,4 @@
-Source: django-screenshot
+Source: screamshotter2
 Maintainer: Support Geotrek <support.geotrek@makina-corpus.com>
 Section: misc
 Priority: optional
@@ -11,7 +11,7 @@ Build-Depends:
  python3-dev (>= 3.5),
  nodejs-dev | pkg-js-tools
 
-Package: django-screenshot
+Package: screamshotter2
 Architecture: any
 Depends:
  ${misc:Depends},
@@ -19,4 +19,6 @@ Depends:
  gettext,
  chromium-browser,
  nodejs
+Conflicts:
+ screamshotter
 Description: Takes captures of HTML pages

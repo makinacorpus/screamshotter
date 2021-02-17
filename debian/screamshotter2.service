@@ -1,0 +1,17 @@
+[Unit]
+Description=Screamshotter v2
+StartLimitIntervalSec=30
+StartLimitBurst=2
+
+[Service]
+WorkingDirectory=/opt/screamshotter
+ExecStart=/opt/screamshotter/bin/gunicorn project.wsgi:application --bind 0.0.0.0:8000
+Environment=DJANGO_SETTINGS_MODULE=project.settings.dev
+Environment=NODE_PATH=/opt/screamshotter/node_modules/
+Restart=on-failure
+User=screamshotter
+Group=screamshotter
+UMask=002
+
+[Install]
+WantedBy=multi-user.target

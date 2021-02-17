@@ -35,7 +35,7 @@ docs/_build/
 !/public/static/.gitkeep
 /debian/.debhelper/
 /debian/debhelper-build-stamp
-/debian/django-screenshot/
-/debian/django-screenshot.substvars
-/debian/django-screenshot.*.debhelper
+/debian/screamshotter2/
+/debian/screamshotter2.substvars
+/debian/screamshotter2.*.debhelper
 /debian/files

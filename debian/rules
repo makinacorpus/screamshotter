@@ -6,9 +6,13 @@ export DH_VIRTUALENV_INSTALL_ROOT=/opt
 	dh $@ --with python-virtualenv --with nodejs
 
 override_dh_virtualenv:
-	dh_virtualenv --python /usr/bin/python3 --builtin-venv
+	dh_virtualenv --python /usr/bin/python3 --builtin-venv --install-suffix screamshotter
 
-.PHONY: override_dh_strip override_dh_shlibdeps
+override_dh_install:
+	/usr/bin/npm ci
+	dh_install
+
+.PHONY: override_dh_strip override_dh_shlibdeps override_dh_auto_build
 
 override_dh_strip:
 	dh_strip --exclude=/Pillow.libs/

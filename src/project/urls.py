@@ -6,9 +6,9 @@ from rest_framework.renderers import JSONOpenAPIRenderer, BrowsableAPIRenderer
 from rest_framework.schemas import get_schema_view
 
 schema_view = get_schema_view(
-    title='Screenshotter API',
+    title='Screamshotter API',
     description='Pupeteer Chromium Headless based API to get advanced screenshots from dynamic web pages',
-    url='https://screenshotter.paas.kasta.ovh',
+    url='https://github.com/makinacorpus/screamshotter',
     renderer_classes=[
         JSONOpenAPIRenderer,
         BrowsableAPIRenderer

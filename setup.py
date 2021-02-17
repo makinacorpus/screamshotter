@@ -2,7 +2,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='django-screenshot',
+    name='screamshotter2',
     version='0.0.9+dev',
     author='Makina Corpus',
     author_email='support.geotrek@makina-corpus.com',

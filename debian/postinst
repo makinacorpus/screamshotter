@@ -1,16 +1,8 @@
 #!/bin/sh -e
 
-# Create screenshot user (only on a new install)
+# Create screamshotter user (only on a new install)
 if [ "$2" = "" ]; then
-	adduser --system --group --no-create-home --quiet screenshot || true
+	adduser --system --group --no-create-home --quiet screamshotter || true
 fi
-
-# Create directories
-# mkdir -p /opt/geotrek-admin/var/conf/extra_static || true
-# chown -R geotrek.geotrek /opt/geotrek-admin/var || true
-
-# Collect statics
-# echo "Copy static files" >&2
-# /opt/django-screenshot/python manage.py collectstatic --clear --noinput -v0 || true
 
 #DEBHELPER#
