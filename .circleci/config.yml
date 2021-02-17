@@ -17,7 +17,7 @@ jobs:
     machine: true
     steps:
       - checkout
-      - run: docker build -t screamshotter
+      - run: docker build -t screamshotter .
       - run: echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_LOGIN" --password-stdin
       - run: docker tag screamshotter:latest geotrekce/circleci-screamshotter:$CIRCLE_WORKFLOW_ID
       - run: docker push geotrekce/circleci-screamshotter:$CIRCLE_WORKFLOW_ID
