@@ -3,10 +3,9 @@ from tempfile import TemporaryDirectory
 
 import magic
 from PIL import Image
-from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
-from django.test import TestCase, override_settings
+from django.test import SimpleTestCase, override_settings
 from django.urls import reverse
 from rest_framework.serializers import Serializer
 from rest_framework.test import APIClient
@@ -19,7 +18,7 @@ from .views import ScreenshotAPIView
 temp_dir = TemporaryDirectory()
 
 
-class CaptureTestCase(TestCase):
+class CaptureTestCase(SimpleTestCase):
     @override_settings(MEDIA_ROOT=temp_dir.name)
     def test_capture_mime(self):
         png = take_screenshot('https://www.google.fr')
@@ -69,11 +68,9 @@ class CaptureTestCase(TestCase):
             bool(app_settings.BAD_SETTINGS)
 
 
-class CaptureApiTestCase(TestCase):
+class CaptureApiTestCase(SimpleTestCase):
     def setUp(self):
         self.api_client = APIClient()
-        self.user = User.objects.create(username='test')
-        self.api_client.force_login(self.user)
 
     def test_api_good_request(self):
         serializer = ScreenshotSerializer()
