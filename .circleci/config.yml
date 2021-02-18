@@ -46,7 +46,7 @@ jobs:
       - run: docker-compose up -d
       - run: curl -d url=https://google.com http://localhost:8000 > google.png 
       - store_artifacts:
-          path: /home/circleci/project/screamshotter/google.png
+          path: google.png
           destination: test-screamshotter2
   docker_publish:
     machine: true
