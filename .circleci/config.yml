@@ -29,7 +29,6 @@ jobs:
       - checkout
       - run: docker pull geotrekce/circleci-screamshotter2:$CIRCLE_WORKFLOW_ID
       - run: docker tag geotrekce/circleci-screamshotter2:$CIRCLE_WORKFLOW_ID geotrekce/screamshotter2:latest
-      - run: ln -s docker-compose-prod.yml docker-compose.yml
       - run: docker-compose run web coverage run ./manage.py test -v2
       - run: docker-compose run web coverage xml -o var/coverage.xml
       # - codecov/upload:
@@ -44,7 +43,6 @@ jobs:
       - checkout
       - run: docker pull geotrekce/circleci-screamshotter2:$CIRCLE_WORKFLOW_ID
       - run: docker tag geotrekce/circleci-screamshotter2:$CIRCLE_WORKFLOW_ID geotrekce/screamshotter2:latest
-      - run: ln -s docker-compose-prod.yml docker-compose.yml
       - run: docker-compose up -d
       - run: curl -d url=https://google.com http://localhost:8000 > google.png 
       - store_artifacts:

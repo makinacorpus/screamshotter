@@ -1,8 +1,7 @@
 version: '3'
 services:
   web:
-    build:
-      image: screamshotter
+    image: screamshotter
     ports:
       - 8000:8000
     environment:

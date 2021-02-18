@@ -16,7 +16,6 @@ sudo apt install screamshotter
 ```
 git clone https://github.com/makinacorpus/screamshotter.git
 cd screamshotter
-ln -s docker-compose-prod.yml docker-compose.yml
 docker-compose up
 ```
 
@@ -31,7 +30,7 @@ docker-compose up
 ```
 git clone git@github.com:makinacorpus/screamshotter.git
 cd screamshotter
-ln -s docker-compose-dev.yml docker-compose.yml
+ln -s docker-compose-dev.override.yml docker-compose.override.yml
 docker-compose up
 ```
 
