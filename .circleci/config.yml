@@ -30,7 +30,7 @@ jobs:
       - run: docker pull geotrekce/circleci-screamshotter2:$CIRCLE_WORKFLOW_ID
       - run: docker tag geotrekce/circleci-screamshotter2:$CIRCLE_WORKFLOW_ID geotrekce/screamshotter2:latest
       - run: docker-compose run web coverage run ./manage.py test -v2
-      - run: docker-compose run web coverage xml -o var/coverage.xml
+      # - run: docker-compose run web coverage xml -o var/coverage.xml
       # - codecov/upload:
       #     file: var/coverage.xml
       #     flags: test
