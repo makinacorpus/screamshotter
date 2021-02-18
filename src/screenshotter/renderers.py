@@ -15,7 +15,7 @@ class PNGRenderer(renderers.BaseRenderer):
 
 class Base64JSONRenderer(renderers.JSONRenderer):
     def render(self, data, accepted_media_type=None, renderer_context=None):
-        if issubclass(type(data), dict):
+        if isinstance(data, dict):
             json_ready = data
         else:
             base64_encoded_data = base64.b64encode(data).decode('utf-8')
