@@ -33,7 +33,7 @@ def take_screenshot(url, viewport_width=1920, viewport_height=1080, wait_selecto
             json.dumps(wait_selectors),
             '--headers',
             json.dumps(forward_headers),
-        ], capture_output=True)
+        ], stderr=subprocess.PIPE)
 
         if command.stderr:
             raise ScreenshotterException(command.stderr.decode())
