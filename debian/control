@@ -12,17 +12,14 @@ Build-Depends:
  libgtk-3-0,
  libasound2,
  libgbm1,
- nodejs,
- npm
+ libxshmfence1
 
 Package: screamshotter2
 Architecture: any
 Depends:
  ${misc:Depends},
  ${shlibs:Depends},
- gettext,
- chromium-browser,
- nodejs
+ gettext
 Conflicts:
  screamshotter
 Description: Takes captures of HTML pages
