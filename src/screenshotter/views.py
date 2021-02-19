@@ -11,7 +11,7 @@ from .serializer import ScreenshotSerializer
 
 class ScreenshotAPIView(APIView):
     serializer_class = ScreenshotSerializer
-    renderer_classes = [renderers.BrowsableAPIRenderer, Base64JSONRenderer, PNGRenderer, ]
+    renderer_classes = [Base64JSONRenderer, PNGRenderer, renderers.BrowsableAPIRenderer]
 
     def get_serializer(self, *args, **kwargs):
         """
