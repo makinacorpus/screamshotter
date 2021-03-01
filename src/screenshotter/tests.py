@@ -35,7 +35,7 @@ class CaptureTestCase(SimpleTestCase):
 
     @override_settings(MEDIA_ROOT=temp_dir.name)
     def test_capture_size(self):
-        png = take_screenshot('https://www.google.fr', viewport_width=1280, viewport_height=720)
+        png = take_screenshot('https://www.google.fr', width=1280, height=720)
 
         png_path = os.path.join(temp_dir.name, 'test2.png')
         cfile = ContentFile(content=png)
