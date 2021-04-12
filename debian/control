@@ -1,4 +1,4 @@
-Source: screamshotter2
+Source: screamshotter
 Maintainer: Support Geotrek <support.geotrek@makina-corpus.com>
 Section: misc
 Priority: optional
@@ -14,7 +14,7 @@ Build-Depends:
  libgbm1,
  libxshmfence1
 
-Package: screamshotter2
+Package: screamshotter
 Architecture: any
 Depends:
  ${misc:Depends},
