@@ -1,7 +1,7 @@
 version: '3'
 services:
   web:
-    image: geotrekce/screamshotter2
+    image: geotrekce/screamshotter
     ports:
       - 8000:8000
     environment:

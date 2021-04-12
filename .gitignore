@@ -36,9 +36,9 @@ docs/_build/
 !/public/static/.gitkeep
 /debian/.debhelper/
 /debian/debhelper-build-stamp
-/debian/screamshotter2/
-/debian/screamshotter2.substvars
-/debian/screamshotter2.*.debhelper
+/debian/screamshotter/
+/debian/screamshotter.substvars
+/debian/screamshotter.*.debhelper
 /debian/files
 /src/screamshotter.egg-info/
 /debian/screamshotter/
