@@ -20,6 +20,4 @@ Depends:
  ${misc:Depends},
  ${shlibs:Depends},
  gettext
-Conflicts:
- screamshotter
 Description: Takes captures of HTML pages
