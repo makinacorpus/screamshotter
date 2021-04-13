@@ -12,24 +12,24 @@ coreapi==2.3.3
     # via screamshotter2 (setup.py)
 coreschema==0.0.4
     # via coreapi
-coverage==5.4
+coverage==5.5
     # via screamshotter2 (setup.py)
 django-debug-toolbar==3.2
     # via screamshotter2 (setup.py)
-django==2.2.18
+django==2.2.20
     # via
     #   django-debug-toolbar
-    #   screamshotter2 (setup.py)
     #   djangorestframework
-djangorestframework==3.12.2
+    #   screamshotter2 (setup.py)
+djangorestframework==3.12.4
     # via screamshotter2 (setup.py)
-flake8==3.8.4
+flake8==3.9.0
     # via screamshotter2 (setup.py)
 gevent==21.1.2
     # via gunicorn
 greenlet==1.0.0
     # via gevent
-gunicorn[gevent]==20.0.4
+gunicorn[gevent]==20.1.0
     # via screamshotter2 (setup.py)
 idna==2.10
     # via requests
@@ -41,13 +41,13 @@ markupsafe==1.1.1
     # via jinja2
 mccabe==0.6.1
     # via flake8
-pillow==7.2.0
+pillow==8.2.0
     # via screamshotter2 (setup.py)
-pycodestyle==2.6.0
+pycodestyle==2.7.0
     # via flake8
-pyflakes==2.2.0
+pyflakes==2.3.1
     # via flake8
-python-magic==0.4.18
+python-magic==0.4.22
     # via screamshotter2 (setup.py)
 pytz==2021.1
     # via django
@@ -59,13 +59,13 @@ sqlparse==0.4.1
     #   django-debug-toolbar
 uritemplate==3.0.1
     # via coreapi
-urllib3==1.26.3
+urllib3==1.26.4
     # via requests
 whitenoise==5.2.0
     # via screamshotter2 (setup.py)
 zope.event==4.5.0
     # via gevent
-zope.interface==5.2.0
+zope.interface==5.3.0
     # via gevent
 
 # The following packages are considered to be unsafe in a requirements file:
