@@ -92,3 +92,7 @@ REST_FRAMEWORK = {
     ),
     'UNAUTHENTICATED_USER': None,
 }
+
+SCREENSHOTTER = {
+    'NODE_BIN_PATH': os.getenv('NODE_BIN_PATH', 'node')
+}

@@ -15,7 +15,7 @@ def take_screenshot(url, width=1920, height=1080, waitfor='body', wait_selectors
 
     with open(screenshot_file.name, 'w+b'):
         command = subprocess.run([
-            'node',
+            app_settings.NODE_BIN_PATH,
             app_settings.PUPPETEER_JAVASCRIPT_FILEPATH,
             '--url',
             url,

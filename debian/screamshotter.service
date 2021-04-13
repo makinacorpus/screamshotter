@@ -8,6 +8,7 @@ WorkingDirectory=/opt/screamshotter
 ExecStart=/opt/screamshotter/bin/gunicorn project.wsgi:application --bind 0.0.0.0:8000
 Environment=DJANGO_SETTINGS_MODULE=project.settings
 Environment=NODE_PATH=/opt/screamshotter/node_modules/
+Environment=NODE_BIN_PATH=/opt/screamshotter/bin/node
 Restart=on-failure
 User=screamshotter
 Group=screamshotter
