@@ -40,3 +40,9 @@ docs/_build/
 /debian/screamshotter2.substvars
 /debian/screamshotter2.*.debhelper
 /debian/files
+/src/screamshotter.egg-info/
+/debian/screamshotter/
+/debian/screamshotter.postinst.debhelper
+/debian/screamshotter.postrm.debhelper
+/debian/screamshotter.prerm.debhelper
+/debian/screamshotter.substvars

@@ -4,7 +4,7 @@ from rest_framework import renderers
 
 
 class PNGRenderer(renderers.BaseRenderer):
-    media_type = 'image/png'
+    media_type = 'text/html'
     format = 'png'
     charset = None
     render_style = 'binary'
