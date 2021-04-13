@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 const parseArgs = require('minimist');
 
 const args = parseArgs(process.argv);
-const { url, path, selector, waitseconds } = args;
+const { url, path, selector, waitseconds, waitfor } = args;
 const headers = JSON.parse(args.headers);
 const viewportWidth = parseInt(args.vwidth, 10);
 const viewportHeight = parseInt(args.vheight, 10);
@@ -21,12 +21,12 @@ const waitSelectors = JSON.parse(args.waitselectors);
   const page = await browser.newPage();
 
   try {
-    page.setViewport({
+    await page.setViewport({
       width: viewportWidth,
       height: viewportHeight,
     });
 
-    page.setExtraHTTPHeaders(headers);
+    await page.setExtraHTTPHeaders(headers);
 
     await page.goto(url, { waitUntil: 'networkidle0' });
 
@@ -35,7 +35,15 @@ const waitSelectors = JSON.parse(args.waitselectors);
         await page.waitForSelector(wait);
       });
     }
-    await page.waitForTimeout(waitseconds);
+
+    if (waitfor !== '' && waitfor !== null) {
+      await page.waitForSelector(waitfor);
+    }
+
+    if (waitseconds !== 0) {
+      await page.waitForTimeout(waitseconds);
+    }
+
     const rect = await page.evaluate(selector => {
       // dynamic add screamshot css class to permit css customization
       document.body.classList.add('screamshot');

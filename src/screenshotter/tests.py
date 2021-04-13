@@ -78,7 +78,7 @@ class CaptureApiTestCase(SimpleTestCase):
         data['url'] = "https://www.google.fr"
 
         response = self.api_client.post(reverse('screenshotter:screenshot'), data=data, format='json')
-        self.assertEqual(response.status_code, 200, serializer.data)
+        self.assertEqual(response.status_code, 200, response.json())
 
     def test_api_bad_request(self):
         serializer = ScreenshotSerializer()

@@ -6,7 +6,7 @@ from .exceptions import ScreenshotterException
 from .settings import app_settings
 
 
-def take_screenshot(url, width=1920, height=1080, waitfor=(),
+def take_screenshot(url, width=1920, height=1080, waitfor='body', wait_selectors=(),
                     selector='body', wait_seconds=1, forward_headers=None):
     if forward_headers is None:
         forward_headers = dict()
@@ -30,7 +30,9 @@ def take_screenshot(url, width=1920, height=1080, waitfor=(),
             '--waitseconds',
             f'{wait_seconds * 1000}',
             '--waitselectors',
-            json.dumps(waitfor),
+            json.dumps(wait_selectors),
+            '--waitfor',
+            waitfor,
             '--headers',
             json.dumps(forward_headers),
         ], stderr=subprocess.PIPE)
