@@ -5,6 +5,7 @@ __pycache__
 /cache
 /venv
 \.venv
+*.egg
 
 *.log
 CACHE
