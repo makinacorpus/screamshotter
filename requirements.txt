@@ -4,33 +4,35 @@
 #
 #    pip-compile
 #
+asgiref==3.3.4
+    # via django
 certifi==2020.12.5
     # via requests
 chardet==4.0.0
     # via requests
 coreapi==2.3.3
-    # via screamshotter2 (setup.py)
+    # via screamshotter (setup.py)
 coreschema==0.0.4
     # via coreapi
 coverage==5.5
-    # via screamshotter2 (setup.py)
+    # via screamshotter (setup.py)
 django-debug-toolbar==3.2
-    # via screamshotter2 (setup.py)
-django==2.2.20
+    # via screamshotter (setup.py)
+django==3.2
     # via
     #   django-debug-toolbar
     #   djangorestframework
-    #   screamshotter2 (setup.py)
+    #   screamshotter (setup.py)
 djangorestframework==3.12.4
-    # via screamshotter2 (setup.py)
+    # via screamshotter (setup.py)
 flake8==3.9.0
-    # via screamshotter2 (setup.py)
+    # via screamshotter (setup.py)
 gevent==21.1.2
     # via gunicorn
 greenlet==1.0.0
     # via gevent
 gunicorn[gevent]==20.1.0
-    # via screamshotter2 (setup.py)
+    # via screamshotter (setup.py)
 idna==2.10
     # via requests
 itypes==1.2.0
@@ -42,13 +44,13 @@ markupsafe==1.1.1
 mccabe==0.6.1
     # via flake8
 pillow==8.2.0
-    # via screamshotter2 (setup.py)
+    # via screamshotter (setup.py)
 pycodestyle==2.7.0
     # via flake8
 pyflakes==2.3.1
     # via flake8
 python-magic==0.4.22
-    # via screamshotter2 (setup.py)
+    # via screamshotter (setup.py)
 pytz==2021.1
     # via django
 requests==2.25.1
@@ -62,7 +64,7 @@ uritemplate==3.0.1
 urllib3==1.26.4
     # via requests
 whitenoise==5.2.0
-    # via screamshotter2 (setup.py)
+    # via screamshotter (setup.py)
 zope.event==4.5.0
     # via gevent
 zope.interface==5.3.0
