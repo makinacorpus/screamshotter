@@ -9,16 +9,13 @@ jobs:
   lint:
     name: Check linting
     runs-on: ubuntu-18.04
-    strategy:
-      matrix:
-        python-version: ['3.6']
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python 3.6
       uses: actions/setup-python@v2
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: 3.6
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -29,14 +26,14 @@ jobs:
         flake8 src
 
   test:
-    name: Python tests (default 18.04 & 20.04)
+    name: Python Unittests
     runs-on: ubuntu-20.04
     needs: [lint]
     env:
       SECRET_KEY: temp-secret-ci
     strategy:
       matrix:
-        python-version: ['3.6', '3.8']
+        python-version: ['3.6', '3.8']  # should match default versions in supported LTS (now 3.6 for 18.04 and 3.8 for 20.04)
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
@@ -116,10 +113,11 @@ jobs:
           name: debian-18-04
       - name: Install package
         run: |
-          dpkg -i /home/runner/work/screamshotter/*.deb || exit 0;
+          sudo dpkg -i /home/runner/work/screamshotter/*.deb || exit 0;
           sudo apt-get install -f -q -y
       - name: E2E test
         run: |
+          systemctl status screamshotter
           curl -d url=https://google.com http://localhost:8000 > google.png
 #  e2e_deb_20_04:
 #    runs-on: ubuntu-20.04
