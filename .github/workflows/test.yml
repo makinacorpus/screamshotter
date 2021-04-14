@@ -113,7 +113,7 @@ jobs:
           name: debian-18-04
       - name: Install package
         run: |
-          sudo dpkg -i /home/runner/work/screamshotter/*.deb || exit 0;
+          sudo dpkg -i /home/runner/work/screamshotter/screamshotter/*.deb || exit 0;
           sudo apt-get install -f -q -y
       - name: E2E test
         run: |
