@@ -61,6 +61,7 @@ jobs:
     runs-on: ubuntu-20.04
     needs: [test]
     steps:
+      - uses: actions/checkout@v2
       - name: Build docker image
         run: |
           docker-compose build
@@ -72,6 +73,7 @@ jobs:
     runs-on: ubuntu-18.04
     needs: [test]
     steps:
+      - uses: actions/checkout@v2
       - name: Prepare debian 18.04 versioning
         run: |
           grep '^[0-9]\+\.[0-9]\+\.[0-9]\+$' VERSION || sed -i 's/~dev0/.ubuntu18.04~dev<< pipeline.number >>/' debian/changelog
