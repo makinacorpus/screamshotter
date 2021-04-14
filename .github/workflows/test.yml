@@ -3,7 +3,7 @@
 
 name: Test CI
 
-on: [push, pull_request]
+on: push
 
 jobs:
   lint:
@@ -33,7 +33,6 @@ jobs:
     strategy:
       matrix:
         python-version: ['3.6', '3.8']
-        django-version: [3.2.*]
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
@@ -43,7 +42,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update -q
-        sudo apt-get -yq nodejs npm
+        sudo apt-get -yq install nodejs npm
         python -m pip install --upgrade pip setuptools wheel
         pip install -r requirements.txt -U
     - name: Test with coverage
