@@ -99,8 +99,8 @@ jobs:
       LANG: C.UTF-8
     steps:
       - run: apt-get update -q
-      - run: ls -als /root
-      - run: dpkg -i /root/screamshotter_*_amd64.deb
+      - run: ls -als /tmp/workspace
+      - run: dpkg -i /tmp/workspace/screamshotter_*_amd64.deb
       - run: apt-get install -f -y
       - run: curl -d url=https://google.com http://localhost:8000 > google.png
       - store_artifacts:
