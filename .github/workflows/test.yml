@@ -7,6 +7,7 @@ on: push
 
 jobs:
   lint:
+    name: Check linting
     runs-on: ubuntu-18.04
     strategy:
       matrix:
@@ -28,6 +29,7 @@ jobs:
         flake8 src
 
   test:
+    name: Python Unittest matrix on default 18.04 & 20.04 python3
     runs-on: ubuntu-20.04
     needs: [lint]
     env:
@@ -58,6 +60,7 @@ jobs:
         codecov
 
   build_docker_image:
+    name: Build docker image
     runs-on: ubuntu-20.04
     needs: [test]
     steps:
@@ -70,6 +73,7 @@ jobs:
         with:
           image: "screamshotter_ci:latest"
   build_deb_18_04:
+    name: Build debian package for Ubuntu 18.04
     runs-on: ubuntu-18.04
     needs: [test]
     steps:
@@ -78,13 +82,19 @@ jobs:
         run: |
           grep '^[0-9]\+\.[0-9]\+\.[0-9]\+$' VERSION || sed -i 's/~dev0/.ubuntu18.04~dev<< pipeline.number >>/' debian/changelog
           sed -i 's/screamshotter (\([0-9]\+\.[0-9]\+\.[0-9]\+\)\(.*\)) RELEASED;/screamshotter (\1.ubuntu18.04\2) bionic;/' debian/changelog
-      - name: Install dependencies to build debian 18.04
+      - name: Install build dependencies
         run: |
           sudo apt-get update -q
           sudo apt-get install -q -y dpkg-dev debhelper dh-virtualenv git python3 python3-venv python3-dev nodejs npm libgtk-3-0 libasound2 libgbm1 libxshmfence1
-      - name: Install dependencies to build debian 18.04
+      - name: Building package debian 18.04
         run: |
           dpkg-buildpackage -uc -us -b
+      - name: Archive package artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: debian-18-04
+          path: |
+            ../*.deb
 #
 #  build_deb_20_04:
 #    runs-on: ubuntu-20.04
