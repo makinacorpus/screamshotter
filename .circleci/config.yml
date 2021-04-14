@@ -92,6 +92,20 @@ jobs:
       - persist_to_workspace:
           root: /root
           paths: screamshotter_*_amd64.deb
+  ubuntu_test_18_04:
+    docker:
+      - image: ubuntu:bionic
+    environment:
+      LANG: C.UTF-8
+    steps:
+      - run: apt-get update -q
+      - run: ls -als /root
+      - run: dpkg -i /root/screamshotter_*_amd64.deb
+      - run: apt-get install -f -y
+      - run: curl -d url=https://google.com http://localhost:8000 > google.png
+      - store_artifacts:
+          path: google.png
+          destination: ubuntu_18.04_test
   ubuntu_publish:
     docker:
       - image: ubuntu:focal
@@ -146,6 +160,12 @@ workflows:
             tags:
               only: /[0-9]+\.[0-9]+\.[0-9]+/
       - ubuntu_package_18_04:
+          filters:
+            tags:
+              only: /[0-9]+\.[0-9]+\.[0-9]+/
+      - ubuntu_test_18_04:
+          requires:
+            - ubuntu_package_18_04
           filters:
             tags:
               only: /[0-9]+\.[0-9]+\.[0-9]+/
