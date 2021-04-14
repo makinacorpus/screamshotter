@@ -105,6 +105,7 @@ jobs:
       - run: ls -als /tmp/workspace
       - run: dpkg -i /tmp/workspace/screamshotter_*_amd64.deb || exit 0;
       - run: apt-get install -f -y
+      - run: systemctl status screamshotter
       - run: curl -d url=https://google.com http://localhost:8000 > google.png
       - store_artifacts:
           path: google.png
