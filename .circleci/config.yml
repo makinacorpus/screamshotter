@@ -94,8 +94,8 @@ jobs:
           root: /root
           paths: screamshotter_*_amd64.deb
   ubuntu_test_18_04:
-    machine: # executor type
-      image: ubuntu-1804:202010-01
+    docker:
+      - image: ubuntu:bionic
     environment:
       LANG: C.UTF-8
     steps:
@@ -104,7 +104,7 @@ jobs:
           at: /tmp/workspace
       - run: dpkg -i /tmp/workspace/screamshotter_*_amd64.deb || exit 0;
       - run: apt-get install -q -f -y
-      - run: systemctl status screamshotter
+      - run: service screamshotter start
       - run: curl -d url=https://google.com http://localhost:8000 > google.png
       - store_artifacts:
           path: google.png
