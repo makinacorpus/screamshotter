@@ -97,7 +97,7 @@ class CaptureApiTestCase(SimpleTestCase):
         response = self.api_client.post(reverse('screenshotter:screenshot') + '?format=json', data=data)
         self.assertEqual(response.status_code, 500, response.json())
 
-    def test_browsable_api(self):
+    def test_api_browsable(self):
         serializer = ScreenshotSerializer()
         data = serializer.data
         data['url'] = "https://www.google.fr"
@@ -105,6 +105,8 @@ class CaptureApiTestCase(SimpleTestCase):
         response = self.api_client.post(reverse('screenshotter:screenshot') + '?format=api', data=data)
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'<html>', response.content)
+        # check default renderer is json in browsable api (response in "base64": "xxx" format)
+        self.assertIn(b'&quot;base64&quot;', response.content)
 
     def test_png_default(self):
         serializer = ScreenshotSerializer()
