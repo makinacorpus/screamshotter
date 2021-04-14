@@ -15,7 +15,7 @@ jobs:
     - name: Set up Python 3.6
       uses: actions/setup-python@v2
       with:
-        python-version: 3.6
+        python-version: 3.6  # lint with minimal version supported (3.6 in 18.04)
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -96,14 +96,14 @@ jobs:
 #  build_deb_20_04:
 #    runs-on: ubuntu-20.04
 #    needs: [test]
-#  e2e_docker_image:
-#    runs-on: ubuntu-20.04
-#    needs: [build_docker_image]
-#    steps:
-#      - name: Download image
-#      uses: ishworkh/docker-image-artifact-download@v1
-#      with:
-#        image: "test_image:latest"
+  e2e_docker_image:
+    runs-on: ubuntu-20.04
+    needs: [build_docker_image]
+    steps:
+      - name: Download image
+        uses: ishworkh/docker-image-artifact-download@v1
+        with:
+          image: "screamshotter_ci:latest"
   e2e_deb_18_04:
     runs-on: ubuntu-18.04
     needs: [ build_deb_18_04 ]
