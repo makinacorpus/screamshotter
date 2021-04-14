@@ -99,6 +99,8 @@ jobs:
       LANG: C.UTF-8
     steps:
       - run: apt-get update -q
+      - attach_workspace:
+          at: /tmp/workspace
       - run: ls -als /tmp/workspace
       - run: dpkg -i /tmp/workspace/screamshotter_*_amd64.deb
       - run: apt-get install -f -y
@@ -173,7 +175,7 @@ workflows:
           requires:
             - codestyle
             - ubuntu_package
-            - ubuntu_package_18_04
+            - ubuntu_test_18_04
             - docker_test
             - docker_test_integration
           filters:
