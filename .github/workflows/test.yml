@@ -1,0 +1,108 @@
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: Python package
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        python-version: ['3.6']
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install flake8
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Lint with flake8
+      run: |
+        flake8 src
+
+  test:
+    runs-on: ubuntu-20.04
+    needs: [lint]
+    strategy:
+      matrix:
+        python-version: ['3.6', '3.8']
+        django-version: [3.2.*]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        sudo apt-get update -q
+        sudo apt-get -yq nodejs npm
+        python -m pip install --upgrade pip setuptools wheel
+        pip install -r requirements.txt -U
+    - name: Test with coverage
+      run: |
+        coverage run ./manage.py test
+    - name: Coverage upload
+      run: |
+        pip install codecov
+        codecov
+
+  build_docker_image:
+    runs-on: ubuntu-20.04
+    needs: [test]
+    steps:
+      - name: Build docker image
+        run: |
+          docker-compose build
+      - name: Upload image
+        uses: ishworkh/docker-image-artifact-upload@v1
+        with:
+          image: "makinacorpus/screamshotter:latest"
+  build_deb_18_04:
+    runs-on: ubuntu-18.04
+    needs: [test]
+    steps:
+      - name: Prepare debian 18.04 versioning
+        run: |
+          grep '^[0-9]\+\.[0-9]\+\.[0-9]\+$' VERSION || sed -i 's/~dev0/.ubuntu18.04~dev<< pipeline.number >>/' debian/changelog
+          sed -i 's/screamshotter (\([0-9]\+\.[0-9]\+\.[0-9]\+\)\(.*\)) RELEASED;/screamshotter (\1.ubuntu18.04\2) bionic;/' debian/changelog
+      - name: Install dependencies to build debian 18.04
+        run: |
+          apt-get update -q
+          apt-get install -q -y dpkg-dev debhelper dh-virtualenv git python3 python3-venv python3-dev nodejs npm libgtk-3-0 libasound2 libgbm1 libxshmfence1
+      - name: Install dependencies to build debian 18.04
+        run: |
+          dpkg-buildpackage -uc -us -b
+#
+#  build_deb_20_04:
+#    runs-on: ubuntu-20.04
+#    needs: [test]
+#  e2e_docker_image:
+#    runs-on: ubuntu-20.04
+#    needs: [build_docker_image]
+#  e2e_deb_18_04:
+#    runs-on: ubuntu-18.04
+#    needs: [ build_deb_18_04 ]
+#  e2e_deb_20_04:
+#    runs-on: ubuntu-20.04
+#    needs: [ build_deb_20_04 ]
+#  publish_docker_image:
+#    runs-on: ubuntu-20.04
+#    needs: [ e2e_docker_image, e2e_deb_18_04, e2e_deb_20_04]
+#  publish_deb_18_04:
+#    runs-on: ubuntu-20.04
+#    needs: [ e2e_docker_image, e2e_deb_18_04, e2e_deb_20_04 ]
+#  publish_deb_20_04:
+#    runs-on: ubuntu-20.04
+#    needs: [ e2e_docker_image, e2e_deb_18_04, e2e_deb_20_04 ]
