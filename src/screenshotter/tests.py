@@ -72,22 +72,46 @@ class CaptureApiTestCase(SimpleTestCase):
     def setUp(self):
         self.api_client = APIClient()
 
-    def test_api_good_request(self):
+    def test_api_good_request_json(self):
         serializer = ScreenshotSerializer()
         data = serializer.data
         data['url'] = "https://www.google.fr"
 
-        response = self.api_client.post(reverse('screenshotter:screenshot'), data=data, format='json')
-        self.assertEqual(response.status_code, 200, response.json())
+        response = self.api_client.post(reverse('screenshotter:screenshot') + '?format=json', data=data)
+        data = response.json()
+        self.assertEqual(response.status_code, 200, data)
+        self.assertIn('base64', data)
 
     def test_api_bad_request(self):
         serializer = ScreenshotSerializer()
-        response = self.api_client.post(reverse('screenshotter:screenshot'), data=serializer.data, format='json')
-        self.assertEqual(response.status_code, 400, serializer.data)
+        response = self.api_client.post(reverse('screenshotter:screenshot') + '?format=json', data=serializer.data)
+        data = response.json()
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('url', data)
+        self.assertEqual(['This field may not be blank.'], data['url'])
 
     def test_api_wrong_response(self):
         serializer = ScreenshotSerializer()
         data = serializer.data
         data['url'] = "https://kikou.com"
-        response = self.api_client.post(reverse('screenshotter:screenshot'), data=data, format='json')
+        response = self.api_client.post(reverse('screenshotter:screenshot') + '?format=json', data=data)
         self.assertEqual(response.status_code, 500, response.json())
+
+    def test_browsable_api(self):
+        serializer = ScreenshotSerializer()
+        data = serializer.data
+        data['url'] = "https://www.google.fr"
+
+        response = self.api_client.post(reverse('screenshotter:screenshot') + '?format=api', data=data)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'<html>', response.content)
+
+    def test_png_default(self):
+        serializer = ScreenshotSerializer()
+        data = serializer.data
+        data['url'] = "https://www.google.fr"
+
+        response = self.api_client.post(reverse('screenshotter:screenshot'), data=data)
+        self.assertEqual(response.status_code, 200)
+        mime = magic.from_buffer(response.content, mime=True)
+        self.assertEqual(mime, "image/png")
