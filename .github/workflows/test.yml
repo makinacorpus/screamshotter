@@ -73,7 +73,7 @@ jobs:
         with:
           image: "screamshotter_ci:latest"
   build_deb_18_04:
-    name: Build debian package for Ubuntu 18.04
+    name: Build 18.04 package
     runs-on: ubuntu-18.04
     needs: [test]
     steps:
@@ -94,7 +94,7 @@ jobs:
         with:
           name: debian-18-04
           path: |
-            ../*.deb
+            /home/runner/work/screamshotter/*.deb
 #
 #  build_deb_20_04:
 #    runs-on: ubuntu-20.04
@@ -102,6 +102,11 @@ jobs:
 #  e2e_docker_image:
 #    runs-on: ubuntu-20.04
 #    needs: [build_docker_image]
+#    steps:
+#      - name: Download image
+#      uses: ishworkh/docker-image-artifact-download@v1
+#      with:
+#        image: "test_image:latest"
   e2e_deb_18_04:
     runs-on: ubuntu-18.04
     needs: [ build_deb_18_04 ]
@@ -111,7 +116,7 @@ jobs:
           name: debian-18-04
       - name: Install package
         run: |
-          dpkg -i *.deb || exit 0;
+          dpkg -i /home/runner/work/screamshotter/*.deb || exit 0;
           sudo apt-get install -f -q -y
       - name: E2E test
         run: |
