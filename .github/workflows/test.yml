@@ -111,9 +111,11 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: debian-18-04
-      - name: Install packages
+      - name: Install package
         run: |
           sudo dpkg -i /home/runner/work/screamshotter/screamshotter/*.deb || exit 0;
+      - name: Fix dependencies
+        run: |
           sudo apt-get install -f -y
       - name: E2E test
         run: |
