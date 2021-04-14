@@ -42,9 +42,10 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update -q
-        sudo apt-get -yq install nodejs npm
+        sudo apt-get -q -y install nodejs npm
         python -m pip install --upgrade pip setuptools wheel
         pip install -r requirements.txt -U
+        npm ci
     - name: Test with coverage
       run: |
         cd src
