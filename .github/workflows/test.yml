@@ -29,7 +29,7 @@ jobs:
         flake8 src
 
   test:
-    name: Python Unittest matrix on default 18.04 & 20.04 python3
+    name: Python tests (default 18.04 & 20.04)
     runs-on: ubuntu-20.04
     needs: [lint]
     env:
@@ -102,9 +102,20 @@ jobs:
 #  e2e_docker_image:
 #    runs-on: ubuntu-20.04
 #    needs: [build_docker_image]
-#  e2e_deb_18_04:
-#    runs-on: ubuntu-18.04
-#    needs: [ build_deb_18_04 ]
+  e2e_deb_18_04:
+    runs-on: ubuntu-18.04
+    needs: [ build_deb_18_04 ]
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: debian-18-04
+      - name: Install package
+        run: |
+          dpkg -i *.deb || exit 0;
+          sudo apt-get install -f -q -y
+      - name: E2E test
+        run: |
+          curl -d url=https://google.com http://localhost:8000 > google.png
 #  e2e_deb_20_04:
 #    runs-on: ubuntu-20.04
 #    needs: [ build_deb_20_04 ]
