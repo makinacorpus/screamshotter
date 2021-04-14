@@ -91,6 +91,7 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.BrowsableAPIRenderer',
     ),
     'UNAUTHENTICATED_USER': None,
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
 }
 
 SCREENSHOTTER = {
