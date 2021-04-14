@@ -64,11 +64,11 @@ jobs:
       - uses: actions/checkout@v2
       - name: Build docker image
         run: |
-          docker-compose build
+          docker build -t screamshotter_ci:latest .
       - name: Upload image
         uses: ishworkh/docker-image-artifact-upload@v1
         with:
-          image: "makinacorpus/screamshotter:latest"
+          image: "screamshotter_ci:latest"
   build_deb_18_04:
     runs-on: ubuntu-18.04
     needs: [test]
@@ -80,8 +80,8 @@ jobs:
           sed -i 's/screamshotter (\([0-9]\+\.[0-9]\+\.[0-9]\+\)\(.*\)) RELEASED;/screamshotter (\1.ubuntu18.04\2) bionic;/' debian/changelog
       - name: Install dependencies to build debian 18.04
         run: |
-          apt-get update -q
-          apt-get install -q -y dpkg-dev debhelper dh-virtualenv git python3 python3-venv python3-dev nodejs npm libgtk-3-0 libasound2 libgbm1 libxshmfence1
+          sudo apt-get update -q
+          sudo apt-get install -q -y dpkg-dev debhelper dh-virtualenv git python3 python3-venv python3-dev nodejs npm libgtk-3-0 libasound2 libgbm1 libxshmfence1
       - name: Install dependencies to build debian 18.04
         run: |
           dpkg-buildpackage -uc -us -b
