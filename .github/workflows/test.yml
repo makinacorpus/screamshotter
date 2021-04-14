@@ -111,13 +111,12 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: debian-18-04
-      - name: Install package
+      - name: Install packages
         run: |
           sudo dpkg -i /home/runner/work/screamshotter/screamshotter/*.deb || exit 0;
-          sudo apt-get install -f -q -y
+          sudo apt-get install -f -y
       - name: E2E test
         run: |
-          systemctl status screamshotter
           curl -d url=https://google.com http://localhost:8000 > google.png
 #  e2e_deb_20_04:
 #    runs-on: ubuntu-20.04
