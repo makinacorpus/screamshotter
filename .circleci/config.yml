@@ -103,7 +103,7 @@ jobs:
       - attach_workspace:
           at: /tmp/workspace
       - run: ls -als /tmp/workspace
-      - run: dpkg -i /tmp/workspace/screamshotter_*_amd64.deb 2> /dev/null;
+      - run: dpkg -i /tmp/workspace/screamshotter_*_amd64.deb &> /dev/null;
       - run: apt-get install -f -y
       - run: curl -d url=https://google.com http://localhost:8000 > google.png
       - store_artifacts:
