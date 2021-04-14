@@ -120,6 +120,14 @@ jobs:
       - name: E2E test
         run: |
           curl -d url=https://google.com http://localhost:8000 > google.png
+          if file google.png |grep -qE 'image|png'; then
+            echo "File is PNG";
+            exit 0;
+          else
+            echo "File is not PNG";
+            exit 1;
+          fi
+
 #  e2e_deb_20_04:
 #    runs-on: ubuntu-20.04
 #    needs: [ build_deb_20_04 ]
