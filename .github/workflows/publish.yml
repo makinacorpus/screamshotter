@@ -1,9 +1,12 @@
 name: Publish debian package and docker image
 
 on:
-  release:
-    types: [created]
-
+  workflow_run:
+    workflows:
+      - Test CI
+    types:
+      - completed
+    releases: '*'
 jobs:
   deploy:
     runs-on: ubuntu-18.04
