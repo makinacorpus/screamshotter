@@ -27,6 +27,12 @@ jobs:
           echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_LOGIN" --password-stdin
           docker tag screamshotter_ci:latest makinacorpus/screamshotter:v2
           docker push makinacorpus/screamshotter:v2
+      - name: Attach debian packages as release binaries
+        uses: skx/github-action-publish-binaries@release-1.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: '/home/runner/work/screamshotter/screamshotter_*_amd64.deb'
       - name: Publish debian packages
         run: |
           grep '^[0-9]\+\.[0-9]\+\.[0-9]\+$' VERSION && export DEB_COMPONENT=main || export DEB_COMPONENT=dev
