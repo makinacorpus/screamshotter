@@ -225,7 +225,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          args: '/home/runner/work/screamshotter/screamshotter_*_amd64.deb'
+          args: '*.deb'
       - name: Publish docker image
         run: |
           echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_LOGIN" --password-stdin
