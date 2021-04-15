@@ -10,6 +10,7 @@ setup(
     description="Takes captures of HTML pages",
     install_requires=[
         'django',
+        'nodeenv',
         'djangorestframework',
         'coreapi',
         # dev & tests
