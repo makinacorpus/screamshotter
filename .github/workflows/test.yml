@@ -18,6 +18,7 @@ jobs:
         python-version: 3.6  # lint with minimal version supported (3.6 in 18.04)
     - name: Install dependencies
       run: |
+        echo "${{ github.event_name }}! ${{ github.event.action }}"
         python -m pip install --upgrade pip
         python -m pip install flake8
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
@@ -201,7 +202,7 @@ jobs:
     name: Publication
     runs-on: ubuntu-18.04
     needs: [ e2e_docker_image, e2e_deb_18_04, e2e_deb_20_04 ]
-    if: github.event_name == 'release' && github.event.action == 'created'
+    if: ${{ github.event_name == 'release' && github.event.action == 'created' }}
     steps:
       - name: Download 18.04 debian artifact
         uses: actions/download-artifact@v2
