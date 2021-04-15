@@ -92,10 +92,34 @@ jobs:
           name: debian-18-04
           path: |
             /home/runner/work/screamshotter/*.deb
-#
-#  build_deb_20_04:
-#    runs-on: ubuntu-20.04
-#    needs: [test]
+
+  build_deb_20_04:
+    runs-on: ubuntu-20.04
+    needs: [test]
+    env:
+      DEBIAN_FRONTEND: noninteractive
+    steps:
+      - uses: actions/checkout@v2
+      - name: Prepare debian 20.04 versioning
+        run: |
+          grep '^[0-9]\+\.[0-9]\+\.[0-9]\+$' VERSION || sed -i 's/+dev/.ubuntu20.04+dev<< pipeline.number >>/' debian/changelog
+          sed -i 's/screamshotter (\([0-9]\+\.[0-9]\+\.[0-9]\+\)\(.*\)) RELEASED;/screamshotter (\1.ubuntu20.04\2) focal;/' debian/changelog
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update -q
+          apt-get install -q -y software-properties-common
+          add-apt-repository ppa:jyrki-pulliainen/dh-virtualenv
+          sudo apt-get install -q -y dpkg-dev debhelper dh-virtualenv git python3 python3-venv python3-dev nodejs npm libgtk-3-0 libasound2 libgbm1 libxshmfence1
+      - name: Building package debian 20.04
+        run: |
+          dpkg-buildpackage -uc -us -b
+      - name: Archive package artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: debian-20-04
+          path: |
+            /home/runner/work/screamshotter/*.deb
+
   e2e_docker_image:
     runs-on: ubuntu-20.04
     needs: [build_docker_image]
@@ -141,9 +165,29 @@ jobs:
             exit 1;
           fi
 
-#  e2e_deb_20_04:
-#    runs-on: ubuntu-20.04
-#    needs: [ build_deb_20_04 ]
+  e2e_deb_20_04:
+    runs-on: ubuntu-20.04
+    needs: [ build_deb_20_04 ]
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: debian-20-04
+      - name: Install package
+        run: |
+          sudo dpkg -i /home/runner/work/screamshotter/screamshotter/*.deb || exit 0;
+      - name: Fix dependencies
+        run: |
+          sudo apt-get install -f -y
+      - name: E2E test
+        run: |
+          curl -d url=https://google.com http://localhost:8000 > google.png
+          if file google.png |grep -qE 'image|png'; then
+            echo "File is PNG";
+            exit 0;
+          else
+            echo "File is not PNG";
+            exit 1;
+          fi
 #  publish_docker_image:
 #    runs-on: ubuntu-20.04
 #    needs: [ e2e_docker_image, e2e_deb_18_04, e2e_deb_20_04]
