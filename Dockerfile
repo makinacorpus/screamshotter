@@ -70,7 +70,7 @@ COPY package-lock.json /package-lock.json
 RUN . /app/venv/bin/activate && npm ci
 
 COPY src /app/src
-COPY app.json /app/src/app.json
+COPY .docker/entrypoint.sh /usr/local/bin
 
 RUN chown django:django -R /app
 
@@ -80,5 +80,6 @@ EXPOSE 8000
 
 WORKDIR /app/src
 
+ENTRYPOINT ["entrypoint.sh"]
 
 CMD ["gunicorn", "project.wsgi:application", "--bind", "0.0.0.0:8000"]
