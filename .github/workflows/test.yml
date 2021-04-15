@@ -235,8 +235,8 @@ jobs:
         run: |
           docker tag screamshotter_ci:latest makinacorpus/screamshotter:v2
           docker push makinacorpus/screamshotter:v2
-      - name: Publish debian packages
-        run: |
-          grep '^[0-9]\+\.[0-9]\+\.[0-9]\+$' VERSION && export DEB_COMPONENT=main || export DEB_COMPONENT=dev
-          scp -P ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no /home/runner/work/screamshotter/screamshotter_*_amd64.deb ${{ secrets.SSH_USER }}@${{ secrets.SSH_PORT }}:/srv/packages/incoming/$DEB_COMPONENT/
-          ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_PORT }} make -C /srv/packages
+#      - name: Publish debian packages
+#        run: |
+#          grep '^[0-9]\+\.[0-9]\+\.[0-9]\+$' VERSION && export DEB_COMPONENT=main || export DEB_COMPONENT=dev
+#          scp -P ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no /home/runner/work/screamshotter/screamshotter_*_amd64.deb ${{ secrets.SSH_USER }}@${{ secrets.SSH_PORT }}:/srv/packages/incoming/$DEB_COMPONENT/
+#          ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_PORT }} make -C /srv/packages
