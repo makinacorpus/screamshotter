@@ -12,9 +12,7 @@ def take_screenshot(url, width=1920, height=1080, waitfor='body', wait_selectors
     if forward_headers is None:
         forward_headers = dict()
 
-    screenshot_file = NamedTemporaryFile(suffix='.png')
-
-    with open(screenshot_file.name, 'w+b'):
+    with NamedTemporaryFile(suffix='.png') as screenshot_file:
         command = subprocess.run([
             'node',
             app_settings.PUPPETEER_JAVASCRIPT_FILEPATH,
@@ -41,5 +39,4 @@ def take_screenshot(url, width=1920, height=1080, waitfor='body', wait_selectors
         if command.stderr:
             raise ScreenshotterException(command.stderr.decode())
 
-    with open(screenshot_file.name, 'rb') as screenshot_data:
-        return screenshot_data.read()
+        return screenshot_file.read()

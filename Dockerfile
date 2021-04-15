@@ -72,6 +72,7 @@ RUN . /app/venv/bin/activate && npm ci
 COPY src /app/src
 COPY .docker/entrypoint.sh /usr/local/bin
 
+
 RUN chown django:django -R /app
 
 USER django
