@@ -67,7 +67,7 @@ RUN /app/venv/bin/nodeenv -C '' -p -n 14.15.5
 # upgrade npm & requirements
 COPY package.json /package.json
 COPY package-lock.json /package-lock.json
-RUN /app/venv/bin/npm ci
+RUN . /app/venv/bin/activate && npm ci
 
 COPY src /app/src
 COPY app.json /app/src/app.json
