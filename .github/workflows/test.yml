@@ -3,7 +3,11 @@
 
 name: Test CI
 
-on: push
+on:
+  push:
+  release:
+    types:
+      - created
 
 jobs:
   lint:
