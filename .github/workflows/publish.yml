@@ -10,7 +10,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-18.04
-    needs: test
     steps:
       - name: Download 18.04 debian artifact
         uses: actions/download-artifact@v2
