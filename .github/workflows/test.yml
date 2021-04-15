@@ -132,7 +132,7 @@ jobs:
           image: "screamshotter_ci:latest"
       - name: Launch service
         run: |
-          docker run -p 8000:8000 screamshotter_ci:latest
+          docker run -d -p 8000:8000 screamshotter_ci:latest
       - name: E2E test
         run: |
           curl -d url=https://google.com http://localhost:8000 > google.png
