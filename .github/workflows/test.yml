@@ -139,6 +139,7 @@ jobs:
           while ! nc -z "127.0.0.1" "8000"; do
               sleep 0.1
           done
+          docker ps -a
           curl -d url=https://google.com http://localhost:8000 > google.png
           if file google.png |grep -qE 'image|png'; then
             echo "File is PNG";
