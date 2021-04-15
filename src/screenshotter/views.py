@@ -1,17 +1,17 @@
 import logging
 
 from rest_framework.response import Response
-from rest_framework import status as http_status, renderers
+from rest_framework import status as http_status
 from rest_framework.views import APIView
 
 from .puppeteer import take_screenshot
-from .renderers import PNGRenderer, Base64JSONRenderer
+from .renderers import PNGRenderer, Base64JSONRenderer, ScreamBrowsableAPIRenderer
 from .serializer import ScreenshotSerializer
 
 
 class ScreenshotAPIView(APIView):
     serializer_class = ScreenshotSerializer
-    renderer_classes = [Base64JSONRenderer, PNGRenderer, renderers.BrowsableAPIRenderer]
+    renderer_classes = [PNGRenderer, Base64JSONRenderer, ScreamBrowsableAPIRenderer]  # keep PNG as first
 
     def get_serializer(self, *args, **kwargs):
         """

@@ -2,11 +2,11 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='screamshotter2',
-    version='0.0.9+dev',
+    name='screamshotter',
+    version='1.9.9+dev',
     author='Makina Corpus',
     author_email='support.geotrek@makina-corpus.com',
-    url='http://makina-corpus.com',
+    url='https://makina-corpus.com',
     description="Takes captures of HTML pages",
     install_requires=[
         'django',
