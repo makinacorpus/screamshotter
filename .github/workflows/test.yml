@@ -94,6 +94,7 @@ jobs:
             /home/runner/work/screamshotter/*.deb
 
   build_deb_20_04:
+    name: Build 20.04 package
     runs-on: ubuntu-20.04
     needs: [test]
     env:
@@ -107,8 +108,8 @@ jobs:
       - name: Install build dependencies
         run: |
           sudo apt-get update -q
-          apt-get install -q -y software-properties-common
-          add-apt-repository ppa:jyrki-pulliainen/dh-virtualenv
+          sudo apt-get install -q -y software-properties-common
+          sudo add-apt-repository ppa:jyrki-pulliainen/dh-virtualenv
           sudo apt-get install -q -y dpkg-dev debhelper dh-virtualenv git python3 python3-venv python3-dev nodejs npm libgtk-3-0 libasound2 libgbm1 libxshmfence1
       - name: Building package debian 20.04
         run: |
@@ -121,6 +122,7 @@ jobs:
             /home/runner/work/screamshotter/*.deb
 
   e2e_docker_image:
+    name: Tests E2E docker
     runs-on: ubuntu-20.04
     needs: [build_docker_image]
     steps:
@@ -142,6 +144,7 @@ jobs:
             exit 1;
           fi
   e2e_deb_18_04:
+    name: Tests E2E 18.04
     runs-on: ubuntu-18.04
     needs: [ build_deb_18_04 ]
     steps:
@@ -166,6 +169,7 @@ jobs:
           fi
 
   e2e_deb_20_04:
+    name: Tests E2E 20.04
     runs-on: ubuntu-20.04
     needs: [ build_deb_20_04 ]
     steps:
