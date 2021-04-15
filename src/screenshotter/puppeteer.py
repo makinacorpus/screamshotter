@@ -1,4 +1,5 @@
 import json
+import os
 import subprocess
 from tempfile import NamedTemporaryFile
 
@@ -35,7 +36,7 @@ def take_screenshot(url, width=1920, height=1080, waitfor='body', wait_selectors
             waitfor,
             '--headers',
             json.dumps(forward_headers),
-        ], stderr=subprocess.PIPE)
+        ], stderr=subprocess.PIPE, env=os.environ)
 
         if command.stderr:
             raise ScreenshotterException(command.stderr.decode())
