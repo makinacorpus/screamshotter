@@ -3,15 +3,11 @@ name: Publish debian package and docker image
 on:
   release:
     types: [created]
-  workflow_run:
-    workflows: [ "Test CI" ]
-    types:
-      - completed
 
 jobs:
   deploy:
     runs-on: ubuntu-18.04
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    needs: test
     steps:
       - name: Download 18.04 debian artifact
         uses: actions/download-artifact@v2
