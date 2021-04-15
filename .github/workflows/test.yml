@@ -135,6 +135,10 @@ jobs:
           docker run -d -p 8000:8000 screamshotter_ci:latest
       - name: E2E test
         run: |
+          echo "Waiting for container..."
+          while ! nc -z "127.0.0.1" "8000"; do
+              sleep 0.1
+          done
           curl -d url=https://google.com http://localhost:8000 > google.png
           if file google.png |grep -qE 'image|png'; then
             echo "File is PNG";
