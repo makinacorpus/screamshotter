@@ -36,6 +36,7 @@ jobs:
     runs-on: ubuntu-18.04
     name: Check javascript linting
     steps:
+      - uses: actions/checkout@v2
       - name: Setup node
         uses: actions/setup-node@v1
         with:
