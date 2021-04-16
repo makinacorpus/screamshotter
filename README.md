@@ -1,3 +1,6 @@
+[![codecov](https://codecov.io/gh/makinacorpus/screamshotter/branch/master/graph/badge.svg?token=Vk72Ni1u8F)](https://codecov.io/gh/makinacorpus/screamshotter)
+![github actions](https://github.com/makinacorpus/screamshotter/actions/workflows/test.yml/badge.svg)
+
 # INSTALL
 
 ## Ubuntu
@@ -39,12 +42,23 @@ sudo apt install -f
 
 ```
 docker pull makinacorpus/screamshotter:latest
-docker run -d -p 8000:8000 makinacorpus/screamshotter:latest
 ```
 
-# RUN
-
 # USAGE
+
+## ubuntu
+
+with systemd
+
+```
+systemctl status|stop|start screamshotter
+```
+
+## docker
+
+```
+docker run -d -p 8000:8000 makinacorpus/screamshotter:latest
+```
 
 # DEVELOPMENT
 
@@ -66,8 +80,6 @@ keep dependencies up to date with pip-tools
 # pip install pip-tools
 pip-compile --upgrade
 ```
-
-### node / npm
 
 ## Quality
 
