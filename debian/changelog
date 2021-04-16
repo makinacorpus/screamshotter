@@ -1,6 +1,7 @@
 screamshotter (2.0.0) RELEASED; urgency=medium
 
   * Initial v2 release
+  * From CasperJS / PhantomJS to Puppeteer / Chromium
 
  -- Jean-Etienne Castagnede <jean-etienne.castagnede@makina-corpus.com>  Fri, 16 Apr 2021 15:00:00 +0200
 
