@@ -1,1 +1,2 @@
-include src/screenshotter/js/index.js
+graft src
+global-exclude *.py[cod] __pycache__ *.so

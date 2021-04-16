@@ -1,6 +1,11 @@
+[![codecov](https://codecov.io/gh/makinacorpus/screamshotter/branch/master/graph/badge.svg?token=Vk72Ni1u8F)](https://codecov.io/gh/makinacorpus/screamshotter)
+![github actions](https://github.com/makinacorpus/screamshotter/actions/workflows/test.yml/badge.svg)
+
 # INSTALL
 
 ## Ubuntu
+
+### From apt repo
 
 ```
 sudo apt update
@@ -11,17 +16,49 @@ sudo apt update
 sudo apt install screamshotter
 ```
 
+### Local installation
+
+Download deb package  from last release assets
+
+Example:
+
+```bash
+wget https://github.com/makinacorpus/screamshotter/releases/download/1.9.9-beta0/screamshotter_1.9.9.ubuntu18.04.dev752653563_amd64.deb
+```
+
+Install it
+
+```bash
+sudo dpkg -i screamshotter_1.9.9.ubuntu18.04.dev752653563_amd64.deb
+```
+
+Fix dependencies
+
+```bash
+sudo apt install -f
+```
+
 ## Docker
 
 ```
-git clone https://github.com/makinacorpus/screamshotter.git
-cd screamshotter
-docker-compose up
+docker pull makinacorpus/screamshotter:latest
 ```
 
-# RUN
-
 # USAGE
+
+## ubuntu
+
+with systemd
+
+```
+systemctl status|stop|start screamshotter
+```
+
+## docker
+
+```
+docker run -d -p 8000:8000 makinacorpus/screamshotter:latest
+```
 
 # DEVELOPMENT
 
@@ -30,7 +67,6 @@ docker-compose up
 ```
 git clone git@github.com:makinacorpus/screamshotter.git
 cd screamshotter
-ln -s docker-compose-dev.override.yml docker-compose.override.yml
 docker-compose up
 ```
 
@@ -40,14 +76,23 @@ docker-compose up
 
 keep dependencies up to date with pip-tools
 
-### node / npm
+```bash
+# pip install pip-tools
+pip-compile --upgrade
+```
 
 ## Quality
 
 ### flake8
 
-flake8 .
+```bash
+# pip install flake8
+flake8 src
+```
 
 ### eslint
 
-eslint .
+```bash
+# pip install flake8
+npm run lint
+```
