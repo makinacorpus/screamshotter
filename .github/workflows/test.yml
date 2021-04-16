@@ -13,8 +13,8 @@ on:
       - created
 
 jobs:
-  lint:
-    name: Check linting
+  flake8:
+    name: Check python linting
     runs-on: ubuntu-18.04
 
     steps:
@@ -32,11 +32,25 @@ jobs:
     - name: Lint with flake8
       run: |
         flake8 src
-
+  eslint:
+    runs-on: ubuntu-18.04
+    name: Check javascript linting
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Install dependencies
+        run: |
+          npm ci
+      - name: Lint with eslint
+        run: |
+          npm run lint
   test:
     name: Python Unittests
     runs-on: ubuntu-20.04
-    needs: [lint]
+    needs: [flake8, eslint]
     env:
       SECRET_KEY: temp-secret-ci
     strategy:
