@@ -1,8 +1,8 @@
-screamshotter (1.9.9+dev) UNRELEASED; urgency=medium
+screamshotter (2.0.0) RELEASED; urgency=medium
 
   * Initial v2 release
 
- -- Gaël UTARD <gael.utard@makina-corpus.com>  Fri, 12 Feb 2021 08:32:41 +0100
+ -- Jean-Etienne Castagnede <jean-etienne.castagnede@makina-corpus.com>  Fri, 16 Apr 2021 15:00:00 +0200
 
 
 screamshotter (1.1.7) RELEASED; urgency=medium
