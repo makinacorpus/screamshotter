@@ -44,10 +44,10 @@ const waitSelectors = JSON.parse(args.waitselectors);
       await page.waitForTimeout(waitseconds);
     }
 
-    const rect = await page.evaluate(() => {
+    const rect = await page.evaluate(aSelector => {
       // dynamic add screamshot css class to permit css customization
       document.body.classList.add('screamshot');
-      const element = document.querySelector(selector);
+      const element = document.querySelector(aSelector);
       const { x, y, width, height } = element.getBoundingClientRect();
       return { left: x, top: y, width, height, id: element.id };
     }, selector);
