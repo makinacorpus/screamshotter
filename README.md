@@ -93,6 +93,6 @@ flake8 src
 ### eslint
 
 ```bash
-# pip install flake8
+# use nodeenv node & npm
 npm run lint
 ```

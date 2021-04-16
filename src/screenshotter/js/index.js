@@ -44,7 +44,7 @@ const waitSelectors = JSON.parse(args.waitselectors);
       await page.waitForTimeout(waitseconds);
     }
 
-    const rect = await page.evaluate(selector => {
+    const rect = await page.evaluate(() => {
       // dynamic add screamshot css class to permit css customization
       document.body.classList.add('screamshot');
       const element = document.querySelector(selector);
