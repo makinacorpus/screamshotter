@@ -16,7 +16,7 @@ coreschema==0.0.4
     # via coreapi
 coverage==5.5
     # via screamshotter (setup.py)
-django-debug-toolbar==3.2
+django-debug-toolbar==3.2.1
     # via screamshotter (setup.py)
 django==3.2
     # via
