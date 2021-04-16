@@ -8,6 +8,7 @@ setup(
     author_email='support.geotrek@makina-corpus.com',
     url='https://makina-corpus.com',
     description="Takes captures of HTML pages",
+    scripts=['src/manage.py'],
     install_requires=[
         'django',
         'nodeenv',
