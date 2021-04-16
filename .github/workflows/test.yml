@@ -59,6 +59,7 @@ jobs:
     - name: Coverage upload
       run: |
         pip install codecov
+        cd src
         codecov
 
   build_docker_image:
