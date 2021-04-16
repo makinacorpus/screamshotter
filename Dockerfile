@@ -1,4 +1,4 @@
-FROM ubuntu:focal
+FROM ubuntu:focal as base
 
 ENV PYTHONUNBUFFERED 1
 ENV DEBIAN_FRONTEND noninteractive
@@ -47,40 +47,53 @@ RUN apt-get -qq update && apt-get install -qq -y \
     libnss3 \
     lsb-release \
     xdg-utils \
-    build-essential \
     git wget less nano curl \
     ca-certificates \
     gettext \
-    libgbm-dev \
-    python3.8-dev python3.8-venv python3.8-distutils -- && \
+    libgbm-dev && \
+    apt-get -q -y full-upgrade && \
+    apt-get clean all && rm -rf /var/apt/lists/* && rm -rf /var/cache/apt/*
+
+COPY .docker/entrypoint.sh /usr/local/bin
+
+EXPOSE 8000
+WORKDIR /app/src
+ENTRYPOINT ["entrypoint.sh"]
+
+FROM base as dev
+
+COPY src /app/src
+
+RUN apt-get -qq update && apt-get install -qq -y \
+    build-essential \
+    python3.8-dev python3.8-venv python3.8-distutils && \
     apt-get clean all && rm -rf /var/apt/lists/* && rm -rf /var/cache/apt/*
 
 # install pip & requirements
 RUN wget https://bootstrap.pypa.io/get-pip.py && python3.8 get-pip.py && rm get-pip.py
 RUN python3.8 -m venv /app/venv
-RUN /app/venv/bin/pip3 install pip setuptools wheel -U
+RUN /app/venv/bin/pip3 install --no-cache-dir pip setuptools wheel -U
 
 COPY requirements.txt /requirements.txt
 RUN /app/venv/bin/pip3 install --no-cache-dir -r /requirements.txt -U
-RUN /app/venv/bin/nodeenv -C '' -p -n 14.15.5
+RUN /app/venv/bin/nodeenv /app/venv/ -C '' -p -n 14.15.5
 
 # upgrade npm & requirements
-COPY package.json /package.json
-COPY package-lock.json /package-lock.json
+COPY package.json /app/package.json
+COPY package-lock.json /app/package-lock.json
 RUN . /app/venv/bin/activate && npm ci
 
-COPY src /app/src
-COPY .docker/entrypoint.sh /usr/local/bin
-
-
 RUN chown django:django -R /app
-
 USER django
 
-EXPOSE 8000
+CMD ["./manage.py", "runserver", "0.0.0.0:8000"]
 
-WORKDIR /app/src
+FROM base
 
-ENTRYPOINT ["entrypoint.sh"]
+COPY --from=dev /app/venv /app/venv
+COPY --from=dev /app/node_modules /app/node_modules
+COPY --from=dev /app/src /app/src
+
+USER django
 
 CMD ["gunicorn", "project.wsgi:application", "--bind", "0.0.0.0:8000"]

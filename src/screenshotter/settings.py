@@ -8,7 +8,6 @@ DEFAULTS = {
     'PUPPETEER_JAVASCRIPT_FILEPATH': os.path.join(os.path.abspath(os.path.dirname(__file__)),
                                                   'js', 'index.js'),
     'CHROMIUM_BROWSER_FILEPATH': 'chromium-browser',
-    'NODE_BIN_PATH': 'node'
 }
 
 
