@@ -84,6 +84,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(PROJECT_DIR, 'static'),
 )
+STATIC_ROOT = os.path.join(os.path.dirname(os.path.dirname(PROJECT_DIR)), 'static')
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
@@ -92,8 +93,4 @@ REST_FRAMEWORK = {
     ),
     'UNAUTHENTICATED_USER': None,
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
-}
-
-SCREENSHOTTER = {
-    'NODE_BIN_PATH': os.getenv('NODE_BIN_PATH', 'node')
 }

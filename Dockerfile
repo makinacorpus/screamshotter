@@ -4,6 +4,7 @@ ENV PYTHONUNBUFFERED 1
 ENV DEBIAN_FRONTEND noninteractive
 ENV LANG C.UTF-8
 ENV SECRET_KEY dev-dev-dev
+ENV COLLECTSTATIC 1
 ARG NODE_ENV=production
 RUN useradd -ms /bin/bash django
 RUN mkdir -p /app
@@ -62,8 +63,6 @@ ENTRYPOINT ["entrypoint.sh"]
 
 FROM base as dev
 
-COPY src /app/src
-
 RUN apt-get -qq update && apt-get install -qq -y \
     build-essential \
     python3.8-dev python3.8-venv python3.8-distutils && \
@@ -92,8 +91,16 @@ FROM base
 
 COPY --from=dev /app/venv /app/venv
 COPY --from=dev /app/node_modules /app/node_modules
-COPY --from=dev /app/src /app/src
+COPY src /app/src
+
+RUN mkdir -p /app/static
+RUN chown django:django /app/static
+
+VOLUME /app/static
 
 USER django
 
-CMD ["gunicorn", "project.wsgi:application", "--bind", "0.0.0.0:8000"]
+HEALTHCHECK CMD curl http://127.0.0.1:8000/?format=api || exit 1
+
+CMD ["gunicorn", "project.wsgi:application", "-w", "1", "--timeout", "600", "--bind", "0.0.0.0:8000", "--worker-tmp-dir", "/dev/shm"]
+

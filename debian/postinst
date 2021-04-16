@@ -1,8 +1,14 @@
 #!/bin/sh -e
 
+mkdir -p /opt/screamshotter/static || true
+chown -R screamshotter:screamshotter /opt/screamshotter/static || true
+
 # Create screamshotter user (only on a new install)
 if [ "$2" = "" ]; then
 	adduser --system --group --no-create-home --quiet screamshotter || true
+
 fi
+
+/opt/screamshotter/bin/python /opt/screamshotter/src/manage.py collectstatic --no-input
 
 #DEBHELPER#
