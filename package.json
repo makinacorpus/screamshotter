@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "minimist": "^1.2.5",
-    "puppeteer": "^7.0.4"
+    "puppeteer": "^8.0.0"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
