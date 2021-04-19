@@ -53,8 +53,6 @@ jobs:
     name: Python Unittests
     runs-on: ubuntu-20.04
     needs: [flake8, eslint]
-    env:
-      SECRET_KEY: temp-secret-ci
     strategy:
       matrix:
         python-version: ['3.6', '3.8']  # should match default versions in supported LTS (now 3.6 for 18.04 and 3.8 for 20.04)

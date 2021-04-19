@@ -1,6 +1,6 @@
 screamshotter (2.0.4+dev) UNRELEASED; urgency=medium
 
-  *
+  * Fix secret key management
 
  -- Jean-Etienne Castagnede <jean-etienne.castagnede@makina-corpus.com>  Fri, 19 Apr 2021 12:30:00 +0200
 
