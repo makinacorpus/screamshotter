@@ -11,5 +11,5 @@ services:
     ports:
       - 8000:8000
     environment:
-      - DJANGO_SETTINGS_MODULE=project.settings.dev
+      - DJANGO_SETTINGS_MODULE=screamshotter.settings.dev
       - COLLECTSTATIC=0

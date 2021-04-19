@@ -1,6 +1,6 @@
 screamshotter (2.0.0+dev) UNRELEASED; urgency=medium
 
-  *
+  * Fix a backward compatibility with v1 by renaming project folder
 
  -- Jean-Etienne Castagnede <jean-etienne.castagnede@makina-corpus.com>  Fri, 16 Apr 2021 15:00:00 +0200
 
