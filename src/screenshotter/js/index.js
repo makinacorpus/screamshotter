@@ -37,7 +37,7 @@ const waitSelectors = JSON.parse(args.waitselectors);
     }
 
     if (waitfor !== '' && waitfor !== null) {
-      await page.waitForSelector(waitfor);
+      await page.waitForSelector(waitfor, { timeout: 60000 });
     }
 
     if (waitseconds !== 0) {

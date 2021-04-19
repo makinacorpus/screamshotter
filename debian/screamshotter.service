@@ -5,7 +5,7 @@ StartLimitBurst=2
 
 [Service]
 WorkingDirectory=/opt/screamshotter
-ExecStart=/opt/screamshotter/bin/gunicorn screamshotter.wsgi:application --bind 127.0.0.1:8000
+ExecStart=/opt/screamshotter/bin/gunicorn screamshotter.wsgi:application --timeout 600 --bind 127.0.0.1:8000
 Environment=NODE_PATH=/opt/screamshotter/node_modules/
 Restart=on-failure
 User=screamshotter
