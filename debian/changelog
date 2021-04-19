@@ -1,3 +1,10 @@
+screamshotter (2.0.4+dev) UNRELEASED; urgency=medium
+
+  *
+
+ -- Jean-Etienne Castagnede <jean-etienne.castagnede@makina-corpus.com>  Fri, 19 Apr 2021 12:30:00 +0200
+
+
 screamshotter (2.0.4) RELEASED; urgency=medium
 
   * Improve and fix package building
