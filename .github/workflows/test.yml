@@ -94,7 +94,11 @@ jobs:
           image: "screamshotter_ci:latest"
   build_deb_18_04:
     name: Build 18.04 package
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
+    container: ubuntu:bionic
+    env:
+      LANG: C.UTF-8
+      DEBIAN_FRONTEND: non-interactive
     needs: [test]
     steps:
       - uses: actions/checkout@v2
@@ -118,9 +122,11 @@ jobs:
 
   build_deb_20_04:
     name: Build 20.04 package
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
+    container: ubuntu:focal
     needs: [test]
     env:
+      LANG: C.UTF-8
       DEBIAN_FRONTEND: noninteractive
     steps:
       - uses: actions/checkout@v2
