@@ -81,7 +81,7 @@ RUN /app/venv/bin/nodeenv /app/venv/ -C '' -p -n 14.15.5
 COPY package.json /app/package.json
 COPY package-lock.json /app/package-lock.json
 RUN . /app/venv/bin/activate && npm ci
-
+RUN mkdir -p /app/static
 RUN chown django:django -R /app
 USER django
 
@@ -102,5 +102,5 @@ USER django
 
 HEALTHCHECK CMD curl http://127.0.0.1:8000/?format=api || exit 1
 
-CMD ["gunicorn", "project.wsgi:application", "-w", "1", "--timeout", "600", "--bind", "0.0.0.0:8000", "--worker-tmp-dir", "/dev/shm"]
+CMD ["gunicorn", "screamshotter.wsgi:application", "-w", "1", "--timeout", "600", "--bind", "0.0.0.0:8000", "--worker-tmp-dir", "/dev/shm"]
 
