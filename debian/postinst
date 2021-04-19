@@ -1,13 +1,12 @@
 #!/bin/sh -e
 
-mkdir -p /opt/screamshotter/static || true
-chown -R screamshotter:screamshotter /opt/screamshotter/static || true
-
 # Create screamshotter user (only on a new install)
 if [ "$2" = "" ]; then
 	adduser --system --group --no-create-home --quiet screamshotter || true
-
 fi
+
+mkdir -p /opt/screamshotter/static || true
+chown -R screamshotter:screamshotter /opt/screamshotter/static || true
 
 screamshotter collectstatic --no-input
 
