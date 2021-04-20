@@ -19,6 +19,8 @@ const waitSelectors = JSON.parse(args.waitselectors);
   });
 
   const page = await browser.newPage();
+  await page.setDefaultNavigationTimeout(60000);
+  await page.setDefaultTimeout(60000);
 
   try {
     await page.setViewport({
@@ -37,7 +39,7 @@ const waitSelectors = JSON.parse(args.waitselectors);
     }
 
     if (waitfor !== '' && waitfor !== null) {
-      await page.waitForSelector(waitfor, { timeout: 60000 });
+      await page.waitForSelector(waitfor);
     }
 
     if (waitseconds !== 0) {
