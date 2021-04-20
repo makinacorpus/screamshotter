@@ -3,7 +3,6 @@ FROM ubuntu:focal as base
 ENV PYTHONUNBUFFERED 1
 ENV DEBIAN_FRONTEND noninteractive
 ENV LANG C.UTF-8
-ENV SECRET_KEY dev-dev-dev
 ENV COLLECTSTATIC 1
 ARG NODE_ENV=production
 RUN useradd -ms /bin/bash django
