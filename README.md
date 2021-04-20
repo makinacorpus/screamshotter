@@ -1,6 +1,10 @@
 [![codecov](https://codecov.io/gh/makinacorpus/screamshotter/branch/master/graph/badge.svg?token=Vk72Ni1u8F)](https://codecov.io/gh/makinacorpus/screamshotter)
 ![github actions](https://github.com/makinacorpus/screamshotter/actions/workflows/test.yml/badge.svg)
 
+# Screamshotter : microservice to take webpage screenshots
+
+### Powered by Django / Node / Puppeteer / Chromium
+
 # INSTALL
 
 ## Ubuntu
@@ -58,6 +62,18 @@ systemctl status|stop|start screamshotter
 
 ```
 docker run -d -p 8000:8000 makinacorpus/screamshotter:latest
+```
+
+## make screenshots
+
+```
+curl -d url=https://google.com http://127.0.0.1:8000 > google.png
+```
+
+## access test browsable api
+
+```
+http://127.0.0.1:8000/?format=api
 ```
 
 # DEVELOPMENT
