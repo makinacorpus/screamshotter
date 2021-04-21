@@ -69,7 +69,7 @@ jobs:
         sudo apt-get update -q
         sudo apt-get -q -y install nodejs npm ca-certificates
         python -m pip install --upgrade pip setuptools wheel
-        pip install -r requirements.txt -U
+        pip install -r dev-requirements.txt -U
         npm ci
     - name: Test with coverage
       run: |
