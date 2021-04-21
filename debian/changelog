@@ -1,6 +1,7 @@
-screamshotter (2.0.6) UNRELEASED; urgency=medium
+screamshotter (2.0.6) RELEASED; urgency=medium
 
   * Increase Puppeteer default timeouts
+  * Optimize npm install in debian packages
 
  -- Jean-Etienne Castagnede <jean-etienne.castagnede@makina-corpus.com>  Fri, 20 Apr 2021 11:32:00 +0200
 
