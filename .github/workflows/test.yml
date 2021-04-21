@@ -258,14 +258,24 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_LOGIN }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Publish docker image
+      - name: Publish Docker image (v2 and latest)
         run: |
           docker tag screamshotter_ci:latest makinacorpus/screamshotter:v2
           docker push makinacorpus/screamshotter:v2
-#          docker tag screamshotter_ci:latest makinacorpus/screamshotter:latest
-#          docker push makinacorpus/screamshotter:latest
-#      - name: Publish debian packages
-#        run: |
-#          grep '^[0-9]\+\.[0-9]\+\.[0-9]\+$' VERSION && export DEB_COMPONENT=main || export DEB_COMPONENT=dev
-#          scp -P ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no /home/runner/work/screamshotter/screamshotter_*_amd64.deb ${{ secrets.SSH_USER }}@${{ secrets.SSH_PORT }}:/srv/packages/incoming/$DEB_COMPONENT/
-#          ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_PORT }} make -C /srv/packages
+          docker tag screamshotter_ci:latest makinacorpus/screamshotter:latest
+          docker push makinacorpus/screamshotter:latest
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
+      - name: Publish debian packages
+        run: |
+          if [[ "${{ github.ref }}" == *"dev"* ]]; then
+            export DEB_COMPONENT=dev
+          else
+            export DEB_COMPONENT=main
+          fi
+          echo "${{ github.ref }} : Publishing as $DEB_COMPONENT package"
+          scp -P ${{ secrets.SSH_PORT }} /home/runner/work/screamshotter/screamshotter_*_amd64.deb ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/srv/packages/incoming/$DEB_COMPONENT/
+          ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} make -C /srv/packages
