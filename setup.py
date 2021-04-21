@@ -14,16 +14,9 @@ setup(
         'nodeenv',
         'djangorestframework',
         'coreapi',
-        # dev & tests
-        'coverage',
-        'flake8',
-        'Pillow',
-        'python-magic',
-        # dev project
-        'django-debug-toolbar',
+        'whitenoise',
         # prod
         'gunicorn[gevent]',
-        'whitenoise'
     ],
     include_package_data=True,
     license='BSD, see LICENSE file.',

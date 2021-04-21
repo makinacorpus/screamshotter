@@ -37,6 +37,8 @@ jobs:
   eslint:
     runs-on: ubuntu-18.04
     name: Check javascript linting
+    env:
+      PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
     steps:
       - uses: actions/checkout@v2
       - name: Setup node
@@ -85,7 +87,10 @@ jobs:
     needs: [test]
     steps:
       - uses: actions/checkout@v2
-      - name: Build docker image
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Build Docker image
         run: |
           docker build -t screamshotter_ci:latest .
       - name: Upload image

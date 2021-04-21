@@ -6,6 +6,7 @@ services:
       target: dev
       args:
         - NODE_ENV=development
+        - REQUIREMENTS=dev-requirements.txt
     volumes:
       - ./src/:/app/src/
     ports:

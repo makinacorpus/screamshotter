@@ -14,18 +14,11 @@ coreapi==2.3.3
     # via screamshotter (setup.py)
 coreschema==0.0.4
     # via coreapi
-coverage==5.5
-    # via screamshotter (setup.py)
-django-debug-toolbar==3.2.1
-    # via screamshotter (setup.py)
 django==3.2
     # via
-    #   django-debug-toolbar
     #   djangorestframework
     #   screamshotter (setup.py)
 djangorestframework==3.12.4
-    # via screamshotter (setup.py)
-flake8==3.9.1
     # via screamshotter (setup.py)
 gevent==21.1.2
     # via gunicorn
@@ -41,26 +34,14 @@ jinja2==2.11.3
     # via coreschema
 markupsafe==1.1.1
     # via jinja2
-mccabe==0.6.1
-    # via flake8
 nodeenv==1.6.0
-    # via screamshotter (setup.py)
-pillow==8.2.0
-    # via screamshotter (setup.py)
-pycodestyle==2.7.0
-    # via flake8
-pyflakes==2.3.1
-    # via flake8
-python-magic==0.4.22
     # via screamshotter (setup.py)
 pytz==2021.1
     # via django
 requests==2.25.1
     # via coreapi
 sqlparse==0.4.1
-    # via
-    #   django
-    #   django-debug-toolbar
+    # via django
 uritemplate==3.0.1
     # via coreapi
 urllib3==1.26.4

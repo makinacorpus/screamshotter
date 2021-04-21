@@ -4,9 +4,10 @@ ENV PYTHONUNBUFFERED 1
 ENV DEBIAN_FRONTEND noninteractive
 ENV LANG C.UTF-8
 ENV COLLECTSTATIC 1
-ARG NODE_ENV=production
+
 RUN useradd -ms /bin/bash django
 RUN mkdir -p /app
+RUN chown django:django /app
 
 RUN apt-get -qq update && apt-get install -qq -y \
     gconf-service \
@@ -62,6 +63,9 @@ ENTRYPOINT ["entrypoint.sh"]
 
 FROM base as dev
 
+ARG NODE_ENV=production
+ARG REQUIREMENTS=requirements.txt
+
 RUN apt-get -qq update && apt-get install -qq -y \
     build-essential \
     python3.8-dev python3.8-venv python3.8-distutils && \
@@ -69,20 +73,19 @@ RUN apt-get -qq update && apt-get install -qq -y \
 
 # install pip & requirements
 RUN wget https://bootstrap.pypa.io/get-pip.py && python3.8 get-pip.py && rm get-pip.py
+
+USER django
 RUN python3.8 -m venv /app/venv
 RUN /app/venv/bin/pip3 install --no-cache-dir pip setuptools wheel -U
 
-COPY requirements.txt /requirements.txt
-RUN /app/venv/bin/pip3 install --no-cache-dir -r /requirements.txt -U
+COPY ${REQUIREMENTS} /app/requirements.txt
+RUN /app/venv/bin/pip3 install --no-cache-dir -r /app/requirements.txt -U && rm /app/requirements.txt
 RUN /app/venv/bin/nodeenv /app/venv/ -C '' -p -n 14.15.5
 
 # upgrade npm & requirements
 COPY package.json /app/package.json
 COPY package-lock.json /app/package-lock.json
-RUN . /app/venv/bin/activate && npm ci
-RUN mkdir -p /app/static
-RUN chown django:django -R /app
-USER django
+RUN . /app/venv/bin/activate && npm ci && rm /app/*.json
 
 CMD ["./manage.py", "runserver", "0.0.0.0:8000"]
 
@@ -93,7 +96,6 @@ COPY --from=dev /app/node_modules /app/node_modules
 COPY src /app/src
 
 RUN mkdir -p /app/static
-RUN chown django:django /app/static
 
 VOLUME /app/static
 
