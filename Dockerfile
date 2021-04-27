@@ -95,7 +95,7 @@ COPY --from=dev /app/venv /app/venv
 COPY --from=dev /app/node_modules /app/node_modules
 COPY src /app/src
 
-RUN mkdir -p /app/static
+RUN mkdir -p /app/static && chown django:django /app/static
 
 VOLUME /app/static
 
