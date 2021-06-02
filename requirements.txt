@@ -44,7 +44,7 @@ sqlparse==0.4.1
     # via django
 uritemplate==3.0.1
     # via coreapi
-urllib3==1.26.4
+urllib3==1.26.5
     # via requests
 whitenoise==5.2.0
     # via screamshotter (setup.py)
