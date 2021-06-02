@@ -6,7 +6,7 @@
 #
 asgiref==3.3.4
     # via django
-certifi==2020.12.5
+certifi==2021.5.30
     # via requests
 chardet==4.0.0
     # via requests
@@ -14,7 +14,7 @@ coreapi==2.3.3
     # via screamshotter (setup.py)
 coreschema==0.0.4
     # via coreapi
-django==3.2
+django==3.2.4
     # via
     #   djangorestframework
     #   screamshotter (setup.py)
@@ -22,7 +22,7 @@ djangorestframework==3.12.4
     # via screamshotter (setup.py)
 gevent==21.1.2
     # via gunicorn
-greenlet==1.0.0
+greenlet==1.1.0
     # via gevent
 gunicorn[gevent]==20.1.0
     # via screamshotter (setup.py)
@@ -30,9 +30,9 @@ idna==2.10
     # via requests
 itypes==1.2.0
     # via coreapi
-jinja2==2.11.3
+jinja2==3.0.1
     # via coreschema
-markupsafe==1.1.1
+markupsafe==2.0.1
     # via jinja2
 nodeenv==1.6.0
     # via screamshotter (setup.py)
