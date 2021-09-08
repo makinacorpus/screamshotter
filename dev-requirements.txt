@@ -24,13 +24,13 @@ coreschema==0.0.4
     #   coreapi
 coverage==5.5
     # via -r dev-requirements.in
-django-debug-toolbar==3.2.1
-    # via -r dev-requirements.in
 django==3.2.4
     # via
     #   -r requirements.txt
     #   django-debug-toolbar
     #   djangorestframework
+django-debug-toolbar==3.2.1
+    # via -r dev-requirements.in
 djangorestframework==3.12.4
     # via -r requirements.txt
 flake8==3.9.2
@@ -65,7 +65,7 @@ mccabe==0.6.1
     # via flake8
 nodeenv==1.6.0
     # via -r requirements.txt
-pillow==8.2.0
+pillow==8.3.2
     # via -r dev-requirements.in
 pycodestyle==2.7.0
     # via flake8
