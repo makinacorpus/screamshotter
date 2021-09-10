@@ -40,7 +40,7 @@ pytz==2021.1
     # via django
 requests==2.25.1
     # via coreapi
-sqlparse==0.4.1
+sqlparse==0.4.2
     # via django
 uritemplate==3.0.1
     # via coreapi
