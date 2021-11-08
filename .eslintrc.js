@@ -5,7 +5,11 @@ const always = 'always';
 
 module.exports = {
   extends: 'airbnb-base',
-  parser: 'babel-eslint',
+  parser: '@babel/eslint-parser',
+  parserOptions: {
+    ecmaVersion: "latest",
+    requireConfigFile: false,
+  },
   env: {
     browser: true,
     jest: true,
