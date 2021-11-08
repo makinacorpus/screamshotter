@@ -80,7 +80,7 @@ RUN /app/venv/bin/pip3 install --no-cache-dir pip setuptools wheel -U
 
 COPY ${REQUIREMENTS} /app/requirements.txt
 RUN /app/venv/bin/pip3 install --no-cache-dir -r /app/requirements.txt -U && rm /app/requirements.txt
-RUN /app/venv/bin/nodeenv /app/venv/ -C '' -p -n 14.15.5
+RUN /app/venv/bin/nodeenv /app/venv/ -C '' -p -n 16.13.0
 
 # upgrade npm & requirements
 COPY package.json /app/package.json
