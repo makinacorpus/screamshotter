@@ -180,6 +180,13 @@ jobs:
             echo "File is not PNG";
             exit 1;
           fi
+      - name: Archive result artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: result-docker
+          path: |
+            /home/runner/work/screamshotter/google.png
+
   e2e_deb_18_04:
     name: Tests E2E 18.04
     runs-on: ubuntu-18.04
@@ -204,6 +211,12 @@ jobs:
             echo "File is not PNG";
             exit 1;
           fi
+      - name: Archive result artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: result-18-04
+          path: |
+            /home/runner/work/screamshotter/google.png
 
   e2e_deb_20_04:
     name: Tests E2E 20.04
@@ -229,6 +242,13 @@ jobs:
             echo "File is not PNG";
             exit 1;
           fi
+      - name: Archive result artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: result-20-04
+          path: |
+            /home/runner/work/screamshotter/google.png
+
   deploy:
     name: Publish (on release only)
     runs-on: ubuntu-18.04
