@@ -8,23 +8,25 @@ asgiref==3.4.1
     # via
     #   -r requirements.txt
     #   django
-certifi==2021.5.30
+certifi==2021.10.8
     # via
     #   -r requirements.txt
     #   requests
-charset-normalizer==2.0.6
+charset-normalizer==2.0.7
     # via
     #   -r requirements.txt
     #   requests
+click==8.0.3
+    # via pip-tools
 coreapi==2.3.3
     # via -r requirements.txt
 coreschema==0.0.4
     # via
     #   -r requirements.txt
     #   coreapi
-coverage==6.0
+coverage==6.1.1
     # via -r dev-requirements.in
-django==3.2.8
+django==3.2.9
     # via
     #   -r requirements.txt
     #   django-debug-toolbar
@@ -33,7 +35,7 @@ django-debug-toolbar==3.2.2
     # via -r dev-requirements.in
 djangorestframework==3.12.4
     # via -r requirements.txt
-flake8==3.9.2
+flake8==4.0.1
     # via -r dev-requirements.in
 gevent==21.8.0
     # via
@@ -45,7 +47,7 @@ greenlet==1.1.2
     #   gevent
 gunicorn[gevent]==20.1.0
     # via -r requirements.txt
-idna==3.2
+idna==3.3
     # via
     #   -r requirements.txt
     #   requests
@@ -65,11 +67,15 @@ mccabe==0.6.1
     # via flake8
 nodeenv==1.6.0
     # via -r requirements.txt
-pillow==8.3.2
+pep517==0.12.0
+    # via pip-tools
+pillow==8.4.0
     # via -r dev-requirements.in
-pycodestyle==2.7.0
+pip-tools==6.4.0
+    # via -r dev-requirements.in
+pycodestyle==2.8.0
     # via flake8
-pyflakes==2.3.1
+pyflakes==2.4.0
     # via flake8
 python-magic==0.4.24
     # via -r dev-requirements.in
@@ -86,7 +92,9 @@ sqlparse==0.4.2
     #   -r requirements.txt
     #   django
     #   django-debug-toolbar
-uritemplate==3.0.1
+tomli==1.2.2
+    # via pep517
+uritemplate==4.1.1
     # via
     #   -r requirements.txt
     #   coreapi
@@ -94,6 +102,8 @@ urllib3==1.26.7
     # via
     #   -r requirements.txt
     #   requests
+wheel==0.37.0
+    # via pip-tools
 whitenoise==5.3.0
     # via -r requirements.txt
 zope.event==4.5.0
@@ -106,4 +116,5 @@ zope.interface==5.4.0
     #   gevent
 
 # The following packages are considered to be unsafe in a requirements file:
+# pip
 # setuptools

@@ -6,15 +6,15 @@
 #
 asgiref==3.4.1
     # via django
-certifi==2021.5.30
+certifi==2021.10.8
     # via requests
-charset-normalizer==2.0.6
+charset-normalizer==2.0.7
     # via requests
 coreapi==2.3.3
     # via screamshotter (setup.py)
 coreschema==0.0.4
     # via coreapi
-django==3.2.8
+django==3.2.9
     # via
     #   djangorestframework
     #   screamshotter (setup.py)
@@ -26,7 +26,7 @@ greenlet==1.1.2
     # via gevent
 gunicorn[gevent]==20.1.0
     # via screamshotter (setup.py)
-idna==3.2
+idna==3.3
     # via requests
 itypes==1.2.0
     # via coreapi
@@ -42,7 +42,7 @@ requests==2.26.0
     # via coreapi
 sqlparse==0.4.2
     # via django
-uritemplate==3.0.1
+uritemplate==4.1.1
     # via coreapi
 urllib3==1.26.7
     # via requests
