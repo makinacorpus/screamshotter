@@ -180,6 +180,8 @@ jobs:
             echo "File is not PNG";
             exit 1;
           fi
+          pwd
+          ls -als
       - name: Archive result artifact
         uses: actions/upload-artifact@v2
         with:
