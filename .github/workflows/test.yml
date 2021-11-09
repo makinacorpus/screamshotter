@@ -185,9 +185,7 @@ jobs:
         with:
           name: result-docker
           path: |
-            pwd
-            ls -als
-            /home/runner/work/screamshotter/google.png
+            /home/runner/work/google.png
 
   e2e_deb_18_04:
     name: Tests E2E 18.04
