@@ -173,10 +173,10 @@ jobs:
         run: |
           sleep 2
           curl -d url=https://google.com http://localhost:8000 > google.png
-      - name: Check result
-        uses: actions/setup-python@v2
+      - uses: actions/setup-python@v2
         with:
           python-version: 3.6
+      - name: Check result
         run: |
           pip install filetype
           if filetype google.png |grep -q 'image/png'; then
@@ -207,10 +207,10 @@ jobs:
       - name: E2E test
         run: |
           curl -d url=https://google.com http://localhost:8000 > google.png
-      - name: Check result
-        uses: actions/setup-python@v2
+      - uses: actions/setup-python@v2
         with:
           python-version: 3.6
+      - name: Check result
         run: |
           pip install filetype
           if filetype google.png |grep -q 'image/png'; then
@@ -241,10 +241,10 @@ jobs:
       - name: E2E test
         run: |
           curl -d url=https://google.com http://localhost:8000 > google.png
-      - name: Check result
-        uses: actions/setup-python@v2
+      - uses: actions/setup-python@v2
         with:
           python-version: 3.6
+      - name: Check result
         run: |
           pip install filetype
           if filetype google.png |grep -q 'image/png'; then
