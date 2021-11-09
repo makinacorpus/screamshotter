@@ -10,7 +10,7 @@ override_dh_virtualenv:
 	debian/screamshotter/opt/screamshotter/bin/python debian/screamshotter/opt/screamshotter/bin/pip install nodeenv==1.5.0
 	debian/screamshotter/opt/screamshotter/bin/nodeenv -C '' -p -n 16.13.0
 	cp package.json package-lock.json debian/screamshotter/opt/screamshotter/
-	. debian/screamshotter/opt/screamshotter/bin/activate && npm ci --production --unsafe-perm=true
+	. debian/screamshotter/opt/screamshotter/bin/activate && npm i --production -g --unsafe-perm=true
 
 .PHONY: override_dh_strip override_dh_shlibdeps
 
