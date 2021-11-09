@@ -180,16 +180,13 @@ jobs:
             echo "File is not PNG";
             exit 1;
           fi
-      - name: Find result
-        run: |
-          pwd
-          ls -als
+
       - name: Archive result artifact
         uses: actions/upload-artifact@v2
         with:
           name: result-docker
           path: |
-            /home/runner/work/google.png
+            /home/runner/work/screamshotter/screamshotter/google.png
 
   e2e_deb_18_04:
     name: Tests E2E 18.04
@@ -201,10 +198,7 @@ jobs:
           name: debian-18-04
       - name: Install package
         run: |
-          sudo dpkg -i /home/runner/work/screamshotter/screamshotter/*.deb || exit 0;
-      - name: Fix dependencies
-        run: |
-          sudo apt-get install -f -y
+          sudo apt-get install -y /home/runner/work/screamshotter/screamshotter/*.deb
       - name: E2E test
         run: |
           curl -d url=https://google.com http://localhost:8000 > google.png
@@ -220,7 +214,7 @@ jobs:
         with:
           name: result-18-04
           path: |
-            /home/runner/work/screamshotter/google.png
+            /home/runner/work/screamshotter/screamshotter/google.png
 
   e2e_deb_20_04:
     name: Tests E2E 20.04
@@ -232,10 +226,7 @@ jobs:
           name: debian-20-04
       - name: Install package
         run: |
-          sudo dpkg -i /home/runner/work/screamshotter/screamshotter/*.deb || exit 0;
-      - name: Fix dependencies
-        run: |
-          sudo apt-get install -f -y
+          sudo apt-get install -y /home/runner/work/screamshotter/screamshotter/*.deb
       - name: E2E test
         run: |
           curl -d url=https://google.com http://localhost:8000 > google.png
@@ -251,7 +242,7 @@ jobs:
         with:
           name: result-20-04
           path: |
-            /home/runner/work/screamshotter/google.png
+            /home/runner/work/screamshotter/screamshotter/google.png
 
   deploy:
     name: Publish (on release only)
