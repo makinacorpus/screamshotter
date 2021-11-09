@@ -173,14 +173,19 @@ jobs:
         run: |
           sleep 2
           curl -d url=https://google.com http://localhost:8000 > google.png
-          if file google.png |grep -qE 'image|png'; then
+      - name: Check result
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.6
+        run: |
+          pip install filetype
+          if filetype google.png |grep -q 'image/png'; then
             echo "File is PNG";
             exit 0;
           else
             echo "File is not PNG";
             exit 1;
           fi
-
       - name: Archive result artifact
         uses: actions/upload-artifact@v2
         with:
@@ -202,7 +207,13 @@ jobs:
       - name: E2E test
         run: |
           curl -d url=https://google.com http://localhost:8000 > google.png
-          if file google.png |grep -qE 'image|png'; then
+      - name: Check result
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.6
+        run: |
+          pip install filetype
+          if filetype google.png |grep -q 'image/png'; then
             echo "File is PNG";
             exit 0;
           else
@@ -230,7 +241,13 @@ jobs:
       - name: E2E test
         run: |
           curl -d url=https://google.com http://localhost:8000 > google.png
-          if file google.png |grep -qE 'image|png'; then
+      - name: Check result
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.6
+        run: |
+          pip install filetype
+          if filetype google.png |grep -q 'image/png'; then
             echo "File is PNG";
             exit 0;
           else
