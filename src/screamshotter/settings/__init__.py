@@ -96,3 +96,9 @@ REST_FRAMEWORK = {
 }
 
 TIMEOUT = os.getenv('TIMEOUT', 60)  # unit : second
+# Override with custom settings
+custom_settings_file = "/opt/screamshotter/conf/custom.py"
+if custom_settings_file:
+
+    with open(custom_settings_file, 'r') as f:
+        exec(f.read())

@@ -1,0 +1,2 @@
+conf/env.in opt/screamshotter/conf
+conf/gunicorn-screamshotter.conf.py.in opt/screamshotter/conf
