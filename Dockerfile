@@ -4,6 +4,7 @@ ENV PYTHONUNBUFFERED 1
 ENV DEBIAN_FRONTEND noninteractive
 ENV LANG C.UTF-8
 ENV COLLECTSTATIC 1
+ENV TIMEOUT=60
 
 RUN useradd -ms /bin/bash django
 RUN mkdir -p /app
@@ -103,5 +104,5 @@ USER django
 
 HEALTHCHECK CMD curl http://127.0.0.1:8000/?format=api || exit 1
 
-CMD ["gunicorn", "screamshotter.wsgi:application", "-w", "1", "--timeout", "600", "--bind", "0.0.0.0:8000", "--worker-tmp-dir", "/dev/shm"]
+CMD ["gunicorn", "screamshotter.wsgi:application", "-w", "1", "--timeout", "${TIMEOUT}", "--bind", "0.0.0.0:8000", "--worker-tmp-dir", "/dev/shm"]
 

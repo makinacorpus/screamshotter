@@ -94,3 +94,5 @@ REST_FRAMEWORK = {
     'UNAUTHENTICATED_USER': None,
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
 }
+
+TIMEOUT = os.getenv('TIMEOUT', 60)  # unit : second
