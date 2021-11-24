@@ -11,6 +11,10 @@ on:
   release:
     types:
       - created
+  schedule:
+    - cron:  '0 15 * * *'
+
+
 env:
   DEBIAN_FRONTEND: noninteractive
 
