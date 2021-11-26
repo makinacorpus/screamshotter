@@ -1,8 +1,10 @@
 import os
 from tempfile import TemporaryDirectory
+from unittest import skipIf
 
 import magic
 from PIL import Image
+from django.conf import settings
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.test import SimpleTestCase, override_settings
@@ -59,6 +61,14 @@ class CaptureTestCase(SimpleTestCase):
     @override_settings(SCREENSHOTTER={'PUPPETEER_JAVASCRIPT_FILEPATH': 'none'})
     def test_bad_script_path(self):
         with self.assertRaises(ScreenshotterException):
+            take_screenshot('https://www.google.fr')
+
+    @skipIf(settings.TIMEOUT != 0.001, "skip if timeout is not 1ms")
+    @override_settings(MEDIA_ROOT=temp_dir.name)
+    def test_timeout_screenshot(self):
+        # We show that we can change timeout value. It's so small, this takes more than 1ms to generate the screenshot.
+        # => It fails
+        with self.assertRaisesRegexp(ScreenshotterException, 'TimeoutError: Navigation timeout of 1 ms exceeded'):
             take_screenshot('https://www.google.fr')
 
     @override_settings(SCREENSHOTTER={'BAD_SETTINGS': 'none'})

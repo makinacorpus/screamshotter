@@ -79,6 +79,7 @@ jobs:
       run: |
         cd src
         coverage run ./manage.py test
+        coverage run -a ./manage.py test --settings screamshotter.settings.test_timeout screenshotter.tests.CaptureTestCase.test_timeout_screenshot
     - name: Coverage upload
       run: |
         pip install codecov

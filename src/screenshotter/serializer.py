@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 
@@ -16,5 +17,7 @@ class ScreenshotSerializer(serializers.Serializer):
                                     help_text=_("CSS selectors to wait before taking screenshot"))
     wait_seconds = serializers.IntegerField(required=False, initial=0,
                                             help_text=_("Force browser to wait before take screenshot"))
+    timeout = serializers.IntegerField(required=False, initial=settings.TIMEOUT,
+                                       help_text=_("Force browser to timeout after this amount (in second)"))
     forward_headers = serializers.JSONField(required=False, initial={},
                                             help_text=_("Add headers to browser request. in JSON form"))

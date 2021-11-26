@@ -1,0 +1,5 @@
+Template: screamshotter/TIMEOUT
+Type: string
+Default: 60
+Description: Timeout (sec)
+ Force browser to timeout after this amount (in second).

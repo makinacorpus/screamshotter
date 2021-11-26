@@ -94,3 +94,12 @@ REST_FRAMEWORK = {
     'UNAUTHENTICATED_USER': None,
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
 }
+
+TIMEOUT = os.getenv('TIMEOUT', 60)  # unit : second
+# Override with custom settings
+
+try:
+    with open(os.path.join('opt', 'screamshotter', 'conf', 'custom.py'), 'r') as f:
+        exec(f.read())
+except FileNotFoundError:
+    pass

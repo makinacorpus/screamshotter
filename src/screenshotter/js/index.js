@@ -6,6 +6,7 @@ const { url, path, selector, waitseconds, waitfor } = args;
 const headers = JSON.parse(args.headers);
 const viewportWidth = parseInt(args.vwidth, 10);
 const viewportHeight = parseInt(args.vheight, 10);
+const timeout = parseInt(args.timeout, 10);
 const waitSelectors = JSON.parse(args.waitselectors);
 
 (async () => {
@@ -19,8 +20,8 @@ const waitSelectors = JSON.parse(args.waitselectors);
   });
 
   const page = await browser.newPage();
-  await page.setDefaultNavigationTimeout(60000);
-  await page.setDefaultTimeout(60000);
+  await page.setDefaultNavigationTimeout(timeout);
+  await page.setDefaultTimeout(timeout);
 
   try {
     await page.setViewport({

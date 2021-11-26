@@ -42,6 +42,11 @@ Fix dependencies
 sudo apt install -f
 ```
 
+Configurate screamshotter
+```bash
+sudo dpkg-reconfigure sreamshotter
+```
+
 ## Docker
 
 ```
