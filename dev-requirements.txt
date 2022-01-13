@@ -69,7 +69,7 @@ nodeenv==1.6.0
     # via -r requirements.txt
 pep517==0.12.0
     # via pip-tools
-pillow==8.4.0
+pillow==9.0.0
     # via -r dev-requirements.in
 pip-tools==6.4.0
     # via -r dev-requirements.in
