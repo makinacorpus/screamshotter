@@ -4,7 +4,7 @@ CHANGELOG
 2.0.13       (2022-01-21)
 -------------------------
 
-* Add environment's variable : timeout for gunicorn and puppeteer
+* Fix zombie processes
 * Update python libraries
 
 
