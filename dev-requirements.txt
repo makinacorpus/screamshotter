@@ -12,7 +12,7 @@ certifi==2021.10.8
     # via
     #   -r requirements.txt
     #   requests
-charset-normalizer==2.0.7
+charset-normalizer==2.0.10
     # via
     #   -r requirements.txt
     #   requests
@@ -26,18 +26,18 @@ coreschema==0.0.4
     #   coreapi
 coverage==6.1.1
     # via -r dev-requirements.in
-django==3.2.9
+django==3.2.11
     # via
     #   -r requirements.txt
     #   django-debug-toolbar
     #   djangorestframework
 django-debug-toolbar==3.2.2
     # via -r dev-requirements.in
-djangorestframework==3.12.4
+djangorestframework==3.13.1
     # via -r requirements.txt
 flake8==4.0.1
     # via -r dev-requirements.in
-gevent==21.8.0
+gevent==21.12.0
     # via
     #   -r requirements.txt
     #   gunicorn
@@ -55,7 +55,7 @@ itypes==1.2.0
     # via
     #   -r requirements.txt
     #   coreapi
-jinja2==3.0.2
+jinja2==3.0.3
     # via
     #   -r requirements.txt
     #   coreschema
@@ -83,7 +83,8 @@ pytz==2021.3
     # via
     #   -r requirements.txt
     #   django
-requests==2.26.0
+    #   djangorestframework
+requests==2.27.1
     # via
     #   -r requirements.txt
     #   coreapi
@@ -94,11 +95,13 @@ sqlparse==0.4.2
     #   django-debug-toolbar
 tomli==1.2.2
     # via pep517
+typing-extensions==4.0.1
+    # via -r requirements.txt
 uritemplate==4.1.1
     # via
     #   -r requirements.txt
     #   coreapi
-urllib3==1.26.7
+urllib3==1.26.8
     # via
     #   -r requirements.txt
     #   requests
