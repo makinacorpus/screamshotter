@@ -295,8 +295,10 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_LOGIN }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Publish Docker image (v2 and latest)
+      - name: Publish Docker image (tag, v2, latest)
         run: |
+          docker tag screamshotter_ci:latest makinacorpus/screamshotter:v${{github.ref_name}}
+          docker push makinacorpus/screamshotter:v${{github.ref_name}}
           docker tag screamshotter_ci:latest makinacorpus/screamshotter:v2
           docker push makinacorpus/screamshotter:v2
           docker tag screamshotter_ci:latest makinacorpus/screamshotter:latest
