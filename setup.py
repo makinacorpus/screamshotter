@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='screamshotter',
-    version='2.0.12+dev',
+    version='2.0.13',
     author='Makina Corpus',
     author_email='support.geotrek@makina-corpus.com',
     url='https://makina-corpus.com',

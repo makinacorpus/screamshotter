@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-2.0.12+dev   (XXXX-XX-XX)
+2.0.13       (2022-01-21)
 -------------------------
 
 * Add environment's variable : timeout for gunicorn and puppeteer

@@ -1,8 +1,9 @@
-screamshotter (2.0.12+dev) UNRELEASED; urgency=medium
+screamshotter (2.0.13) UNRELEASED; urgency=medium
 
-  *
+  * Fix zombie processes
+  * Update python packages
 
- -- Jean-Etienne Castagnede <jean-etienne.castagnede@makina-corpus.com>  Fri, 27 Apr 2021 09:40:00 +0200
+ -- Jean-Etienne Castagnede <jean-etienne.castagnede@makina-corpus.com>  Fri, 21 Jan 2022 11:17:00 +0200
 
 screamshotter (2.0.12) RELEASED; urgency=medium
 
