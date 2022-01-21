@@ -11,8 +11,10 @@ const waitSelectors = JSON.parse(args.waitselectors);
 
 (async () => {
   const browser = await puppeteer.launch({
+    headless: true,
     args: [
       '--no-sandbox',
+      '--no-zygote',
       '--disable-setuid-sandbox',
       // https://github.com/GoogleChrome/puppeteer/blob/master/docs/troubleshooting.md#tips
       '--disable-dev-shm-usage',
