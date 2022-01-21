@@ -18,7 +18,7 @@ django==3.2.11
     # via
     #   djangorestframework
     #   screamshotter (setup.py)
-djangorestframework==3.12.4
+djangorestframework==3.13.1
     # via screamshotter (setup.py)
 gevent==21.12.0
     # via gunicorn
@@ -37,7 +37,9 @@ markupsafe==2.0.1
 nodeenv==1.6.0
     # via screamshotter (setup.py)
 pytz==2021.3
-    # via django
+    # via
+    #   django
+    #   djangorestframework
 requests==2.27.1
     # via coreapi
 sqlparse==0.4.2
