@@ -6,11 +6,10 @@ services:
       target: dev
       args:
         - NODE_ENV=development
-        - REQUIREMENTS=dev-requirements.txt
     volumes:
       - ./src/:/app/src/
     ports:
-      - 8000:8000
+      - "8000:8000"
     environment:
       - DJANGO_SETTINGS_MODULE=screamshotter.settings.dev
       - COLLECTSTATIC=0

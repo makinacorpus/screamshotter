@@ -63,10 +63,9 @@ EXPOSE 8000
 WORKDIR /app/src
 ENTRYPOINT ["entrypoint.sh"]
 
-FROM base as dev
+FROM base as build
 
 ARG NODE_ENV=production
-ARG REQUIREMENTS=requirements.txt
 
 RUN apt-get -qq update && apt-get install -qq -y \
     build-essential \
@@ -80,7 +79,7 @@ USER django
 RUN python3.8 -m venv /app/venv
 RUN /app/venv/bin/pip3 install --no-cache-dir pip setuptools wheel -U
 
-COPY ${REQUIREMENTS} /app/requirements.txt
+COPY requirements.txt /app/
 RUN /app/venv/bin/pip3 install --no-cache-dir -r /app/requirements.txt -U && rm /app/requirements.txt
 RUN /app/venv/bin/nodeenv /app/venv/ -C '' -p -n 16.13.0
 
@@ -89,15 +88,23 @@ COPY package.json /app/package.json
 COPY package-lock.json /app/package-lock.json
 RUN . /app/venv/bin/activate && npm ci && rm /app/*.json
 
+FROM build as dev
+
+COPY requirements-dev.txt /app/
+RUN /app/venv/bin/pip3 install --no-cache-dir -r /app/requirements-dev.txt -U && rm /app/requirements-dev.txt
+
 CMD ["./manage.py", "runserver", "0.0.0.0:8000"]
 
 FROM base
 
-COPY --from=dev /app/venv /app/venv
-COPY --from=dev /app/node_modules /app/node_modules
+COPY --from=build /app/venv /app/venv
+COPY --from=build /app/node_modules /app/node_modules
 COPY src /app/src
 
 RUN mkdir -p /app/static && chown django:django /app/static
+
+RUN apt-get -qq update && apt-get upgrade -qq -y && \
+    apt-get clean all && rm -rf /var/apt/lists/* && rm -rf /var/cache/apt/*
 
 VOLUME /app/static
 
