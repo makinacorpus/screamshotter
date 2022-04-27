@@ -8,15 +8,13 @@ asgiref==3.4.1
     # via django
 certifi==2021.10.8
     # via requests
-charset-normalizer==2.0.10
-    # via
-    #   requests
-    #   sentry-sdk
+charset-normalizer==2.0.12
+    # via requests
 coreapi==2.3.3
     # via screamshotter (setup.py)
 coreschema==0.0.4
     # via coreapi
-django==3.2.11
+django==3.2.13
     # via
     #   djangorestframework
     #   screamshotter (setup.py)
@@ -38,7 +36,7 @@ markupsafe==2.0.1
     # via jinja2
 nodeenv==1.6.0
     # via screamshotter (setup.py)
-pytz==2021.3
+pytz==2022.1
     # via
     #   django
     #   djangorestframework
@@ -48,11 +46,11 @@ sentry-sdk==1.5.10
     # via screamshotter (setup.py)
 sqlparse==0.4.2
     # via django
-typing-extensions==4.0.1
+typing-extensions==4.1.1
     # via asgiref
 uritemplate==4.1.1
     # via coreapi
-urllib3==1.26.8
+urllib3==1.26.9
     # via requests
 whitenoise==5.3.0
     # via screamshotter (setup.py)
