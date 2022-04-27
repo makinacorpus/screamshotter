@@ -1,4 +1,4 @@
-FROM ubuntu:focal as base
+FROM ubuntu:jammy as base
 
 ENV PYTHONUNBUFFERED 1
 ENV DEBIAN_FRONTEND noninteractive
@@ -69,14 +69,14 @@ ARG NODE_ENV=production
 
 RUN apt-get -qq update && apt-get install -qq -y \
     build-essential \
-    python3.8-dev python3.8-venv python3.8-distutils && \
+    python3.10-dev python3.10-venv python3.10-distutils && \
     apt-get clean all && rm -rf /var/apt/lists/* && rm -rf /var/cache/apt/*
 
 # install pip & requirements
-RUN wget https://bootstrap.pypa.io/get-pip.py && python3.8 get-pip.py && rm get-pip.py
+RUN wget https://bootstrap.pypa.io/get-pip.py && python3 get-pip.py && rm get-pip.py
 
 USER django
-RUN python3.8 -m venv /app/venv
+RUN python3.10 -m venv /app/venv
 RUN /app/venv/bin/pip3 install --no-cache-dir pip setuptools wheel -U
 
 COPY requirements.txt /app/
