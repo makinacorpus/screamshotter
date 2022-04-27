@@ -17,6 +17,7 @@ setup(
         'whitenoise',
         # prod
         'gunicorn[gevent]',
+        'sentry-sdk',
     ],
     include_package_data=True,
     license='BSD, see LICENSE file.',
