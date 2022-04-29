@@ -1,9 +1,10 @@
 #!/usr/bin/python3
+from screamshotter import __version__
 from setuptools import setup, find_packages
 
 setup(
     name='screamshotter',
-    version='2.0.14+dev',
+    version=__version__,
     author='Makina Corpus',
     author_email='support.geotrek@makina-corpus.com',
     url='https://makina-corpus.com',

@@ -3,3 +3,18 @@ Type: string
 Default: 60
 Description: Timeout (sec)
  Force browser to timeout after this amount (in second).
+
+Template: screamshotter/SENTRY_DSN
+Type: string
+Description: Sentry dsn (url)
+ External log : https://docs.sentry.io
+
+Template: screamshotter/SENTRY_ENVIRONMENT
+Type: string
+Description: Environment of your installation
+
+Template: screamshotter/SENTRY_TRACE_SAMPLE
+Type: string
+Default: 0.2
+Description: Trace sample of sentry
+  With this option set, every transaction created will have that percentage chance of being sent to Sentry (between 0 and 1)

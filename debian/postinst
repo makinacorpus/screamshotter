@@ -12,7 +12,9 @@ if [ "$2" = "" ]; then
 fi
 
 db_get screamshotter/TIMEOUT; export TIMEOUT="$RET"
-
+db_get screamshotter/SENTRY_DSN; export SENTRY_DSN="$RET"
+db_get screamshotter/SENTRY_ENVIRONMENT; export SENTRY_ENVIRONMENT="$RET"
+db_get screamshotter/SENTRY_TRACE_SAMPLE; export SENTRY_TRACE_SAMPLE="$RET"
 
 mkdir -p /opt/screamshotter/static || true
 chown -R screamshotter:screamshotter /opt/screamshotter/static || true

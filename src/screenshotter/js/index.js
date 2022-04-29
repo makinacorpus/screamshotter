@@ -1,8 +1,29 @@
+const Sentry = require('@sentry/node');
+const Integrations = require('@sentry/tracing');
+
 const puppeteer = require('puppeteer');
 const parseArgs = require('minimist');
 
 const args = parseArgs(process.argv);
-const { url, path, selector, waitseconds, waitfor } = args;
+
+const { version, sentrydsn, sentryenv, sentrytracerate, url, path, selector, waitseconds, waitfor } = args;
+
+try {
+  if (sentrydsn !== '') {
+    Sentry.init({
+      dsn: sentrydsn,
+      environment: sentryenv,
+      release: version,
+      integrations: [new Integrations.BrowserTracing()],
+
+      tracesSampleRate: sentrytracerate,
+
+    });
+  }
+} catch (e) {
+  console.error(e);
+}
+
 const headers = JSON.parse(args.headers);
 const viewportWidth = parseInt(args.vwidth, 10);
 const viewportHeight = parseInt(args.vheight, 10);
@@ -48,26 +69,37 @@ const waitSelectors = JSON.parse(args.waitselectors);
     if (waitseconds !== 0) {
       await page.waitForTimeout(waitseconds);
     }
-
     const rect = await page.evaluate(aSelector => {
       // dynamic add screamshot css class to permit css customization
       document.body.classList.add('screamshot');
       const element = document.querySelector(aSelector);
-      const { x, y, width, height } = element.getBoundingClientRect();
-      return { left: x, top: y, width, height, id: element.id };
+      if (element !== null) {
+        const { x, y, width, height } = element.getBoundingClientRect();
+        return { left: x, top: y, width, height, id: element.id };
+      }
+      const Exception = `The selector ${aSelector} was not found on this page`;
+      return { exception: Exception };
     }, selector);
-
-    await page.screenshot({
-      path,
-      clip: {
-        x: rect.left,
-        y: rect.top,
-        width: rect.width,
-        height: rect.height,
-      },
-    });
+    if (typeof rect.left !== 'undefined') {
+      await page.screenshot({
+        path,
+        clip: {
+          x: rect.left,
+          y: rect.top,
+          width: rect.width,
+          height: rect.height,
+        },
+      });
+    } else {
+      console.warn(rect.exception);
+      const bodyHTML = await page.evaluate(() => document.body.innerHTML);
+      Sentry.captureMessage(bodyHTML);
+    }
   } catch (e) {
     console.error(e);
+    const bodyHTML = await page.evaluate(() => document.body.innerHTML);
+    Sentry.captureException(e);
+    Sentry.captureMessage(bodyHTML);
   } finally {
     await page.close();
     await browser.close();
