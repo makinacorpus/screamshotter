@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-from screamshotter import __version__
+from src.screamshotter import __version__
 from setuptools import setup, find_packages
 
 setup(
