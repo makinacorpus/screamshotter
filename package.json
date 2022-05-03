@@ -10,6 +10,9 @@
   "license": "ISC",
   "dependencies": {
     "@babel/core": "^7.16.0",
+    "@sentry/node": "^6.19.7",
+    "@sentry/tracing": "^6.19.7",
+    "html-prettify": "^1.0.6",
     "minimist": "^1.2.5",
     "puppeteer": "^11.0.0"
   },

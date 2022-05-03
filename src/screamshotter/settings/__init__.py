@@ -13,6 +13,13 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 import os
 from uuid import uuid4
 
+
+from screamshotter import __version__
+
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
+
 # Build paths inside the screamshotter like this: os.path.join(BASE_DIR, ...)
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
@@ -98,8 +105,28 @@ REST_FRAMEWORK = {
 TIMEOUT = os.getenv('TIMEOUT', 60)  # unit : second
 # Override with custom settings
 
+SENTRY_DSN = os.getenv('SCREAMSHOTTER_SENTRY_DSN')
+SENTRY_ENVIRONMENT = os.getenv('SCREAMSHOTTER_SENTRY_ENVIRONMENT', 'screamshotter')
+SENTRY_TRACE_SAMPLE = os.getenv('SCREAMSHOTTER_SENTRY_TRACE_SAMPLE', '0.2')
+
 try:
-    with open(os.path.join('opt', 'screamshotter', 'conf', 'custom.py'), 'r') as f:
+    with open(os.path.join('/opt', 'screamshotter', 'conf', 'custom.py'), 'r') as f:
         exec(f.read())
 except FileNotFoundError:
     pass
+
+if SENTRY_DSN:
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        environment=SENTRY_ENVIRONMENT,  # ex : cd30 / cd44 / PNRHJ etc
+        integrations=[DjangoIntegration(), ],
+        # If you wish to associate users to errors (assuming you are using
+        # django.contrib.auth) you may enable sending PII data.
+        send_default_pii=True,
+        traces_sample_rate=float(SENTRY_TRACE_SAMPLE),
+        # By default the SDK will try to use the SENTRY_RELEASE
+        # environment variable, or infer a git commit
+        # SHA as release, however you may want to set
+        # something more human-readable.
+        release=__version__,
+    )

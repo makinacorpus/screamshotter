@@ -1,9 +1,13 @@
 #!/usr/bin/python3
+
 from setuptools import setup, find_packages
+
+with open("src/screamshotter/VERSION", "r") as fh:
+    __version__ = fh.read().strip()
 
 setup(
     name='screamshotter',
-    version='2.0.14+dev',
+    version=__version__,
     author='Makina Corpus',
     author_email='support.geotrek@makina-corpus.com',
     url='https://makina-corpus.com',
@@ -17,6 +21,7 @@ setup(
         'whitenoise',
         # prod
         'gunicorn[gevent]',
+        'sentry-sdk',
     ],
     include_package_data=True,
     license='BSD, see LICENSE file.',
