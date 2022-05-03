@@ -3,6 +3,7 @@ const Integrations = require('@sentry/tracing');
 
 const puppeteer = require('puppeteer');
 const parseArgs = require('minimist');
+const prettify = require('html-prettify');
 
 const args = parseArgs(process.argv);
 
@@ -15,7 +16,6 @@ try {
       environment: sentryenv,
       release: version,
       integrations: [new Integrations.BrowserTracing()],
-
       tracesSampleRate: sentrytracerate,
 
     });
@@ -80,6 +80,7 @@ const waitSelectors = JSON.parse(args.waitselectors);
       const Exception = `The selector ${aSelector} was not found on this page`;
       return { exception: Exception };
     }, selector);
+
     if (typeof rect.left !== 'undefined') {
       await page.screenshot({
         path,
@@ -91,15 +92,11 @@ const waitSelectors = JSON.parse(args.waitselectors);
         },
       });
     } else {
-      console.warn(rect.exception);
       const bodyHTML = await page.evaluate(() => document.body.innerHTML);
-      Sentry.captureMessage(bodyHTML);
+      throw new Error(`${rect.exception}: ${prettify(bodyHTML)}`);
     }
   } catch (e) {
     console.error(e);
-    const bodyHTML = await page.evaluate(() => document.body.innerHTML);
-    Sentry.captureException(e);
-    Sentry.captureMessage(bodyHTML);
   } finally {
     await page.close();
     await browser.close();

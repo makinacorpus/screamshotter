@@ -1,6 +1,9 @@
 #!/usr/bin/python3
-from src.screamshotter import __version__
+
 from setuptools import setup, find_packages
+
+with open("src/screamshotter/VERSION", "r") as fh:
+    __version__ = fh.read().strip()
 
 setup(
     name='screamshotter',
