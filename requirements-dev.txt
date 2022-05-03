@@ -12,7 +12,7 @@ click==8.0.4
     # via pip-tools
 coverage==6.2
     # via -r requirements-dev.in
-django==3.2.11
+django==3.2.13
     # via
     #   -c ./requirements.txt
     #   django-debug-toolbar
@@ -39,7 +39,7 @@ pyflakes==2.4.0
     # via flake8
 python-magic==0.4.25
     # via -r requirements-dev.in
-pytz==2021.3
+pytz==2022.1
     # via
     #   -c ./requirements.txt
     #   django
@@ -50,7 +50,7 @@ sqlparse==0.4.2
     #   django-debug-toolbar
 tomli==1.2.3
     # via pep517
-typing-extensions==4.0.1
+typing-extensions==4.1.1
     # via
     #   -c ./requirements.txt
     #   importlib-metadata
