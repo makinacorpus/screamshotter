@@ -1,3 +1,9 @@
+screamshotter (2.0.15+dev) UNRELEASED; urgency=medium
+
+  *
+
+ -- Timothee de Montety <timothee.de-montety@makina-corpus.com>  Tue, 03 May 2022 14:37:00 +0200
+
 screamshotter (2.0.15) RELEASED; urgency=medium
 
   * Add sentry
