@@ -7,7 +7,9 @@
 asgiref==3.4.1
     # via django
 certifi==2021.10.8
-    # via requests
+    # via
+    #   requests
+    #   sentry-sdk
 charset-normalizer==2.0.12
     # via requests
 coreapi==2.3.3
@@ -51,7 +53,9 @@ typing-extensions==4.1.1
 uritemplate==4.1.1
     # via coreapi
 urllib3==1.26.9
-    # via requests
+    # via
+    #   requests
+    #   sentry-sdk
 whitenoise==5.3.0
     # via screamshotter (setup.py)
 zope.event==4.5.0

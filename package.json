@@ -12,7 +12,6 @@
     "@sentry/node": "^6.19.7",
     "@sentry/tracing": "^6.19.7",
     "html-prettify": "^1.0.6",
-    "minimist": "^1.2.5",
     "@babel/core": "^7.17.9",
     "minimist": "^1.2.6",
     "puppeteer": "^13.6.0"
