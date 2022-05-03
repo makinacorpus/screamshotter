@@ -1,8 +1,10 @@
 CHANGELOG
 =========
 
-2.0.14+dev   (XXXX-XX-XX)
+2.0.15       (2022-05-03)
 -------------------------
+
+* Add sentry in package and docker
 
 
 2.0.14       (2022-01-21)
