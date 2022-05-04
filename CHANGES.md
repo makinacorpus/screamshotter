@@ -4,7 +4,7 @@ CHANGELOG
 2.0.15+dev   (XXXX-XX-XX)
 -------------------------
 
-*
+* Add sentry documentation
 
 
 2.0.15       (2022-05-03)
