@@ -1,10 +1,10 @@
 CHANGELOG
 =========
 
-2.0.15+dev   (XXXX-XX-XX)
+2.0.16       (2022-05-11)
 -------------------------
 
-*
+* Fix debian packaging deployment
 
 
 2.0.15       (2022-05-03)

@@ -1,8 +1,8 @@
-screamshotter (2.0.15+dev) UNRELEASED; urgency=medium
+screamshotter (2.0.16) RELEASED; urgency=medium
 
-  *
+  * New release to fix debian packaging
 
- -- Timothee de Montety <timothee.de-montety@makina-corpus.com>  Tue, 03 May 2022 14:37:00 +0200
+ -- Jean-Etienne Castagnede <jean-etienne.castagnede@makina-corpus.com>  Wed, 11 May 2022 14:17:00 +0200
 
 screamshotter (2.0.15) RELEASED; urgency=medium
 
