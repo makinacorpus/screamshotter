@@ -4,7 +4,7 @@ CHANGELOG
 2.0.16+dev   (2022-05-11)
 -------------------------
 
-*
+* Fix debian package dependencies.
 
 
 2.0.16       (2022-05-11)
