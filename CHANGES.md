@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-2.0.16+dev   (2022-05-11)
+2.0.17       (2022-06-16)
 -------------------------
 
 * Fix debian package dependencies.

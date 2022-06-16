@@ -1,8 +1,8 @@
-screamshotter (2.0.16+dev) UNRELEASED; urgency=medium
+screamshotter (2.0.17) RELEASED; urgency=medium
 
-  *
+  * Fix debian package dependencies.
 
- -- Jean-Etienne Castagnede <jean-etienne.castagnede@makina-corpus.com>  Wed, 11 May 2022 14:17:00 +0200
+ -- Jean-Etienne Castagnede <jean-etienne.castagnede@makina-corpus.com>  Thu, 16 Jun 2022 10:21:00 +0200
 
 screamshotter (2.0.16) RELEASED; urgency=medium
 
