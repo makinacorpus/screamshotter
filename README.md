@@ -117,3 +117,21 @@ flake8 src
 # use nodeenv node & npm
 npm run lint
 ```
+
+## Debug
+
+You can install sentry with screamshotter, fill SENTRY_DSN, SENTRY_ENVIRONMENT, SENTRY_TRACE_SAMPLE during installation.
+
+Or reconfigurate with
+```bash
+sudo dpkg-reconfigure sreamshotter
+```
+
+You can add environment variable for docker too:
+
+```yml
+environment:
+    - SENTRY_DSN=
+    - SENTRY_ENVIRONMENT=
+    - SENTRY_TRACE_SAMPLE=
+```
