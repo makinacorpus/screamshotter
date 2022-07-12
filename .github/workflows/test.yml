@@ -207,31 +207,36 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: debian-18-04
-      - name: Install package
-        run: |
-          sudo apt-get install -y /home/runner/work/screamshotter/screamshotter/*.deb
-      - name: E2E test
-        run: |
-          curl -d url=https://google.com http://localhost:8000 > google.png
-      - uses: actions/setup-python@v2
+      - name: Run in LXC (Fedora 33)
+        uses: wsdfhjxc/run-in-lxc-action@1.x
         with:
-          python-version: 3.6
-      - name: Check result
-        run: |
-          pip install filetype
-          if filetype google.png |grep -q 'image/png'; then
-            echo "File is PNG";
-            exit 0;
-          else
-            echo "File is not PNG";
-            exit 1;
-          fi
-      - name: Archive result artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: result-18-04
-          path: |
-            /home/runner/work/screamshotter/screamshotter/google.png
+          distr: ubuntu
+          release: bionic
+        - name: Install package
+          run: |
+            sudo apt-get install -y /home/runner/work/screamshotter/screamshotter/*.deb
+        - name: E2E test
+          run: |
+            curl -d url=https://google.com http://localhost:8000 > google.png
+        - uses: actions/setup-python@v2
+          with:
+            python-version: 3.6
+        - name: Check result
+          run: |
+            pip install filetype
+            if filetype google.png |grep -q 'image/png'; then
+              echo "File is PNG";
+              exit 0;
+            else
+              echo "File is not PNG";
+              exit 1;
+            fi
+        - name: Archive result artifact
+          uses: actions/upload-artifact@v2
+          with:
+            name: result-18-04
+            path: |
+              /home/runner/work/screamshotter/screamshotter/google.png
 
   e2e_deb_20_04:
     name: Tests E2E 20.04
