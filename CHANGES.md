@@ -6,6 +6,10 @@ CHANGELOG
 
 * Add sentry documentation
 
+**Bugfix**:
+
+* TIMEOUT settings from environment is now cast in integer
+
 
 2.0.17       (2022-06-16)
 -------------------------
