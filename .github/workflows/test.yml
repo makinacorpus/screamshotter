@@ -212,12 +212,9 @@ jobs:
         with:
           distr: ubuntu
           release: bionic
-      - name: Install package
-        run: |
-          sudo apt-get install -y /home/runner/work/screamshotter/screamshotter/*.deb
-      - name: E2E test
-        run: |
-          curl -d url=https://google.com http://localhost:8000 > google.png
+          run: |
+            sudo apt-get install -y /home/runner/work/screamshotter/screamshotter/*.deb
+            curl -d url=https://google.com http://localhost:8000 > google.png
       - uses: actions/setup-python@v2
         with:
           python-version: 3.6
