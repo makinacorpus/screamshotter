@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-2.0.17+dev   (XXXX-XX-XX)
+2.0.18       (2022-07-13)
 -------------------------
 
 * Add sentry documentation

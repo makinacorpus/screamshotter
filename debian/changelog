@@ -1,8 +1,9 @@
-screamshotter (2.0.17+dev) UNRELEASED; urgency=medium
+screamshotter (2.0.18) RELEASED; urgency=medium
 
-  *
+  * Add sentry documentation
+  * TIMEOUT settings from environment is now cast in integer
 
- -- Jean-Etienne Castagnede <jean-etienne.castagnede@makina-corpus.com>  Thu, 16 Jun 2022 10:21:00 +0200
+ -- Jean-Etienne Castagnede <jean-etienne.castagnede@makina-corpus.com>  Wed, 13 Jul 2022 10:43:00 +0200
 
 screamshotter (2.0.17) RELEASED; urgency=medium
 
