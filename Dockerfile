@@ -110,7 +110,5 @@ VOLUME /app/static
 
 USER django
 
-HEALTHCHECK CMD curl http://127.0.0.1:8000/?format=api || exit 1
-
 CMD gunicorn screamshotter.wsgi:application -w $WORKERS --timeout `expr $TIMEOUT + 10` --bind 0.0.0.0:8000 --worker-tmp-dir /dev/shm
 
