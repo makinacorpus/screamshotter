@@ -102,7 +102,7 @@ REST_FRAMEWORK = {
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
 }
 
-TIMEOUT = os.getenv('TIMEOUT', 60)  # unit : second
+TIMEOUT = int(os.getenv('TIMEOUT', 60))  # unit : second
 # Override with custom settings
 
 SENTRY_DSN = os.getenv('SCREAMSHOTTER_SENTRY_DSN')
