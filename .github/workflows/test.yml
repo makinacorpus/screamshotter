@@ -61,7 +61,7 @@ jobs:
     needs: [flake8, eslint]
     strategy:
       matrix:
-        python-version: ['3.6', '3.8']  # should match default versions in supported LTS (now 3.6 for 18.04 and 3.8 for 20.04)
+        python-version: ['3.6', '3.8', '3.10']  # should match default versions in supported LTS (now 3.6 for 18.04 and 3.8 for 20.04)
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
