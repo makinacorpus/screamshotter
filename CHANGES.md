@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+2.0.18+dev   (XXXX-XX-XX)
+-------------------------
+
+* Official support for Ubuntu 22.04 Jammy and python 3.10
+
+
 2.0.18       (2022-07-13)
 -------------------------
 
