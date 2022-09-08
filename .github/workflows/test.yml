@@ -26,9 +26,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python 3.6
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
-        python-version: 3.6  # lint with minimal version supported (3.6 in 18.04)
+        python-version: '3.6'  # lint with minimal version supported (3.6 in 18.04)
     - name: Install dependencies
       run: |
         echo "${{ github.event_name }}! ${{ github.event.action }}"
@@ -72,7 +72,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
@@ -214,9 +214,9 @@ jobs:
         run: |
           sleep 2
           curl -d url=https://google.com http://localhost:8000 > google.png
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
         with:
-          python-version: 3.6
+          python-version: '3.8'
       - name: Check result
         run: |
           pip install filetype
@@ -248,9 +248,9 @@ jobs:
       - name: E2E test
         run: |
           curl -d url=https://google.com http://localhost:8000 > google.png
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
         with:
-          python-version: 3.6
+          python-version: '3.6'
       - name: Check result
         run: |
           pip install filetype
@@ -282,9 +282,9 @@ jobs:
       - name: E2E test
         run: |
           curl -d url=https://google.com http://localhost:8000 > google.png
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
         with:
-          python-version: 3.6
+          python-version: '3.8'
       - name: Check result
         run: |
           pip install filetype
@@ -316,9 +316,9 @@ jobs:
       - name: E2E test
         run: |
           curl -d url=https://google.com http://localhost:8000 > google.png
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
         with:
-          python-version: 3.6
+          python-version: '3.8'
       - name: Check result
         run: |
           pip install filetype
