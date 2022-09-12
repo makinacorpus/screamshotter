@@ -100,5 +100,6 @@ const waitSelectors = JSON.parse(args.waitselectors);
   } finally {
     await page.close();
     await browser.close();
+    await browser.disconnect();
   }
 })();
