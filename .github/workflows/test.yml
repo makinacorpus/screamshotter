@@ -24,11 +24,11 @@ jobs:
     runs-on: ubuntu-18.04
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up Python 3.6
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
-        python-version: 3.6  # lint with minimal version supported (3.6 in 18.04)
+        python-version: '3.6'  # lint with minimal version supported (3.6 in 18.04)
     - name: Install dependencies
       run: |
         echo "${{ github.event_name }}! ${{ github.event.action }}"
@@ -44,7 +44,7 @@ jobs:
     env:
       PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup node
         uses: actions/setup-node@v1
         with:
@@ -57,15 +57,22 @@ jobs:
           npm run lint
   test:
     name: Python Unittests
-    runs-on: ubuntu-20.04
+    runs-on: ${{ matrix.os }}
     needs: [flake8, eslint]
     strategy:
       matrix:
-        python-version: ['3.6', '3.8']  # should match default versions in supported LTS (now 3.6 for 18.04 and 3.8 for 20.04)
+        os: ['ubuntu-18.04', 'ubuntu-20.04', 'ubuntu-22.04']
+        include:
+          - os: 'ubuntu-18.04'
+            python-version: '3.6'  # default python version in 18.04
+          - os: 'ubuntu-20.04'
+            python-version: '3.8'  # default python version in 20.04
+          - os: 'ubuntu-22.04'
+            python-version: '3.10'  # default python version in 22.04
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
@@ -92,7 +99,7 @@ jobs:
     runs-on: ubuntu-20.04
     needs: [test]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v1
@@ -111,7 +118,7 @@ jobs:
       LANG: C.UTF-8
     needs: [test]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Prepare debian 18.04 versioning
         run: |
           sed -i 's/+dev/.ubuntu18.04~dev'$GITHUB_RUN_ID'/' debian/changelog
@@ -138,7 +145,7 @@ jobs:
     env:
       LANG: C.UTF-8
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Prepare debian 20.04 versioning
         run: |
           sed -i 's/+dev/.ubuntu20.04~dev'$GITHUB_RUN_ID'/' debian/changelog
@@ -158,7 +165,32 @@ jobs:
           name: debian-20-04
           path: |
             /home/runner/work/screamshotter/*.deb
-
+  build_deb_22_04:
+    name: Build 22.04 package
+    runs-on: ubuntu-latest
+    container: ubuntu:jammy
+    needs: [test]
+    env:
+      LANG: C.UTF-8
+    steps:
+      - uses: actions/checkout@v3
+      - name: Prepare debian 22.04 versioning
+        run: |
+          sed -i 's/+dev/.ubuntu22.04~dev'$GITHUB_RUN_ID'/' debian/changelog
+          sed -i 's/screamshotter (\([0-9]\+\.[0-9]\+\.[0-9]\+\)\(.*\)) RELEASED;/screamshotter (\1.ubuntu22.04\2) jammy;/' debian/changelog
+      - name: Install build dependencies
+        run: |
+          apt-get update -q
+          apt-get install -q -y dpkg-dev debhelper dh-virtualenv git python3 python3-venv python3-dev libgtk-3-0 libasound2 libgbm1 libxshmfence1
+      - name: Building package debian 20.04
+        run: |
+          dpkg-buildpackage -uc -us -b
+      - name: Archive package artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: debian-22-04
+          path: |
+            /home/runner/work/screamshotter/*.deb
   e2e_docker_image:
     name: Tests E2E docker
     runs-on: ubuntu-20.04
@@ -179,7 +211,7 @@ jobs:
         run: |
           sleep 2
           curl -d url=https://google.com http://localhost:8000 > google.png
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
         with:
           python-version: 3.6
       - name: Check result
@@ -213,9 +245,9 @@ jobs:
       - name: E2E test
         run: |
           curl -d url=https://google.com http://localhost:8000 > google.png
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
         with:
-          python-version: 3.6
+          python-version: 3.8
       - name: Check result
         run: |
           pip install filetype
@@ -247,9 +279,9 @@ jobs:
       - name: E2E test
         run: |
           curl -d url=https://google.com http://localhost:8000 > google.png
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
         with:
-          python-version: 3.6
+          python-version: 3.8
       - name: Check result
         run: |
           pip install filetype
@@ -266,11 +298,44 @@ jobs:
           name: result-20-04
           path: |
             /home/runner/work/screamshotter/screamshotter/google.png
+  e2e_deb_22_04:
+    name: Tests E2E 22.04
+    runs-on: ubuntu-22.04
+    needs: [ build_deb_22_04 ]
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: debian-22-04
+      - name: Install package
+        run: |
+          sudo apt-get install -y /home/runner/work/screamshotter/screamshotter/*.deb
+      - name: E2E test
+        run: |
+          curl -d url=https://google.com http://localhost:8000 > google.png
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+      - name: Check result
+        run: |
+          pip install filetype
+          if filetype google.png |grep -q 'image/png'; then
+            echo "File is PNG";
+            exit 0;
+          else
+            echo "File is not PNG";
+            exit 1;
+          fi
+      - name: Archive result artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: result-22-04
+          path: |
+            /home/runner/work/screamshotter/screamshotter/google.png
 
   deploy:
     name: Publish (on release only)
     runs-on: ubuntu-18.04
-    needs: [ e2e_docker_image, e2e_deb_18_04, e2e_deb_20_04 ]
+    needs: [ e2e_docker_image, e2e_deb_18_04, e2e_deb_20_04, e2e_deb_22_04 ]
     if: ${{ github.event_name == 'release' && github.event.action == 'created' }}
     steps:
       - name: Download 18.04 debian artifact
@@ -281,6 +346,10 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: debian-20-04
+      - name: Download 22.04 debian artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: debian-22-04
       - name: Download docker image
         uses: ishworkh/docker-image-artifact-download@v1
         with:
@@ -318,4 +387,12 @@ jobs:
           fi
           echo "${{ github.ref }} : Publishing as $DEB_COMPONENT package"
           scp -P ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no /home/runner/work/screamshotter/screamshotter/screamshotter_*_amd64.deb ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/srv/packages/incoming/$DEB_COMPONENT/
-          ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} make -C /srv/packages
+          if [[ "${{ github.ref }}" == *"dev"* ]]; then
+            ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} make bionic_dev -C /srv/packages
+            ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} make focal_dev -C /srv/packages
+            ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} make jammy_dev -C /srv/packages
+          else
+            ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} make bionic_main -C /srv/packages
+            ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} make focal_main -C /srv/packages
+            ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} make jammy_main -C /srv/packages
+          fi
