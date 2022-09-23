@@ -367,12 +367,17 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Publish Docker image (tag, v2, latest)
         run: |
-          docker tag screamshotter_ci:latest makinacorpus/screamshotter:v${{github.ref_name}}
-          docker push makinacorpus/screamshotter:v${{github.ref_name}}
-          docker tag screamshotter_ci:latest makinacorpus/screamshotter:v2
-          docker push makinacorpus/screamshotter:v2
-          docker tag screamshotter_ci:latest makinacorpus/screamshotter:latest
-          docker push makinacorpus/screamshotter:latest
+          if [[ "${{ github.ref }}" == *"dev"* ]]; then
+            export DOCKER_TAG=dev
+          else
+            docker tag screamshotter_ci:latest makinacorpus/screamshotter:v${{github.ref_name}}
+            docker push makinacorpus/screamshotter:v${{github.ref_name}}
+            docker tag screamshotter_ci:latest makinacorpus/screamshotter:v2
+            docker push makinacorpus/screamshotter:v2
+            export DOCKER_TAG=latest
+          fi
+          docker tag screamshotter_ci:latest makinacorpus/screamshotter:$DOCKER_TAG
+          docker push makinacorpus/screamshotter:$DOCKER_TAG
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
         with:
