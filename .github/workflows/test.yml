@@ -24,11 +24,11 @@ jobs:
     runs-on: ubuntu-18.04
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up Python 3.6
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
-        python-version: 3.6  # lint with minimal version supported (3.6 in 18.04)
+        python-version: '3.6'  # lint with minimal version supported (3.6 in 18.04)
     - name: Install dependencies
       run: |
         echo "${{ github.event_name }}! ${{ github.event.action }}"
@@ -44,7 +44,7 @@ jobs:
     env:
       PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup node
         uses: actions/setup-node@v1
         with:
@@ -70,9 +70,9 @@ jobs:
           - os: 'ubuntu-22.04'
             python-version: '3.10'  # default python version in 22.04
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
@@ -99,7 +99,7 @@ jobs:
     runs-on: ubuntu-20.04
     needs: [test]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v1
@@ -118,7 +118,7 @@ jobs:
       LANG: C.UTF-8
     needs: [test]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Prepare debian 18.04 versioning
         run: |
           sed -i 's/+dev/.ubuntu18.04~dev'$GITHUB_RUN_ID'/' debian/changelog
@@ -145,7 +145,7 @@ jobs:
     env:
       LANG: C.UTF-8
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Prepare debian 20.04 versioning
         run: |
           sed -i 's/+dev/.ubuntu20.04~dev'$GITHUB_RUN_ID'/' debian/changelog
@@ -173,7 +173,7 @@ jobs:
     env:
       LANG: C.UTF-8
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Prepare debian 22.04 versioning
         run: |
           sed -i 's/+dev/.ubuntu22.04~dev'$GITHUB_RUN_ID'/' debian/changelog
@@ -211,7 +211,7 @@ jobs:
         run: |
           sleep 2
           curl -d url=https://google.com http://localhost:8000 > google.png
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
         with:
           python-version: 3.6
       - name: Check result
@@ -245,7 +245,7 @@ jobs:
       - name: E2E test
         run: |
           curl -d url=https://google.com http://localhost:8000 > google.png
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
         with:
           python-version: 3.8
       - name: Check result
@@ -279,7 +279,7 @@ jobs:
       - name: E2E test
         run: |
           curl -d url=https://google.com http://localhost:8000 > google.png
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
         with:
           python-version: 3.8
       - name: Check result
@@ -312,7 +312,7 @@ jobs:
       - name: E2E test
         run: |
           curl -d url=https://google.com http://localhost:8000 > google.png
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
         with:
           python-version: 3.8
       - name: Check result
