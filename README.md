@@ -124,7 +124,7 @@ You can install sentry with screamshotter, fill SENTRY_DSN, SENTRY_ENVIRONMENT, 
 
 Or reconfigurate with
 ```bash
-sudo dpkg-reconfigure sreamshotter
+sudo dpkg-reconfigure screamshotter
 ```
 
 You can add environment variable for docker too:
