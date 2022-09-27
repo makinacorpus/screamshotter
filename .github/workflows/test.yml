@@ -338,6 +338,19 @@ jobs:
     needs: [ e2e_docker_image, e2e_deb_18_04, e2e_deb_20_04, e2e_deb_22_04 ]
     if: ${{ github.event_name == 'release' && github.event.action == 'created' }}
     steps:
+      - name: Download 22.04 debian artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: debian-22-04
+      - name: publish PPA 22.04
+        uses: yuezk/publish-ppa-package@main
+        with:
+          repository: 'ppa:j-e-castagnede/screamshotter'
+          gpg_private_key: ${{ secrets.PPA_GPG_PRIVATE_KEY }}
+          gpg_passphrase: ${{ secrets.PPA_GPG_PASSPHRASE }}
+          pkgdir: "/home/runner/work/screamshotter/screamshotter/"
+          series: "jammy"
+
       - name: Download 18.04 debian artifact
         uses: actions/download-artifact@v2
         with:
@@ -346,10 +359,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: debian-20-04
-      - name: Download 22.04 debian artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: debian-22-04
+
       - name: Download docker image
         uses: ishworkh/docker-image-artifact-download@v1
         with:
