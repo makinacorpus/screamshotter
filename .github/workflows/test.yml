@@ -348,7 +348,7 @@ jobs:
           repository: 'ppa:j-e-castagnede/screamshotter'
           gpg_private_key: ${{ secrets.PPA_GPG_PRIVATE_KEY }}
           gpg_passphrase: ${{ secrets.PPA_GPG_PASSPHRASE }}
-          pkgdir: "/home/runner/work/screamshotter/screamshotter/"
+          pkgdir: "${{ github.workspace }}"
           series: "jammy"
 
       - name: Download 18.04 debian artifact
