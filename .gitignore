@@ -47,3 +47,4 @@ docs/_build/
 /debian/screamshotter.postrm.debhelper
 /debian/screamshotter.prerm.debhelper
 /debian/screamshotter.substvars
+/dist

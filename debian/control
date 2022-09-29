@@ -8,11 +8,7 @@ Build-Depends:
  dh-virtualenv (>= 1.0),
  python3 (>= 3.6),
  python3-venv (>= 3.6),
- python3-dev (>= 3.6),
- libgtk-3-0,
- libasound2,
- libgbm1,
- libxshmfence1
+ python3-dev (>= 3.6)
 
 Package: screamshotter
 Architecture: any

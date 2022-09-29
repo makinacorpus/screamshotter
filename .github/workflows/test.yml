@@ -185,6 +185,14 @@ jobs:
       - name: Building package debian 20.04
         run: |
           dpkg-buildpackage -uc -us -b
+      - name: publish PPA 22.04
+        uses: yuezk/publish-ppa-package@main
+        with:
+          repository: 'ppa:j-e-castagnede/screamshotter'
+          gpg_private_key: ${{ secrets.PPA_GPG_PRIVATE_KEY }}
+          gpg_passphrase: ${{ secrets.PPA_GPG_PASSPHRASE }}
+          pkgdir: "${{ github.workspace }}"
+          series: "jammy"
       - name: Archive package artifact
         uses: actions/upload-artifact@v2
         with:
