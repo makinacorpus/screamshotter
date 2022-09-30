@@ -111,7 +111,7 @@ jobs:
         with:
           image: "screamshotter_ci:latest"
   build_deb:
-    name: Build ubuntu packages
+    name: Build ${{ matrix.system }} package
     runs-on: ubuntu-latest
     strategy:
       matrix:
