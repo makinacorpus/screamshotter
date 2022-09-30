@@ -184,17 +184,20 @@ jobs:
           path: |
             /home/runner/work/screamshotter/screamshotter/google.png
 
-  e2e_deb_18_04:
+  e2e_package:
     name: Tests E2E 18.04
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-${{ matrix.system }}
+    strategy:
+      matrix:
+        system: ['18.04', '20.04', '22.04']
     needs: [ build_deb ]
     steps:
       - uses: actions/download-artifact@v2
         with:
-          name: debian-18-04
+          name: debian-${{ matrix.system }}
       - name: Install package
         run: |
-          sudo apt-get install -y /home/runner/work/screamshotter/screamshotter/*.deb
+          sudo apt-get install -y /home/runner/work/screamshotter/screamshotter/dist/*.deb
       - name: E2E test
         run: |
           curl -d url=https://google.com http://localhost:8000 > google.png
@@ -214,95 +217,28 @@ jobs:
       - name: Archive result artifact
         uses: actions/upload-artifact@v2
         with:
-          name: result-18-04
-          path: |
-            /home/runner/work/screamshotter/screamshotter/google.png
-
-  e2e_deb_20_04:
-    name: Tests E2E 20.04
-    runs-on: ubuntu-20.04
-    needs: [ build_deb ]
-    steps:
-      - uses: actions/download-artifact@v2
-        with:
-          name: debian-20-04
-      - name: Install package
-        run: |
-          sudo apt-get install -y /home/runner/work/screamshotter/screamshotter/*.deb
-      - name: E2E test
-        run: |
-          curl -d url=https://google.com http://localhost:8000 > google.png
-      - uses: actions/setup-python@v4
-        with:
-          python-version: 3.8
-      - name: Check result
-        run: |
-          pip install filetype
-          if filetype google.png |grep -q 'image/png'; then
-            echo "File is PNG";
-            exit 0;
-          else
-            echo "File is not PNG";
-            exit 1;
-          fi
-      - name: Archive result artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: result-20-04
-          path: |
-            /home/runner/work/screamshotter/screamshotter/google.png
-  e2e_deb_22_04:
-    name: Tests E2E 22.04
-    runs-on: ubuntu-22.04
-    needs: [ build_deb ]
-    steps:
-      - uses: actions/download-artifact@v2
-        with:
-          name: debian-22-04
-      - name: Install package
-        run: |
-          sudo apt-get install -y /home/runner/work/screamshotter/screamshotter/*.deb
-      - name: E2E test
-        run: |
-          curl -d url=https://google.com http://localhost:8000 > google.png
-      - uses: actions/setup-python@v4
-        with:
-          python-version: 3.8
-      - name: Check result
-        run: |
-          pip install filetype
-          if filetype google.png |grep -q 'image/png'; then
-            echo "File is PNG";
-            exit 0;
-          else
-            echo "File is not PNG";
-            exit 1;
-          fi
-      - name: Archive result artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: result-22-04
+          name: result-${{ matrix.system }}
           path: |
             /home/runner/work/screamshotter/screamshotter/google.png
 
   deploy:
     name: Publish (on release only)
     runs-on: ubuntu-18.04
-    needs: [ e2e_docker_image, e2e_deb_18_04, e2e_deb_20_04, e2e_deb_22_04 ]
+    needs: [ e2e_docker_image, e2e_package ]
     if: ${{ github.event_name == 'release' && github.event.action == 'created' }}
     steps:
       - name: Download 18.04 debian artifact
         uses: actions/download-artifact@v2
         with:
-          name: debian-18-04
+          name: debian-18.04
       - name: Download 20.04 debian artifact
         uses: actions/download-artifact@v2
         with:
-          name: debian-20-04
+          name: debian-20.04
       - name: Download 22.04 debian artifact
         uses: actions/download-artifact@v2
         with:
-          name: debian-22-04
+          name: debian-22.04
       - name: Download docker image
         uses: ishworkh/docker-image-artifact-download@v1
         with:
@@ -344,7 +280,7 @@ jobs:
             export DEB_COMPONENT=main
           fi
           echo "${{ github.ref }} : Publishing as $DEB_COMPONENT package"
-          scp -P ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no /home/runner/work/screamshotter/screamshotter/screamshotter_*_amd64.deb ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/srv/packages/incoming/$DEB_COMPONENT/
+          scp -P ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no /home/runner/work/screamshotter/screamshotter/dist/screamshotter_*_amd64.deb ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/srv/packages/incoming/$DEB_COMPONENT/
           if [[ "${{ github.ref }}" == *"dev"* ]]; then
             ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} make bionic_dev -C /srv/packages
             ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} make focal_dev -C /srv/packages
