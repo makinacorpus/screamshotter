@@ -197,7 +197,7 @@ jobs:
           name: debian-${{ matrix.system }}
       - name: Install package
         run: |
-          sudo apt-get install -y /home/runner/work/screamshotter/screamshotter/dist/*.deb
+          sudo apt-get install -y /home/runner/work/screamshotter/screamshotter/*.deb
       - name: E2E test
         run: |
           curl -d url=https://google.com http://localhost:8000 > google.png
