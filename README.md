@@ -91,6 +91,17 @@ cd screamshotter
 docker-compose up
 ```
 
+## Build debian packages
+
+You need docker installed
+
+```
+ENV DISTRO=debian:bullseye make
+```
+
+You can replace debian:bullseye with another debian based docker image
+This will generate debian package in dist folder
+
 ## Tools
 
 ### pip-tools
