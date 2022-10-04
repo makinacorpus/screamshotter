@@ -4,6 +4,12 @@ Default: 60
 Description: Timeout (sec)
  Force browser to timeout after this amount (in second).
 
+Template: screamshotter/MAX_REQUESTS
+Type: string
+Default: 250
+Description: Max number of worker requests before restarting.
+ Force worker to restart to prevent memory leaks. 0 to disable.
+
 Template: screamshotter/SENTRY_DSN
 Type: string
 Description: Sentry dsn (url)

@@ -6,6 +6,7 @@ ENV LANG C.UTF-8
 ENV COLLECTSTATIC 1
 ENV TIMEOUT 60
 ENV WORKERS 1
+ENV MAX_REQUESTS 250
 
 RUN useradd -ms /bin/bash django
 RUN mkdir -p /app
@@ -110,5 +111,5 @@ VOLUME /app/static
 
 USER django
 
-CMD gunicorn screamshotter.wsgi:application -w $WORKERS --timeout `expr $TIMEOUT + 10` --bind 0.0.0.0:8000 --worker-tmp-dir /dev/shm
+CMD gunicorn screamshotter.wsgi:application -w $WORKERS --max-requests $MAX_REQUESTS  --timeout `expr $TIMEOUT + 10` --bind 0.0.0.0:8000 --worker-tmp-dir /dev/shm
 
