@@ -105,7 +105,7 @@ const waitSelectors = JSON.parse(args.waitselectors);
       // force killing chromium processes avoiding zombie processes
       process.kill(pid, 'SIGKILL');
     } catch (e) {
-      console.log('Kll browser processes');
+      // console.log('Kll browser processes');
     }
   }
 })();
