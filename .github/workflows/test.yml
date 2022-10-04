@@ -346,10 +346,10 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: debian-20-04
-      - name: Download 22.04 debian artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: debian-22-04
+#      - name: Download 22.04 debian artifact
+#        uses: actions/download-artifact@v2
+#        with:
+#          name: debian-22-04
       - name: Download docker image
         uses: ishworkh/docker-image-artifact-download@v1
         with:
@@ -361,11 +361,11 @@ jobs:
         with:
           args: '*.deb'
       - name: Login to Docker Hub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_LOGIN }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Publish Docker image (tag, v2, latest)
+      - name: Publish Docker image (tag, v2, latest or dev)
         run: |
           if [[ "${{ github.ref }}" == *"dev"* ]]; then
             export DOCKER_TAG=dev
@@ -395,9 +395,9 @@ jobs:
           if [[ "${{ github.ref }}" == *"dev"* ]]; then
             ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} make bionic_dev -C /srv/packages
             ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} make focal_dev -C /srv/packages
-            ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} make jammy_dev -C /srv/packages
+            # ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} make jammy_dev -C /srv/packages
           else
             ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} make bionic_main -C /srv/packages
             ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} make focal_main -C /srv/packages
-            ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} make jammy_main -C /srv/packages
+            # ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} make jammy_main -C /srv/packages
           fi
