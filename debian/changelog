@@ -1,8 +1,9 @@
-screamshotter (2.0.18+dev) UNRELEASED; urgency=medium
+screamshotter (2.0.19) RELEASED; urgency=medium
 
-  *
+  * Add MAX_REQUESTS environment restart gunicorn workers to prevent memory leaks. Default to 250.
+  * Force kill chromium process after screenshots.
 
- -- Jean-Etienne Castagnede <jean-etienne.castagnede@makina-corpus.com>  Wed, 13 Jul 2022 10:45:00 +0200
+ -- Jean-Etienne Castagnede <jean-etienne.castagnede@makina-corpus.com>  Tue, 04 Oct 2022 17:45:00 +0200
 
 screamshotter (2.0.18) RELEASED; urgency=medium
 

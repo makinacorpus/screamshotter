@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-2.0.18+dev   (XXXX-XX-XX)
+2.0.19       (2022-10-04)
 -------------------------
 
 * Add MAX_REQUESTS environment restart gunicorn workers to prevent memory leaks. Default to 250.
