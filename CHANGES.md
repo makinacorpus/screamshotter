@@ -4,6 +4,9 @@ CHANGELOG
 2.0.18+dev   (XXXX-XX-XX)
 -------------------------
 
+* Add MAX_REQUESTS environment restart gunicorn workers to prevent memory leaks. Default to 250.
+* Force kill chromium process after screenshots.
+
 
 2.0.18       (2022-07-13)
 -------------------------
