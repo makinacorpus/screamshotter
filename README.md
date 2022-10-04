@@ -131,6 +131,8 @@ You can add environment variable for docker too:
 
 ```yml
 environment:
+    - TIMEOUT=60
+    - MAX_REQUESTS=250
     - SENTRY_DSN=
     - SENTRY_ENVIRONMENT=
     - SENTRY_TRACE_SAMPLE=

@@ -1,2 +1,3 @@
 bind = "127.0.0.1:8000"
 timeout = ${TIMEOUT}
+max_requests = ${MAX_REQUESTS}
