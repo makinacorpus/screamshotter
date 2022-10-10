@@ -38,7 +38,7 @@ markupsafe==2.0.1
     # via jinja2
 nodeenv==1.6.0
     # via screamshotter (setup.py)
-pytz==2022.1
+pytz==2022.4
     # via
     #   django
     #   djangorestframework
