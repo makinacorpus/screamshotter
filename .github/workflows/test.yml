@@ -217,7 +217,7 @@ jobs:
       - name: Check result
         run: |
           pip install filetype
-          if filetype google.png |grep -q 'image/png'; then
+          if filetype -f google.png |grep -q 'image/png'; then
             echo "File is PNG";
             exit 0;
           else
@@ -251,7 +251,7 @@ jobs:
       - name: Check result
         run: |
           pip install filetype
-          if filetype google.png |grep -q 'image/png'; then
+          if filetype -f google.png |grep -q 'image/png'; then
             echo "File is PNG";
             exit 0;
           else
@@ -285,7 +285,7 @@ jobs:
       - name: Check result
         run: |
           pip install filetype
-          if filetype google.png |grep -q 'image/png'; then
+          if filetype -f google.png |grep -q 'image/png'; then
             echo "File is PNG";
             exit 0;
           else
@@ -318,7 +318,7 @@ jobs:
       - name: Check result
         run: |
           pip install filetype
-          if filetype google.png |grep -q 'image/png'; then
+          if filetype -f google.png |grep -q 'image/png'; then
             echo "File is PNG";
             exit 0;
           else
