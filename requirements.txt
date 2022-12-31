@@ -6,7 +6,7 @@
 #
 asgiref==3.4.1
     # via django
-certifi==2021.10.8
+certifi==2022.12.7
     # via
     #   requests
     #   sentry-sdk
