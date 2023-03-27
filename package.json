@@ -14,7 +14,7 @@
     "html-prettify": "^1.0.7",
     "@babel/core": "^7.20.7",
     "minimist": "^1.2.7",
-    "puppeteer": "^13.6.0"
+    "puppeteer": "^19.8.0"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.19.1",
