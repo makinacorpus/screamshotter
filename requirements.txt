@@ -16,7 +16,7 @@ coreapi==2.3.3
     # via screamshotter (setup.py)
 coreschema==0.0.4
     # via coreapi
-django==3.2.16
+django==4.2
     # via
     #   djangorestframework
     #   screamshotter (setup.py)
