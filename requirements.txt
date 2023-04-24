@@ -44,7 +44,7 @@ pytz==2022.4
     #   djangorestframework
 requests==2.27.1
     # via coreapi
-sentry-sdk==1.5.10
+sentry-sdk==1.20.0
     # via screamshotter (setup.py)
 sqlparse==0.4.2
     # via django
