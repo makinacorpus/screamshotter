@@ -42,7 +42,7 @@ pytz==2022.4
     # via
     #   django
     #   djangorestframework
-requests==2.27.1
+requests==2.31.0
     # via coreapi
 sentry-sdk==1.30.0
     # via screamshotter (setup.py)
