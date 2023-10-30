@@ -21,14 +21,14 @@ env:
 jobs:
   flake8:
     name: Check python linting
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
-    - name: Set up Python 3.6
+    - name: Set up Python 3.8
       uses: actions/setup-python@v4
       with:
-        python-version: '3.6'  # lint with minimal version supported (3.6 in 18.04)
+        python-version: '3.8'  # lint with minimal version supported (3.6 in 18.04)
     - name: Install dependencies
       run: |
         echo "${{ github.event_name }}! ${{ github.event.action }}"
@@ -39,7 +39,7 @@ jobs:
       run: |
         flake8 src
   eslint:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     name: Check javascript linting
     env:
       PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 1
@@ -61,10 +61,8 @@ jobs:
     needs: [flake8, eslint]
     strategy:
       matrix:
-        os: ['ubuntu-18.04', 'ubuntu-20.04', 'ubuntu-22.04']
+        os: ['ubuntu-20.04', 'ubuntu-22.04']
         include:
-          - os: 'ubuntu-18.04'
-            python-version: '3.6'  # default python version in 18.04
           - os: 'ubuntu-20.04'
             python-version: '3.8'  # default python version in 20.04
           - os: 'ubuntu-22.04'
@@ -110,33 +108,7 @@ jobs:
         uses: ishworkh/docker-image-artifact-upload@v1
         with:
           image: "screamshotter_ci:latest"
-  build_deb_18_04:
-    name: Build 18.04 package
-    runs-on: ubuntu-latest
-    container: ubuntu:bionic
-    env:
-      LANG: C.UTF-8
-    needs: [test]
-    steps:
-      - uses: actions/checkout@v3
-      - name: Prepare debian 18.04 versioning
-        run: |
-          sed -i 's/+dev/.ubuntu18.04~dev'$GITHUB_RUN_ID'/' debian/changelog
-          sed -i 's/screamshotter (\([0-9]\+\.[0-9]\+\.[0-9]\+\)\(.*\)) RELEASED;/screamshotter (\1.ubuntu18.04\2) bionic;/' debian/changelog
-      - name: Install build dependencies
-        run: |
-          apt-get update -q
-          apt-get install -q -y dpkg-dev debhelper dh-virtualenv git python3 python3-venv python3-dev libgtk-3-0 libasound2 libgbm1 libxshmfence1
-      - name: Building package debian 18.04
-        run: |
-          dpkg-buildpackage -uc -us -b
-      - name: Archive package artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: debian-18-04
-          path: |
-            /home/runner/work/screamshotter/*.deb
-
+  
   build_deb_20_04:
     name: Build 20.04 package
     runs-on: ubuntu-latest
@@ -231,40 +203,6 @@ jobs:
           path: |
             /home/runner/work/screamshotter/screamshotter/google.png
 
-  e2e_deb_18_04:
-    name: Tests E2E 18.04
-    runs-on: ubuntu-18.04
-    needs: [ build_deb_18_04 ]
-    steps:
-      - uses: actions/download-artifact@v2
-        with:
-          name: debian-18-04
-      - name: Install package
-        run: |
-          sudo apt-get install -y /home/runner/work/screamshotter/screamshotter/*.deb
-      - name: E2E test
-        run: |
-          curl -d url=https://google.com http://localhost:8000 > google.png
-      - uses: actions/setup-python@v4
-        with:
-          python-version: 3.8
-      - name: Check result
-        run: |
-          pip install filetype
-          if filetype -f google.png |grep -q 'image/png'; then
-            echo "File is PNG";
-            exit 0;
-          else
-            echo "File is not PNG";
-            exit 1;
-          fi
-      - name: Archive result artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: result-18-04
-          path: |
-            /home/runner/work/screamshotter/screamshotter/google.png
-
   e2e_deb_20_04:
     name: Tests E2E 20.04
     runs-on: ubuntu-20.04
@@ -335,13 +273,9 @@ jobs:
   deploy:
     name: Publish (on release only)
     runs-on: ubuntu-18.04
-    needs: [ e2e_docker_image, e2e_deb_18_04, e2e_deb_20_04, e2e_deb_22_04 ]
+    needs: [ e2e_docker_image, e2e_deb_20_04, e2e_deb_22_04 ]
     if: ${{ github.event_name == 'release' && github.event.action == 'created' }}
     steps:
-      - name: Download 18.04 debian artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: debian-18-04
       - name: Download 20.04 debian artifact
         uses: actions/download-artifact@v2
         with:
