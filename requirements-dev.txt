@@ -45,7 +45,7 @@ sqlparse==0.4.2
     #   django-debug-toolbar
 tomli==1.2.3
     # via pep517
-wheel==0.37.1
+wheel==0.38.1
     # via pip-tools
 
 # The following packages are considered to be unsafe in a requirements file:
