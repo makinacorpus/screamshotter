@@ -132,7 +132,7 @@ jobs:
         run: |
           dpkg-buildpackage -uc -us -b
       - name: Archive package artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: debian-20-04
           path: |
@@ -158,7 +158,7 @@ jobs:
         run: |
           dpkg-buildpackage -uc -us -b
       - name: Archive package artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: debian-22-04
           path: |
@@ -197,7 +197,7 @@ jobs:
             exit 1;
           fi
       - name: Archive result artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: result-docker
           path: |
@@ -231,7 +231,7 @@ jobs:
             exit 1;
           fi
       - name: Archive result artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: result-20-04
           path: |
@@ -264,7 +264,7 @@ jobs:
             exit 1;
           fi
       - name: Archive result artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: result-22-04
           path: |
