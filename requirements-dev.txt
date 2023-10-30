@@ -12,7 +12,7 @@ click==8.0.4
     # via pip-tools
 coverage==6.2
     # via -r requirements-dev.in
-django==3.2.16
+django==3.2.22
     # via
     #   -c ./requirements.txt
     #   django-debug-toolbar
@@ -24,7 +24,7 @@ mccabe==0.6.1
     # via flake8
 pep517==0.12.0
     # via pip-tools
-pillow==8.4.0
+pillow==10.0.0
     # via -r requirements-dev.in
 pip-tools==6.4.0
     # via -r requirements-dev.in
@@ -45,7 +45,7 @@ sqlparse==0.4.2
     #   django-debug-toolbar
 tomli==1.2.3
     # via pep517
-wheel==0.37.1
+wheel==0.38.1
     # via pip-tools
 
 # The following packages are considered to be unsafe in a requirements file:
