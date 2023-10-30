@@ -4,7 +4,7 @@
 #
 #    pip-compile
 #
-asgiref==3.4.1
+asgiref==3.7.2
     # via django
 certifi==2023.7.22
     # via
