@@ -13,7 +13,7 @@
     "@sentry/tracing": "^7.76.0",
     "html-prettify": "^1.0.7",
     "@babel/core": "^7.23.2",
-    "minimist": "^1.2.7",
+    "minimist": "^1.2.8",
     "puppeteer": "^13.6.0"
   },
   "devDependencies": {
