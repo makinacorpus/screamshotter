@@ -33,7 +33,7 @@ const waitSelectors = JSON.parse(args.waitselectors);
 
 (async () => {
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: "new",
     args: [
       '--no-sandbox',
       '--no-zygote',
