@@ -6,8 +6,7 @@ export DH_VIRTUALENV_INSTALL_ROOT=/opt
 	dh $@ --with python-virtualenv
 
 override_dh_virtualenv:
-	dh_virtualenv --python /usr/bin/python3 --builtin-venv --install-suffix screamshotter --preinstall "setuptools==53.0.0" --preinstall "wheel==0.36.2"
-	debian/screamshotter/opt/screamshotter/bin/python debian/screamshotter/opt/screamshotter/bin/pip install nodeenv
+	dh_virtualenv --python /usr/bin/python3 --builtin-venv --install-suffix screamshotter --preinstall "setuptools==53.0.0" --preinstall "wheel==0.36.2" --preinstall "nodeenv==1.8.0"
 	debian/screamshotter/opt/screamshotter/bin/nodeenv -C '' -p -n 20.9.0
 	cp package.json package-lock.json debian/screamshotter/opt/screamshotter/
 	. debian/screamshotter/opt/screamshotter/bin/activate && npm ci --production -g --unsafe-perm=true
