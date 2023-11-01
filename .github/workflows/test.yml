@@ -198,6 +198,7 @@ jobs:
             exit 0;
           else
             echo "File is not PNG";
+            filetype -f google.png;
             exit 1;
           fi
       - name: Archive result artifact
@@ -232,6 +233,7 @@ jobs:
             exit 0;
           else
             echo "File is not PNG";
+            filetype -f google.png;
             exit 1;
           fi
       - name: Archive result artifact
@@ -265,6 +267,7 @@ jobs:
             exit 0;
           else
             echo "File is not PNG";
+            filetype -f google.png;
             exit 1;
           fi
       - name: Archive result artifact
