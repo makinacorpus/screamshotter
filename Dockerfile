@@ -100,6 +100,7 @@ FROM base
 
 COPY --from=build /app/venv /app/venv
 COPY --from=build /app/node_modules /app/node_modules
+COPY --from=build /home/django/.cache/puppeteer /home/django/.cache/puppeteer
 COPY src /app/src
 
 RUN mkdir -p /app/static && chown django:django /app/static
