@@ -15,6 +15,8 @@ class ScreenshotSerializer(serializers.Serializer):
     waitfor = serializers.CharField(required=False,
                                     initial='body',
                                     help_text=_("CSS selectors to wait before taking screenshot"))
+    screamshotter_css_class = serializers.CharField(required=False, initial='screamshot',
+                                                    help_text=_("CSS class to inject in body for customization"))
     wait_seconds = serializers.IntegerField(required=False, initial=0,
                                             help_text=_("Force browser to wait before take screenshot"))
     timeout = serializers.IntegerField(required=False, initial=settings.TIMEOUT,

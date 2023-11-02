@@ -11,7 +11,8 @@ from django.conf import settings
 
 
 def take_screenshot(url, width=1920, height=1080, waitfor='body', wait_selectors=(),
-                    selector='body', wait_seconds=1, timeout=settings.TIMEOUT, forward_headers=None):
+                    selector='body', wait_seconds=1, timeout=settings.TIMEOUT, forward_headers=None,
+                    screamshotter_css_class='screamshot'):
     if forward_headers is None:
         forward_headers = dict()
 
@@ -46,6 +47,8 @@ def take_screenshot(url, width=1920, height=1080, waitfor='body', wait_selectors
             waitfor,
             '--timeout',
             f'{timeout * 1000}',
+            '--screamshottercssclass',
+            screamshotter_css_class,
             '--headers',
             json.dumps(forward_headers),
         ], stderr=subprocess.PIPE, env=os.environ)
