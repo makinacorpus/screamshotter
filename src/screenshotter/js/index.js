@@ -28,7 +28,7 @@ const headers = JSON.parse(args.headers);
 const viewportWidth = parseInt(args.vwidth, 10);
 const viewportHeight = parseInt(args.vheight, 10);
 const timeout = parseInt(args.timeout, 10);
-const screamshotterCssClass = parseInt(args.screamshotter_css_class, 'screamshot');
+const screamshotterCssClass = args.screamshotter_css_class;
 const waitSelectors = JSON.parse(args.waitselectors);
 
 (async () => {
