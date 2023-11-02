@@ -47,7 +47,7 @@ def take_screenshot(url, width=1920, height=1080, waitfor='body', wait_selectors
             waitfor,
             '--timeout',
             f'{timeout * 1000}',
-            '--screamshotter_css_class',
+            '--screamshottercssclass',
             screamshotter_css_class,
             '--headers',
             json.dumps(forward_headers),
