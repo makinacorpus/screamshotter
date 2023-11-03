@@ -71,10 +71,10 @@ const waitSelectors = JSON.parse(args.waitselectors);
       await page.waitForTimeout(waitseconds);
     }
 
-    const rect = await page.evaluate((aSelector, aCss) => {
+    const rect = await page.evaluate((aSelector, aScreamshotterCssClass) => {
       // dynamic add screamshotterCssClass css class to permit css customization
-      console.error(aCss);
-      document.body.classList.add(aCss);
+      console.error(aScreamshotterCssClass);
+      document.body.classList.add(aScreamshotterCssClass);
       const element = document.querySelector(aSelector);
       if (element !== null) {
         const { x, y, width, height } = element.getBoundingClientRect();
