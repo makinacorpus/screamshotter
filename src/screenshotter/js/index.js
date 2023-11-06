@@ -28,6 +28,7 @@ const headers = JSON.parse(args.headers);
 const viewportWidth = parseInt(args.vwidth, 10);
 const viewportHeight = parseInt(args.vheight, 10);
 const timeout = parseInt(args.timeout, 10);
+const screamshotterCssClass = args.screamshottercssclass;
 const waitSelectors = JSON.parse(args.waitselectors);
 
 (async () => {
@@ -69,9 +70,11 @@ const waitSelectors = JSON.parse(args.waitselectors);
     if (waitseconds !== 0) {
       await page.waitForTimeout(waitseconds);
     }
-    const rect = await page.evaluate(aSelector => {
-      // dynamic add screamshot css class to permit css customization
-      document.body.classList.add('screamshot');
+
+    const rect = await page.evaluate((aSelector, aScreamshotterCssClass) => {
+      // dynamic add screamshotterCssClass css class to permit css customization
+      console.error(aScreamshotterCssClass);
+      document.body.classList.add(aScreamshotterCssClass);
       const element = document.querySelector(aSelector);
       if (element !== null) {
         const { x, y, width, height } = element.getBoundingClientRect();
@@ -79,7 +82,7 @@ const waitSelectors = JSON.parse(args.waitselectors);
       }
       const Exception = `The selector ${aSelector} was not found on this page`;
       return { exception: Exception };
-    }, selector);
+    }, selector, screamshotterCssClass);
 
     if (typeof rect.left !== 'undefined') {
       await page.screenshot({

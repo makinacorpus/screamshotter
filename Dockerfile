@@ -9,7 +9,7 @@ ENV WORKERS 1
 ENV MAX_REQUESTS 250
 
 RUN useradd -ms /bin/bash django
-RUN mkdir -p /app
+RUN mkdir -p /app/static
 RUN chown django:django /app
 
 RUN apt-get -qq update && apt-get install -qq -y \
@@ -70,7 +70,7 @@ ARG NODE_ENV=production
 
 RUN apt-get -qq update && apt-get install -qq -y \
     build-essential \
-    python3.10-dev python3.10-venv python3.10-distutils && \
+    python3.10-dev python3.10-venv python3.10-distutils libmagic1 && \
     apt-get clean all && rm -rf /var/apt/lists/* && rm -rf /var/cache/apt/*
 
 # install pip & requirements
