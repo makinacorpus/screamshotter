@@ -1,8 +1,12 @@
 CHANGELOG
 =========
 
-2.0.19+dev   (XXXX-XX-XX)
+2.0.20       (2023-11-06)
 -------------------------
+
+**New features**
+
+* Add `screamshotter_css_class` to allow to change css class to inject in body.
 
 
 2.0.19       (2022-10-04)
