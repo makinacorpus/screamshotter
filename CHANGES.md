@@ -1,6 +1,14 @@
 CHANGELOG
 =========
 
+2.0.20+dev   (XXXX-XX-XX)
+-------------------------
+
+**Bugfix**:
+
+* Fix chromium zombie processes in docker image
+
+
 2.0.20       (2023-11-06)
 -------------------------
 
