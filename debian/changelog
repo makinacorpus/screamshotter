@@ -4,7 +4,6 @@ screamshotter (2.0.21) RELEASED; urgency=medium
 
  -- Jean-Etienne Castagnede <jean-etienne.castagnede@makina-corpus.com>  Wed, 22 Nov 2023 16:54:00 +0100
 
-
 screamshotter (2.0.20) RELEASED; urgency=medium
 
   * Add screamshotter_css_class to allow to change css class to inject in body.
