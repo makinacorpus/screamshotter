@@ -6,6 +6,8 @@
 #
 asgiref==3.7.2
     # via django
+backports-zoneinfo==0.2.1
+    # via django
 certifi==2023.11.17
     # via
     #   requests
@@ -16,7 +18,7 @@ coreapi==2.3.3
     # via screamshotter (setup.py)
 coreschema==0.0.4
     # via coreapi
-django==3.2.23
+django==4.2.7
     # via
     #   djangorestframework
     #   screamshotter (setup.py)
@@ -41,9 +43,7 @@ nodeenv==1.8.0
 packaging==23.2
     # via gunicorn
 pytz==2023.3.post1
-    # via
-    #   django
-    #   djangorestframework
+    # via djangorestframework
 requests==2.31.0
     # via coreapi
 sentry-sdk==1.36.0

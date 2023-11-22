@@ -8,13 +8,17 @@ asgiref==3.7.2
     # via
     #   -c ./requirements.txt
     #   django
+backports-zoneinfo==0.2.1
+    # via
+    #   -c ./requirements.txt
+    #   django
 build==1.0.3
     # via pip-tools
 click==8.1.7
     # via pip-tools
 coverage==7.3.2
     # via -r requirements-dev.in
-django==3.2.23
+django==4.2.7
     # via
     #   -c ./requirements.txt
     #   django-debug-toolbar
@@ -42,10 +46,6 @@ pyproject-hooks==1.0.0
     # via build
 python-magic==0.4.27
     # via -r requirements-dev.in
-pytz==2023.3.post1
-    # via
-    #   -c ./requirements.txt
-    #   django
 sqlparse==0.4.4
     # via
     #   -c ./requirements.txt
