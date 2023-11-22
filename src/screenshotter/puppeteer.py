@@ -1,5 +1,6 @@
 import json
 import os
+import signal
 import subprocess
 from tempfile import NamedTemporaryFile
 
@@ -51,9 +52,10 @@ def take_screenshot(url, width=1920, height=1080, waitfor='body', wait_selectors
             screamshotter_css_class,
             '--headers',
             json.dumps(forward_headers),
-        ], stderr=subprocess.PIPE, env=os.environ)
+        ], stderr=subprocess.PIPE, env=os.environ, preexec_fn=os.setsid)
 
         if command.stderr:
             raise ScreenshotterException(command.stderr.decode())
 
+        os.killpg(os.getpgid(command.pid), signal.SIGTERM)
         return screenshot_file.read()
