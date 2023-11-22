@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "@sentry/node": "^7.77.0",
-    "@sentry/tracing": "^7.77.0",
+    "@sentry/tracing": "^7.80.1",
     "html-prettify": "^1.0.7",
     "@babel/core": "^7.23.3",
     "minimist": "^1.2.8",
