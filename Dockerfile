@@ -7,7 +7,7 @@ ENV COLLECTSTATIC 1
 ENV TIMEOUT 60
 ENV WORKERS 1
 ENV MAX_REQUESTS 250
-ENV PUPPETEER_CACHE_DIR /opt/screamshotter/puppeteer/
+ENV PUPPETEER_CACHE_DIR /app/puppeteer/
 
 RUN useradd -ms /bin/bash django
 RUN mkdir -p /app/static
@@ -101,7 +101,7 @@ FROM base
 
 COPY --from=build /app/venv /app/venv
 COPY --from=build /app/node_modules /app/node_modules
-COPY --from=build /home/django/.cache/puppeteer /home/django/.cache/puppeteer
+COPY --from=build /app/puppeteer /app/puppeteer
 COPY src /app/src
 
 RUN mkdir -p /app/static && chown django:django /app/static
