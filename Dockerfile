@@ -13,6 +13,7 @@ RUN mkdir -p /app/static
 RUN chown django:django /app
 
 RUN apt-get -qq update && apt-get install -qq -y \
+    dumb-init \
     gconf-service \
     libasound2 \
     libatk1.0-0 \
@@ -103,8 +104,6 @@ COPY --from=build /app/node_modules /app/node_modules
 COPY src /app/src
 
 RUN mkdir -p /app/static && chown django:django /app/static
-ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.2/dumb-init_1.2.2_x86_64 /usr/local/bin/dumb-init
-RUN chmod +x /usr/local/bin/dumb-init
 
 RUN apt-get -qq update && apt-get upgrade -qq -y && \
     apt-get clean all && rm -rf /var/apt/lists/* && rm -rf /var/cache/apt/*
@@ -113,6 +112,5 @@ VOLUME /app/static
 
 USER django
 
-ENTRYPOINT ["dumb-init", "--", "/usr/local/bin/entrypoint.sh"]
 CMD gunicorn screamshotter.wsgi:application -w $WORKERS --max-requests $MAX_REQUESTS  --timeout `expr $TIMEOUT + 10` --bind 0.0.0.0:8000 --worker-tmp-dir /dev/shm
 

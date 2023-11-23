@@ -19,7 +19,7 @@ def take_screenshot(url, width=1920, height=1080, waitfor='body', wait_selectors
     # We send sentry informations and version : when we use screamshotter as a package, informations are in settings only
     with NamedTemporaryFile(suffix='.png') as screenshot_file:
         command = subprocess.run([
-            "/usr/local/bin/dumb-init",
+            "dumb-init",
             "--dumb-init",
             "--",
             os.getenv('NODE_BIN_PATH', 'node'),
