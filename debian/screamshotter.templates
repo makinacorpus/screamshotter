@@ -24,3 +24,8 @@ Type: string
 Default: 0.2
 Description: Trace sample of sentry
   With this option set, every transaction created will have that percentage chance of being sent to Sentry (between 0 and 1)
+
+Template: screamshotter/PUPPETEER_CACHE_DIR
+Type: string
+Default: /opt/screamshotter/puppeteer/
+Description: Path to get Puppeteer cache and chromium

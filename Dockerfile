@@ -7,6 +7,7 @@ ENV COLLECTSTATIC 1
 ENV TIMEOUT 60
 ENV WORKERS 1
 ENV MAX_REQUESTS 250
+ENV PUPPETEER_CACHE_DIR /opt/screamshotter/puppeteer/
 
 RUN useradd -ms /bin/bash django
 RUN mkdir -p /app/static
@@ -87,7 +88,7 @@ RUN /app/venv/bin/nodeenv /app/venv/ -C '' -p -n 20.9.0
 # upgrade npm & requirements
 COPY package.json /app/package.json
 COPY package-lock.json /app/package-lock.json
-RUN . /app/venv/bin/activate && PUPPETEER_CACHE_DIR=/opt/screamshotter/puppeteer/ npm ci && rm /app/*.json
+RUN . /app/venv/bin/activate && npm ci && rm /app/*.json
 
 FROM build as dev
 
