@@ -19,7 +19,7 @@ def take_screenshot(url, width=1920, height=1080, waitfor='body', wait_selectors
 
     # We send sentry informations and version : when we use screamshotter as a package, informations are in settings only
     with NamedTemporaryFile(suffix='.png') as screenshot_file:
-        command = subprocess.run([
+        command = subprocess.Popen([
             os.getenv('NODE_BIN_PATH', 'node'),
             app_settings.PUPPETEER_JAVASCRIPT_FILEPATH,
             '--version',
