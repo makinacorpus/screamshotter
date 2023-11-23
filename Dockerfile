@@ -87,7 +87,7 @@ RUN /app/venv/bin/nodeenv /app/venv/ -C '' -p -n 20.9.0
 # upgrade npm & requirements
 COPY package.json /app/package.json
 COPY package-lock.json /app/package-lock.json
-RUN . /app/venv/bin/activate && npm ci && rm /app/*.json
+RUN . /app/venv/bin/activate && PUPPETEER_CACHE_DIR=/opt/screamshotter/puppeteer/ npm ci && rm /app/*.json
 
 FROM build as dev
 
@@ -104,8 +104,6 @@ COPY --from=build /home/django/.cache/puppeteer /home/django/.cache/puppeteer
 COPY src /app/src
 
 RUN mkdir -p /app/static && chown django:django /app/static
-ADD https://github.com/Yelp/dumb-init/releases/download/v1.2.2/dumb-init_1.2.2_x86_64 /usr/local/bin/dumb-init
-RUN chmod +x /usr/local/bin/dumb-init
 
 RUN apt-get -qq update && apt-get upgrade -qq -y && \
     apt-get clean all && rm -rf /var/apt/lists/* && rm -rf /var/cache/apt/*
@@ -114,6 +112,4 @@ VOLUME /app/static
 
 USER django
 
-ENTRYPOINT ["dumb-init", "--", "/usr/local/bin/entrypoint.sh"]
 CMD gunicorn screamshotter.wsgi:application -w $WORKERS --max-requests $MAX_REQUESTS  --timeout `expr $TIMEOUT + 10` --bind 0.0.0.0:8000 --worker-tmp-dir /dev/shm
-
