@@ -2,6 +2,7 @@
 
 if [ "$1" = "purge" ]; then
 	deluser --quiet screamshotter || true
+	rm -rf /opt/screamshotter || true
 fi
 
 #DEBHELPER#
