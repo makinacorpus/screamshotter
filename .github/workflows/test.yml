@@ -131,6 +131,7 @@ jobs:
           apt-get update -q
           apt-get install -q -y software-properties-common
           add-apt-repository ppa:jyrki-pulliainen/dh-virtualenv
+          add-apt-repository ppa:deadsnakes/ppa
           apt-get install -yqq dpkg-dev debhelper dh-virtualenv git devscripts equivs
           mk-build-deps --install --tool='apt-get -o Debug::pkgProblemResolver=yes --no-install-recommends --yes' debian/control
       - name: Building package debian 20.04
@@ -142,6 +143,7 @@ jobs:
           name: debian-20-04
           path: |
             /home/runner/work/screamshotter/*.deb
+
   build_deb_22_04:
     name: Build 22.04 package
     runs-on: ubuntu-latest
