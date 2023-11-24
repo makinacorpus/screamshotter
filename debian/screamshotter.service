@@ -8,6 +8,7 @@ WorkingDirectory=/opt/screamshotter
 ExecStart=/opt/screamshotter/bin/gunicorn --config=/opt/screamshotter/conf/gunicorn-screamshotter.conf.py screamshotter.wsgi:application
 Environment=NODE_PATH=/opt/screamshotter/node_modules/
 Environment=NODE_BIN_PATH=/opt/screamshotter/bin/node
+Environment=PUPPETEER_CACHE_DIR=/opt/screamshotter/puppeteer/
 Restart=on-failure
 User=screamshotter
 Group=screamshotter

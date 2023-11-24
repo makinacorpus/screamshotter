@@ -8,7 +8,7 @@
 
 # Create screamshotter user (only on a new install)
 if [ "$2" = "" ]; then
-	adduser --system --group --no-create-home --quiet screamshotter || true
+	adduser --system --group --home /opt/screamshotter --quiet screamshotter || true
 fi
 
 db_get screamshotter/TIMEOUT; export TIMEOUT="$RET"
@@ -18,7 +18,7 @@ db_get screamshotter/SENTRY_ENVIRONMENT; export SENTRY_ENVIRONMENT="$RET"
 db_get screamshotter/SENTRY_TRACE_SAMPLE; export SENTRY_TRACE_SAMPLE="$RET"
 
 mkdir -p /opt/screamshotter/static || true
-chown -R screamshotter:screamshotter /opt/screamshotter/static || true
+chown -R screamshotter:screamshotter /opt/screamshotter || true
 
 # Generate config files
 echo "Generate configuration" >&2
