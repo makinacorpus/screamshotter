@@ -1,3 +1,9 @@
+screamshotter (2.1.0) RELEASED; urgency=medium
+
+  * Update to node 20, puppeteer and chromium
+
+ -- Jean-Etienne Castagnede <jean-etienne.castagnede@makina-corpus.com>  Fri, 24 Nov 2023 12:04:00 +0100
+
 screamshotter (2.0.21) RELEASED; urgency=medium
 
   * Fix zombie process in docker image.
