@@ -1,6 +1,14 @@
 CHANGELOG
 =========
 
+2.1.0+dev    (XXXX-XX-XX)
+-------------------------
+
+**New features**
+
+* Allow to use external browser with `EXTERNAL_PUPPETEER` environment variable
+
+
 2.1.0        (2023-11-24)
 -------------------------
 
