@@ -7,7 +7,7 @@ const prettify = require('html-prettify');
 
 const args = parseArgs(process.argv);
 
-const { version, sentrydsn, sentryenv, sentrytracerate, url, path, selector, waitseconds, waitfor, external_puppeteer } = args;
+const { version, sentrydsn, sentryenv, sentrytracerate, url, path, selector, waitseconds, waitfor } = args;
 
 try {
   if (sentrydsn !== '') {
