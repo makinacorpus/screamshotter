@@ -111,5 +111,12 @@ let browser;
   } finally {
     await page.close();
     await browser.close();
+    try {
+      // force killing chromium processes avoiding zombie processes
+      const pid = -browser.process().pid;
+      process.kill(pid, 'SIGKILL');
+    } catch (e) {
+      // console.log('Kll browser processes');
+    }
   }
 })();
