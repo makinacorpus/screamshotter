@@ -1,4 +1,10 @@
-screamshotter (2.1.1) UNRELEASED; urgency=medium
+screamshotter (2.2.0) RELEASED; urgency=medium
+
+  * Update to node 20, puppeteer and chromium
+
+ -- Jean-Etienne Castagnede <jean-etienne.castagnede@makina-corpus.com>  Thu, 11 Jan 2024 10:31:00 +0100
+
+screamshotter (2.1.1) RELEASED; urgency=medium
 
   * Update to node 20, puppeteer and chromium
 
