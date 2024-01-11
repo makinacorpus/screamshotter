@@ -136,4 +136,5 @@ environment:
     - SENTRY_DSN=
     - SENTRY_ENVIRONMENT=
     - SENTRY_TRACE_SAMPLE=
+    - EXTERNAL_PUPPETEER=  # if you use browserless.io : wss://your_url:3000
 ```

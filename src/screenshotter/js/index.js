@@ -30,18 +30,26 @@ const viewportHeight = parseInt(args.vheight, 10);
 const timeout = parseInt(args.timeout, 10);
 const screamshotterCssClass = args.screamshottercssclass;
 const waitSelectors = JSON.parse(args.waitselectors);
+const externalPuppeteer = args.external_puppeteer;
+
+let browser;
 
 (async () => {
-  const browser = await puppeteer.launch({
-    headless: 'new',
-    args: [
-      '--no-sandbox',
-      '--no-zygote',
-      '--disable-setuid-sandbox',
-      // https://github.com/GoogleChrome/puppeteer/blob/master/docs/troubleshooting.md#tips
-      '--disable-dev-shm-usage',
-    ],
-  });
+  if (externalPuppeteer !== '') {
+    browser = await puppeteer.connect({
+      browserWSEndpoint: externalPuppeteer,
+    });
+  } else {
+    browser = await puppeteer.launch({
+      headless: 'new',
+      args: [
+        '--no-sandbox',
+        '--no-zygote',
+        '--disable-setuid-sandbox',
+        // https://github.com/GoogleChrome/puppeteer/blob/master/docs/troubleshooting.md#tips
+        '--disable-dev-shm-usage'],
+    });
+  }
 
   const page = await browser.newPage();
   await page.setDefaultNavigationTimeout(timeout);
@@ -103,9 +111,9 @@ const waitSelectors = JSON.parse(args.waitselectors);
   } finally {
     await page.close();
     await browser.close();
-    const pid = -browser.process().pid;
     try {
       // force killing chromium processes avoiding zombie processes
+      const pid = -browser.process().pid;
       process.kill(pid, 'SIGKILL');
     } catch (e) {
       // console.log('Kll browser processes');
