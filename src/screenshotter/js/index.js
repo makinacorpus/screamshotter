@@ -38,6 +38,7 @@ let browser;
   if (externalPuppeteer !== '') {
     browser = await puppeteer.connect({
       browserWSEndpoint: externalPuppeteer,
+      ignoreHTTPSErrors: true,
     });
   } else {
     browser = await puppeteer.launch({

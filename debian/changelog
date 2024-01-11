@@ -1,6 +1,12 @@
+screamshotter (2.2.1) RELEASED; urgency=medium
+
+  * Ignore SSL errors with external browser
+
+ -- Jean-Etienne Castagnede <jean-etienne.castagnede@makina-corpus.com>  Thu, 11 Jan 2024 12:49:00 +0100
+
 screamshotter (2.2.0) RELEASED; urgency=medium
 
-  * Update to node 20, puppeteer and chromium
+  * Allow to use external browser with `EXTERNAL_PUPPETEER` environment variable
 
  -- Jean-Etienne Castagnede <jean-etienne.castagnede@makina-corpus.com>  Thu, 11 Jan 2024 10:31:00 +0100
 

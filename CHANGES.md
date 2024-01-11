@@ -1,6 +1,14 @@
 CHANGELOG
 =========
 
+2.2.1        (2024-01-11)
+-------------------------
+
+**Improvements**:
+
+* Ignore SSL errors with external browser
+
+
 2.2.0        (2024-01-11)
 -------------------------
 
