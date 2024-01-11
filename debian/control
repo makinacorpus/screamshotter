@@ -20,6 +20,7 @@ Depends:
  ${misc:Depends},
  ${shlibs:Depends},
  gettext,
+ dumb-init,
  python3 (>= 3.6),
  libappindicator3-1,
  libasound2,
