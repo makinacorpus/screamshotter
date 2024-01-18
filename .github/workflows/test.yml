@@ -136,7 +136,7 @@ jobs:
         run: |
           dpkg-buildpackage -uc -us -b
       - name: Archive package artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: debian-20-04
           path: |
@@ -162,7 +162,7 @@ jobs:
         run: |
           dpkg-buildpackage -uc -us -b
       - name: Archive package artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: debian-22-04
           path: |
@@ -202,7 +202,7 @@ jobs:
             exit 1;
           fi
       - name: Archive result artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: result-docker
           path: |
@@ -213,7 +213,7 @@ jobs:
     runs-on: ubuntu-20.04
     needs: [ build_deb_20_04 ]
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: debian-20-04
       - name: Install package
@@ -237,7 +237,7 @@ jobs:
             exit 1;
           fi
       - name: Archive result artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: result-20-04
           path: |
@@ -247,7 +247,7 @@ jobs:
     runs-on: ubuntu-22.04
     needs: [ build_deb_22_04 ]
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: debian-22-04
       - name: Install package
@@ -271,7 +271,7 @@ jobs:
             exit 1;
           fi
       - name: Archive result artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: result-22-04
           path: |
@@ -284,11 +284,11 @@ jobs:
     if: ${{ github.event_name == 'release' && github.event.action == 'created' }}
     steps:
       - name: Download 20.04 debian artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: debian-20-04
 #      - name: Download 22.04 debian artifact
-#        uses: actions/download-artifact@v3
+#        uses: actions/download-artifact@v4
 #        with:
 #          name: debian-22-04
       - name: Download docker image
