@@ -1,6 +1,14 @@
 CHANGELOG
 =========
 
+2.2.1+dev    (XXXX-XX-XX)
+-------------------------
+
+**Bugfix**:
+
+* Fix chromium crash after debian update from previous version
+
+
 2.2.1        (2024-01-11)
 -------------------------
 
