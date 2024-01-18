@@ -34,6 +34,7 @@ END
   	chown screamshotter.screamshotter $CONF_DIR/$f || true
 done
 
+systemctl stop screamshotter || true
 usermod -d /opt/screamshotter screamshotter || true # set home directory for old installation without
 
 screamshotter collectstatic --no-input
