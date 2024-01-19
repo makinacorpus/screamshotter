@@ -1,6 +1,30 @@
 CHANGELOG
 =========
 
+2.2.2        (2024-01-19)
+-------------------------
+
+**Bugfix**:
+
+* Fix chromium crash after debian update from previous version
+
+
+2.2.1        (2024-01-11)
+-------------------------
+
+**Improvements**:
+
+* Ignore SSL errors with external browser
+
+
+2.2.0        (2024-01-11)
+-------------------------
+
+**New features**
+
+* Allow to use external browser with `EXTERNAL_PUPPETEER` environment variable
+
+
 2.1.0        (2023-11-24)
 -------------------------
 

@@ -30,7 +30,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python 3.8
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.8'  # lint with minimal version supported (3.8 in 20.04)
     - name: Install dependencies
@@ -74,7 +74,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
@@ -138,7 +138,7 @@ jobs:
         run: |
           dpkg-buildpackage -uc -us -b
       - name: Archive package artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: debian-20-04
           path: |
@@ -166,7 +166,7 @@ jobs:
         run: |
           dpkg-buildpackage -uc -us -b
       - name: Archive package artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: debian-22-04
           path: |
@@ -191,7 +191,7 @@ jobs:
         run: |
           sleep 2
           curl -d url=https://google.com http://localhost:8000 > google.png
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: 3.8
       - name: Check result
@@ -206,7 +206,7 @@ jobs:
             exit 1;
           fi
       - name: Archive result artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: result-docker
           path: |
@@ -217,7 +217,7 @@ jobs:
     runs-on: ubuntu-20.04
     needs: [ build_deb_20_04 ]
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: debian-20-04
       - name: Install package
@@ -226,7 +226,7 @@ jobs:
       - name: E2E test
         run: |
           curl -d url=https://google.com http://localhost:8000 > google.png
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: 3.8
       - name: Check result
@@ -241,7 +241,7 @@ jobs:
             exit 1;
           fi
       - name: Archive result artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: result-20-04
           path: |
@@ -251,7 +251,7 @@ jobs:
     runs-on: ubuntu-22.04
     needs: [ build_deb_22_04 ]
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: debian-22-04
       - name: Install package
@@ -260,7 +260,7 @@ jobs:
       - name: E2E test
         run: |
           curl -d url=https://google.com http://localhost:8000 > google.png
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: 3.8
       - name: Check result
@@ -275,7 +275,7 @@ jobs:
             exit 1;
           fi
       - name: Archive result artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: result-22-04
           path: |
@@ -288,11 +288,11 @@ jobs:
     if: ${{ github.event_name == 'release' && github.event.action == 'created' }}
     steps:
       - name: Download 20.04 debian artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: debian-20-04
 #      - name: Download 22.04 debian artifact
-#        uses: actions/download-artifact@v3
+#        uses: actions/download-artifact@v4
 #        with:
 #          name: debian-22-04
       - name: Download docker image

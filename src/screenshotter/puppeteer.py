@@ -51,6 +51,8 @@ def take_screenshot(url, width=1920, height=1080, waitfor='body', wait_selectors
             screamshotter_css_class,
             '--headers',
             json.dumps(forward_headers),
+            '--external_puppeteer',
+            f"{os.getenv('EXTERNAL_PUPPETEER', '')}"
         ], stderr=subprocess.PIPE, env=os.environ)
 
         if command.stderr:
