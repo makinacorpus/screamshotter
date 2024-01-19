@@ -6,7 +6,7 @@ export DH_VIRTUALENV_INSTALL_ROOT=/opt
 	dh $@ --with python-virtualenv
 
 override_dh_virtualenv:
-	dh_virtualenv --python /usr/bin/python3 --builtin-venv --install-suffix screamshotter --preinstall "setuptools" --preinstall "wheel"
+	dh_virtualenv --python /usr/bin/python3.10 --builtin-venv --install-suffix screamshotter --preinstall "setuptools" --preinstall "wheel"
 	debian/screamshotter/opt/screamshotter/bin/python debian/screamshotter/opt/screamshotter/bin/nodeenv -C '' -p -n 20.9.0
 	cp package.json package-lock.json debian/screamshotter/opt/screamshotter/
 	export PUPPETEER_CACHE_DIR=$(CURDIR)/debian/screamshotter/opt/screamshotter/puppeteer/ && . ./debian/screamshotter/opt/screamshotter/bin/activate && cd debian/screamshotter/opt/screamshotter/ && npm ci --omit=dev --unsafe-perm=true
