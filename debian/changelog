@@ -1,8 +1,8 @@
-screamshotter (2.2.1+dev) UNRELEASED; urgency=medium
+screamshotter (2.2.2) RELEASED; urgency=medium
 
   * Fix chromium crash after debian update from previous version
 
- -- Jean-Etienne Castagnede <jean-etienne.castagnede@makina-corpus.com>  Thu, 18 Jan 2024 16:51:00 +0100
+ -- Jean-Etienne Castagnede <jean-etienne.castagnede@makina-corpus.com>  Fri, 19 Jan 2024 09:43:00 +0100
 
 screamshotter (2.2.1) RELEASED; urgency=medium
 
