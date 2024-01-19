@@ -1,3 +1,9 @@
+screamshotter (2.2.1+dev) UNRELEASED; urgency=medium
+
+  * Fix chromium crash after debian update from previous version
+
+ -- Jean-Etienne Castagnede <jean-etienne.castagnede@makina-corpus.com>  Thu, 18 Jan 2024 16:51:00 +0100
+
 screamshotter (2.2.1) RELEASED; urgency=medium
 
   * Ignore SSL errors with external browser
