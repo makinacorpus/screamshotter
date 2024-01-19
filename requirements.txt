@@ -6,7 +6,7 @@
 #
 asgiref==3.7.2
     # via django
-backports-zoneinfo==0.2.1
+backports.zoneinfo==0.2.1;python_version<"3.9"
     # via django
 certifi==2023.11.17
     # via
