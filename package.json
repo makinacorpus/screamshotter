@@ -9,7 +9,7 @@
   "author": "JEC",
   "license": "ISC",
   "dependencies": {
-    "@sentry/node": "^7.93.0",
+    "@sentry/node": "^7.94.1",
     "@sentry/tracing": "^7.93.0",
     "html-prettify": "^1.0.7",
     "@babel/core": "^7.23.7",
