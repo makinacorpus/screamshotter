@@ -36,14 +36,16 @@ packaging==23.2
     #   build
 pillow==10.2.0
     # via -r requirements-dev.in
-pip-tools==7.3.0
+pip-tools==7.4.0
     # via -r requirements-dev.in
 pycodestyle==2.11.1
     # via flake8
 pyflakes==3.2.0
     # via flake8
 pyproject-hooks==1.0.0
-    # via build
+    # via
+    #   build
+    #   pip-tools
 python-magic==0.4.27
     # via -r requirements-dev.in
 sqlparse==0.4.4
