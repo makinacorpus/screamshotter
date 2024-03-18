@@ -40,7 +40,7 @@ markupsafe==2.1.5
     # via jinja2
 nodeenv==1.8.0
     # via screamshotter (setup.py)
-packaging==23.2
+packaging==24.0
     # via gunicorn
 pytz==2024.1
     # via djangorestframework
