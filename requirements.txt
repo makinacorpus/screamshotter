@@ -30,7 +30,7 @@ greenlet==3.0.3
     # via gevent
 gunicorn[gevent]==21.2.0
     # via screamshotter (setup.py)
-idna==3.6
+idna==3.7
     # via requests
 itypes==1.2.0
     # via coreapi
