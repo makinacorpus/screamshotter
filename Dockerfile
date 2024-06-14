@@ -14,6 +14,7 @@ RUN mkdir -p /app/static
 RUN chown django:django /app
 
 RUN apt-get -qq update && apt-get install -qq -y \
+    dumb-init \
     gconf-service \
     libasound2 \
     libatk1.0-0 \
