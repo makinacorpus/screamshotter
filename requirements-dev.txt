@@ -4,7 +4,7 @@
 #
 #    pip-compile requirements-dev.in
 #
-asgiref==3.7.2
+asgiref==3.8.1
     # via
     #   -c ./requirements.txt
     #   django
@@ -24,13 +24,13 @@ django==4.2.11
     #   django-debug-toolbar
 django-debug-toolbar==4.3.0
     # via -r requirements-dev.in
-flake8==7.0.0
+flake8==7.1.0
     # via -r requirements-dev.in
 importlib-metadata==6.8.0
     # via build
 mccabe==0.7.0
     # via flake8
-packaging==23.2
+packaging==24.1
     # via
     #   -c ./requirements.txt
     #   build
@@ -38,7 +38,7 @@ pillow==10.3.0
     # via -r requirements-dev.in
 pip-tools==7.4.1
     # via -r requirements-dev.in
-pycodestyle==2.11.1
+pycodestyle==2.12.0
     # via flake8
 pyflakes==3.2.0
     # via flake8
@@ -48,7 +48,7 @@ pyproject-hooks==1.0.0
     #   pip-tools
 python-magic==0.4.27
     # via -r requirements-dev.in
-sqlparse==0.4.4
+sqlparse==0.5.0
     # via
     #   -c ./requirements.txt
     #   django
@@ -58,7 +58,7 @@ tomli==2.0.1
     #   build
     #   pip-tools
     #   pyproject-hooks
-typing-extensions==4.9.0
+typing-extensions==4.12.2
     # via
     #   -c ./requirements.txt
     #   asgiref
