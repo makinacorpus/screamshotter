@@ -8,7 +8,7 @@ asgiref==3.8.1
     # via django
 backports.zoneinfo==0.2.1;python_version<"3.9"
     # via django
-certifi==2024.6.2
+certifi==2024.7.4
     # via
     #   requests
     #   sentry-sdk
