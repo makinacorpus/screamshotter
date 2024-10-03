@@ -34,7 +34,7 @@ packaging==24.1
     # via
     #   -c ./requirements.txt
     #   build
-pillow==10.3.0
+pillow==10.4.0
     # via -r requirements-dev.in
 pip-tools==7.4.1
     # via -r requirements-dev.in
