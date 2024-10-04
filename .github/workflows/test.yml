@@ -229,7 +229,7 @@ jobs:
   deploy:
     name: Publish (on release only)
     runs-on: ubuntu-latest
-    needs: [ flake8, eslint, test, e2e_docker_image, e2e_deb_ ]
+    needs: [ flake8, eslint, test, e2e_docker_image, e2e_deb]
     if: ${{ github.event_name == 'release' && github.event.action == 'created' }}
     steps:
       - name: Download 20.04 debian artifact
