@@ -1,3 +1,9 @@
+screamshotter (2.2.3) RELEASED; urgency=medium
+
+  * Dependencies update
+
+ -- Jean-Etienne Castagnede <jean-etienne.castagnede@makina-corpus.com>  Fri, 4 Oct 2024 15:02:00 +0200
+
 screamshotter (2.2.2) RELEASED; urgency=medium
 
   * Fix chromium crash after debian update from previous version
