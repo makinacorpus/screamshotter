@@ -245,7 +245,7 @@ jobs:
       - name: Download 20.04 debian artifact
         uses: actions/download-artifact@v4
         with:
-          name: debian-20-04
+          name: debian-20.04
 
       - name: Download docker image
         uses: ishworkh/docker-image-artifact-download@v1
@@ -298,7 +298,7 @@ jobs:
       - name: Download 22.04 debian artifact
         uses: actions/download-artifact@v4
         with:
-          name: debian-22-04
+          name: debian-22.04
 
       - name: Attach debian packages as release binaries
         uses: skx/github-action-publish-binaries@master
