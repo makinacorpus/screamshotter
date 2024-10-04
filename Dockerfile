@@ -1,4 +1,4 @@
-FROM ubuntu:jammyAS base
+FROM ubuntu:jammy AS base
 
 ENV PYTHONUNBUFFERED=1
 ENV DEBIAN_FRONTEND=noninteractive
