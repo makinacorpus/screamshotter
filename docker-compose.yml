@@ -13,3 +13,5 @@ services:
     environment:
       - DJANGO_SETTINGS_MODULE=screamshotter.settings.dev
       - COLLECTSTATIC=0
+      - EXTERNAL_PUPPETEER=wss://chrome.paas.kasta.ovh:443
+
