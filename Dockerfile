@@ -1,13 +1,13 @@
-FROM ubuntu:jammy as base
+FROM ubuntu:jammy AS base
 
-ENV PYTHONUNBUFFERED 1
-ENV DEBIAN_FRONTEND noninteractive
-ENV LANG C.UTF-8
-ENV COLLECTSTATIC 1
-ENV TIMEOUT 60
-ENV WORKERS 1
-ENV MAX_REQUESTS 250
-ENV PUPPETEER_CACHE_DIR /app/puppeteer/
+ENV PYTHONUNBUFFERED=1
+ENV DEBIAN_FRONTEND=noninteractive
+ENV LANG=C.UTF-8
+ENV COLLECTSTATIC=1
+ENV TIMEOUT=60
+ENV WORKERS=1
+ENV MAX_REQUESTS=250
+ENV PUPPETEER_CACHE_DIR=/app/puppeteer/
 
 RUN useradd -ms /bin/bash django
 RUN mkdir -p /app/static
@@ -65,7 +65,7 @@ EXPOSE 8000
 WORKDIR /app/src
 ENTRYPOINT ["entrypoint.sh"]
 
-FROM base as build
+FROM base AS build
 
 ARG NODE_ENV=production
 
@@ -90,7 +90,7 @@ COPY package.json /app/package.json
 COPY package-lock.json /app/package-lock.json
 RUN . /app/venv/bin/activate && npm ci && rm /app/*.json
 
-FROM build as dev
+FROM build AS dev
 
 COPY requirements-dev.txt /app/
 RUN /app/venv/bin/pip3 install --no-cache-dir -r /app/requirements-dev.txt -U && rm /app/requirements-dev.txt
