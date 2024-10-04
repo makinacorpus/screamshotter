@@ -137,6 +137,7 @@ jobs:
       - name: Build package
         run: |
           make build_deb
+          cp ./dpkg/*.deb /home/runner/work/screamshotter/
 
       - name: Archive package artifact
         uses: actions/upload-artifact@v4
@@ -186,49 +187,18 @@ jobs:
           path: |
             /home/runner/work/screamshotter/screamshotter/google.png
 
-  e2e_deb_20_04:
-    name: Tests E2E 20.04
-    runs-on: ubuntu-20.04
+  e2e_deb:
+    name: Tests E2E debian packages
+    runs-on: ubuntu-${{ matrix.version }}
     needs: [ build_deb ]
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: debian-20.04
-      - name: Install package
-        run: |
-          sudo apt-get install -y /home/runner/work/screamshotter/screamshotter/*.deb
-      - name: E2E test
-        run: |
-          curl -d url=https://google.com http://localhost:8000 > google.png
-      - uses: actions/setup-python@v5
-        with:
-          python-version: 3.8
-      - name: Check result
-        run: |
-          pip install filetype
-          if filetype -f google.png |grep -q 'image/png'; then
-            echo "File is PNG";
-            exit 0;
-          else
-            echo "File is not PNG";
-            filetype -f google.png;
-            exit 1;
-          fi
-      - name: Archive result artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: result-20-04
-          path: |
-            /home/runner/work/screamshotter/screamshotter/google.png
+    strategy:
+        matrix:
+            version: ['20.04', '22.04']
 
-  e2e_deb_22_04:
-    name: Tests E2E 22.04
-    runs-on: ubuntu-22.04
-    needs: [ build_deb ]
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: debian-22.04
+          name: debian-${{ matrix.version }}
       - name: Install package
         run: |
           sudo apt-get install -y /home/runner/work/screamshotter/screamshotter/*.deb
@@ -252,14 +222,14 @@ jobs:
       - name: Archive result artifact
         uses: actions/upload-artifact@v4
         with:
-          name: result-22-04
+          name: result-${{ matrix.version }}
           path: |
             /home/runner/work/screamshotter/screamshotter/google.png
 
   deploy:
     name: Publish (on release only)
     runs-on: ubuntu-latest
-    needs: [ flake8, eslint, test, e2e_docker_image, e2e_deb_20_04, e2e_deb_22_04 ]
+    needs: [ flake8, eslint, test, e2e_docker_image, e2e_deb_ ]
     if: ${{ github.event_name == 'release' && github.event.action == 'created' }}
     steps:
       - name: Download 20.04 debian artifact
