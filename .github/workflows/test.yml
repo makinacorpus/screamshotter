@@ -96,6 +96,22 @@ jobs:
         cd src
         codecov
 
+  build_docker_image:
+    name: Build docker image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build Docker image
+        run: |
+          docker build -t screamshotter_ci:latest .
+      - name: Upload image
+        uses: ishworkh/docker-image-artifact-upload@v1
+        with:
+          image: "screamshotter_ci:latest"
+
   build_deb:
     name: Build debian package
     runs-on: ubuntu-latest
@@ -130,19 +146,15 @@ jobs:
           path: |
             /home/runner/work/screamshotter/*.deb
 
-  e2e_docker:
+  e2e_docker_image:
     name: Tests E2E docker
     runs-on: ubuntu-latest
+    needs: [build_docker_image]
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build Docker image
-        run: |
-          docker build -t screamshotter_ci:latest .
+      - name: Download image
+        uses: ishworkh/docker-image-artifact-download@v1
+        with:
+          image: "screamshotter_ci:latest"
 
       - name: Launch service
         run: |
@@ -192,15 +204,19 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: debian-${{ matrix.version }}
+
       - name: Install package
         run: |
           sudo apt-get install -y /home/runner/work/screamshotter/screamshotter/*.deb
+
       - name: E2E test
         run: |
           curl -d url=https://google.com http://localhost:8000 > google.png
+
       - uses: actions/setup-python@v5
         with:
           python-version: 3.8
+
       - name: Check result
         run: |
           pip install filetype
@@ -212,6 +228,7 @@ jobs:
             filetype -f google.png;
             exit 1;
           fi
+
       - name: Archive result artifact
         uses: actions/upload-artifact@v4
         with:
@@ -222,7 +239,7 @@ jobs:
   deploy:
     name: Publish (on release only)
     runs-on: ubuntu-latest
-    needs: [ flake8, eslint, test, e2e_docker, e2e_deb]
+    needs: [ flake8, eslint, test, e2e_docker_image, e2e_deb_ ]
     if: ${{ github.event_name == 'release' && github.event.action == 'created' }}
     steps:
       - name: Download 20.04 debian artifact
@@ -240,6 +257,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_LOGIN }}
           password: ${{ secrets.DOCKER_PASSWORD }}
+
       - name: Publish Docker image (tag, v2, latest or dev)
         run: |
           if [[ "${{ github.ref }}" == *"dev"* ]]; then
