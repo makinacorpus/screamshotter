@@ -1,5 +1,4 @@
 const Sentry = require('@sentry/node');
-const Integrations = require('@sentry/tracing');
 
 const puppeteer = require('puppeteer');
 const parseArgs = require('minimist');
@@ -15,9 +14,7 @@ try {
       dsn: sentrydsn,
       environment: sentryenv,
       release: version,
-      integrations: [new Integrations.BrowserTracing()],
       tracesSampleRate: sentrytracerate,
-
     });
   }
 } catch (e) {
