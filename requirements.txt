@@ -42,7 +42,7 @@ nodeenv==1.9.1
     # via screamshotter (setup.py)
 packaging==24.1
     # via gunicorn
-pytz==2024.1
+pytz==2024.2
     # via djangorestframework
 requests==2.32.3
     # via coreapi
