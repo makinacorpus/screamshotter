@@ -1,8 +1,11 @@
-FROM ubuntu:jammy AS base
+ARG BASE_IMAGE=jammy
+
+FROM ubuntu:${BASE_IMAGE} AS base
 
 ENV PYTHONUNBUFFERED=1
 ENV DEBIAN_FRONTEND=noninteractive
 ENV LANG=C.UTF-8
+ENV TZ=UTC
 ENV COLLECTSTATIC=1
 ENV TIMEOUT=60
 ENV WORKERS=1
@@ -71,14 +74,14 @@ ARG NODE_ENV=production
 
 RUN apt-get -qq update && apt-get install -qq -y \
     build-essential \
-    python3.10-dev python3.10-venv python3.10-distutils libmagic1 && \
+    python3-dev python3-venv python3-distutils libmagic1 && \
     apt-get clean all && rm -rf /var/apt/lists/* && rm -rf /var/cache/apt/*
 
 # install pip & requirements
 RUN wget https://bootstrap.pypa.io/get-pip.py && python3 get-pip.py && rm get-pip.py
 
 USER django
-RUN python3.10 -m venv /app/venv
+RUN python3 -m venv /app/venv
 RUN /app/venv/bin/pip3 install --no-cache-dir pip setuptools wheel -U
 
 COPY requirements.txt /app/
