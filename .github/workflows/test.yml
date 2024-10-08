@@ -77,6 +77,8 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
+        cache: pip
+
     - name: Install dependencies
       run: |
         sudo apt-get update -q
@@ -85,11 +87,13 @@ jobs:
         pip install -r requirements.txt -U
         pip install -r requirements-dev.txt
         npm ci
+
     - name: Test with coverage
       run: |
         cd src
         coverage run ./manage.py test
         coverage run -a ./manage.py test --settings screamshotter.settings.test_timeout screenshotter.tests.CaptureTestCase.test_timeout_screenshot
+
     - name: Coverage upload
       run: |
         pip install codecov
@@ -101,14 +105,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v3
+
       - name: Build Docker image
         run: |
           docker build -t screamshotter_ci:latest .
+
       - name: Upload image
-        uses: ishworkh/docker-image-artifact-upload@v1
+        uses: ishworkh/docker-image-artifact-upload@v2.1.0
         with:
           image: "screamshotter_ci:latest"
 
@@ -123,6 +130,7 @@ jobs:
                   version: '20.04'
                 - os: jammy
                   version: '22.04'
+
     env:
       DISTRO: 'ubuntu:${{ matrix.os }}'
       CODE: ${{ matrix.version }}
@@ -150,9 +158,10 @@ jobs:
     name: Tests E2E docker
     runs-on: ubuntu-latest
     needs: [build_docker_image]
+
     steps:
       - name: Download image
-        uses: ishworkh/docker-image-artifact-download@v1
+        uses: ishworkh/docker-image-artifact-download@v2.1.0
         with:
           image: "screamshotter_ci:latest"
 
@@ -248,7 +257,7 @@ jobs:
           name: 'debian-20.04'
 
       - name: Download docker image
-        uses: ishworkh/docker-image-artifact-download@v1
+        uses: ishworkh/docker-image-artifact-download@v2.1.0
         with:
           image: "screamshotter_ci:latest"
 

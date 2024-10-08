@@ -1,0 +1,52 @@
+name: Check deps
+
+on:
+  pull_request:
+    paths:
+      - setup.py
+      - requirements.txt
+      - requirements-dev.txt
+
+env:
+  DEBIAN_FRONTEND: noninteractive
+
+jobs:
+  quality:
+    name: Checking dependency graph
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: ['ubuntu-20.04']
+        python-version: ['3.8']
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v5
+        with:
+          cache: 'pip'
+          python-version: '3.8.18'
+
+      - name: Install dependencies
+        run: |
+          pip3 install -c requirements-dev.txt pip-tools
+
+      - name: Check dependency graph
+        run: |
+          pip-compile -q --strip-extras
+          pip-compile -q --strip-extras requirements-dev.in
+
+      - name: Verify dependency graph is ok
+        uses: tj-actions/verify-changed-files@v20
+        id: verify-changed-files
+        with:
+          files: |
+            requirements.txt
+            requirements-dev.txt
+
+      - name: Validating graph
+        if: steps.verify-changed-files.outputs.files_changed == 'true'
+        run: |
+          echo "Dependency file(s) changed: ${{ steps.verify-changed-files.outputs.changed_files }}"
+          git diff
+          core.setFailed('Please add your new dependencies in setup.py and/or dev-requirements.in then run pip-compile to add them in requirements. (see docs/contribute/development)')

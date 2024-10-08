@@ -13,8 +13,8 @@ ENV MAX_REQUESTS=250
 ENV PUPPETEER_CACHE_DIR=/app/puppeteer/
 
 RUN useradd -ms /bin/bash django
-RUN mkdir -p /app/static
-RUN chown django:django /app
+RUN mkdir -p /app/static /opt
+RUN chown django:django /app /opt
 
 RUN apt-get -qq update && apt-get install -qq -y \
     gconf-service \
@@ -81,28 +81,28 @@ RUN apt-get -qq update && apt-get install -qq -y \
 RUN wget https://bootstrap.pypa.io/get-pip.py && python3 get-pip.py && rm get-pip.py
 
 USER django
-RUN python3 -m venv /app/venv
-RUN /app/venv/bin/pip3 install --no-cache-dir pip setuptools wheel -U
+RUN python3 -m venv /opt/venv
+RUN /opt/venv/bin/pip3 install --no-cache-dir pip setuptools wheel -U
 
 COPY requirements.txt /app/
-RUN /app/venv/bin/pip3 install --no-cache-dir -r /app/requirements.txt -U && rm /app/requirements.txt
-RUN /app/venv/bin/nodeenv /app/venv/ -C '' -p -n 20.9.0
+RUN /opt/venv/bin/pip3 install --no-cache-dir -r /app/requirements.txt -U && rm /app/requirements.txt
+RUN /opt/venv/bin/nodeenv /app/venv/ -C '' -p -n 20.9.0
 
 # upgrade npm & requirements
 COPY package.json /app/package.json
 COPY package-lock.json /app/package-lock.json
-RUN . /app/venv/bin/activate && npm ci && rm /app/*.json
+RUN . /opt/venv/bin/activate && npm ci && rm /app/*.json
 
 FROM build AS dev
 
 COPY requirements-dev.txt /app/
-RUN /app/venv/bin/pip3 install --no-cache-dir -r /app/requirements-dev.txt -U && rm /app/requirements-dev.txt
+RUN /opt/venv/bin/pip3 install --no-cache-dir -r /app/requirements-dev.txt -U && rm /app/requirements-dev.txt
 
 CMD ["./manage.py", "runserver", "0.0.0.0:8000"]
 
 FROM base
 
-COPY --from=build /app/venv /app/venv
+COPY --from=build /opt/venv /opt/venv
 COPY --from=build /app/node_modules /app/node_modules
 COPY --from=build /app/puppeteer /app/puppeteer
 COPY src /app/src

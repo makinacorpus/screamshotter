@@ -3,7 +3,7 @@
 cd /app/src || exit
 
 # Activate venv
-. /app/venv/bin/activate
+. /opt/venv/bin/activate
 
 if [ "$COLLECTSTATIC" == "1" ]
 then
