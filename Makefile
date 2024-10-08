@@ -7,4 +7,4 @@ build_deb:
 	docker rm screamshotter_deb_run
 
 deps:
-	docker compose run --rm web bash -c "pip-compile -q --strip-extras && pip-compile -q --strip-extras requirements-dev.in"
+	docker compose run --rm  web bash -c "cd /app && pip-compile -q --strip-extras && pip-compile -q --strip-extras requirements-dev.in"

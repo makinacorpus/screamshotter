@@ -2,10 +2,10 @@ name: Check deps
 
 on:
   pull_request:
-    #paths:
-    #  - setup.py
-    #  - requirements.txt
-    #  - requirements-dev.txt
+    paths:
+      - setup.py
+      - requirements.txt
+      - requirements-dev.txt
 
 env:
   DEBIAN_FRONTEND: noninteractive
