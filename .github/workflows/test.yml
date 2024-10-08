@@ -114,7 +114,7 @@ jobs:
           docker build -t screamshotter_ci:latest .
 
       - name: Upload image
-        uses: ishworkh/docker-image-artifact-upload@v2
+        uses: ishworkh/docker-image-artifact-upload@v2.1.0
         with:
           image: "screamshotter_ci:latest"
 
@@ -160,7 +160,7 @@ jobs:
 
     steps:
       - name: Download image
-        uses: ishworkh/docker-image-artifact-download@v2
+        uses: ishworkh/docker-image-artifact-download@v2.1.0
         with:
           image: "screamshotter_ci:latest"
 
@@ -256,7 +256,7 @@ jobs:
           name: 'debian-20.04'
 
       - name: Download docker image
-        uses: ishworkh/docker-image-artifact-download@v1
+        uses: ishworkh/docker-image-artifact-download@v2.1.0
         with:
           image: "screamshotter_ci:latest"
 
