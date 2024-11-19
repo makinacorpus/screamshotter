@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=jammy
+ARG BASE_IMAGE=noble
 
 FROM ubuntu:${BASE_IMAGE} AS base
 
@@ -17,8 +17,8 @@ RUN mkdir -p /app/static /opt
 RUN chown django:django /app /opt
 
 RUN apt-get -qq update && apt-get install -qq -y \
-    gconf-service \
-    libasound2 \
+    libappindicator3-1 \
+    libasound2-dev \
     libatk1.0-0 \
     libatk-bridge2.0-0 \
     libc6 \
@@ -28,7 +28,6 @@ RUN apt-get -qq update && apt-get install -qq -y \
     libexpat1 \
     libfontconfig1 \
     libgcc1 \
-    libgconf-2-4 \
     libgdk-pixbuf2.0-0 \
     libglib2.0-0 \
     libgtk-3-0 \
@@ -51,7 +50,6 @@ RUN apt-get -qq update && apt-get install -qq -y \
     libxtst6 \
     ca-certificates \
     fonts-liberation \
-    libappindicator1 \
     libnss3 \
     lsb-release \
     xdg-utils \
@@ -74,11 +72,8 @@ ARG NODE_ENV=production
 
 RUN apt-get -qq update && apt-get install -qq -y \
     build-essential \
-    python3-dev python3-venv python3-distutils libmagic1 && \
+    python3-pip python3-dev python3-venv libmagic1 && \
     apt-get clean all && rm -rf /var/apt/lists/* && rm -rf /var/cache/apt/*
-
-# install pip & requirements
-RUN wget https://bootstrap.pypa.io/get-pip.py && python3 get-pip.py && rm get-pip.py
 
 USER django
 RUN python3 -m venv /opt/venv

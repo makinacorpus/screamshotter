@@ -70,6 +70,8 @@ jobs:
             python-version: '3.8'  # default python version in 20.04
           - os: 'ubuntu-22.04'
             python-version: '3.10'  # default python version in 22.04
+          - os: 'ubuntu-24.04'
+            python-version: '3.12'  # default python version in 22.04
 
     steps:
     - uses: actions/checkout@v4
@@ -124,13 +126,14 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
         matrix:
-            os: ['focal', 'jammy']
+            os: ['focal', 'jammy', 'noble']
             include:
                 - os: focal
                   version: '20.04'
                 - os: jammy
                   version: '22.04'
-
+                - os: noble
+                  version: '24.04'
     env:
       DISTRO: 'ubuntu:${{ matrix.os }}'
       CODE: ${{ matrix.version }}
@@ -207,7 +210,7 @@ jobs:
     needs: [ build_deb ]
     strategy:
         matrix:
-            version: ['20.04', '22.04']
+            version: ['20.04', '22.04', '24.04']
 
     steps:
       - uses: actions/download-artifact@v4
@@ -308,6 +311,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: debian-22.04
+
+      - name: Download 24.04 debian artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: debian-24.04
 
       - name: Attach debian packages as release binaries
         uses: skx/github-action-publish-binaries@master
