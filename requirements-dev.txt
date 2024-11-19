@@ -24,7 +24,7 @@ django==4.2.18
     #   django-debug-toolbar
 django-debug-toolbar==4.4.6
     # via -r requirements-dev.in
-flake8==7.1.0
+flake8==7.1.1
     # via -r requirements-dev.in
 importlib-metadata==6.8.0
     # via build
