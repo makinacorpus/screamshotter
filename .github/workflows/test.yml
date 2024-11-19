@@ -310,6 +310,11 @@ jobs:
         with:
           name: debian-22.04
 
+      - name: Download 24.04 debian artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: debian-24.04
+
       - name: Attach debian packages as release binaries
         uses: skx/github-action-publish-binaries@master
         env:
