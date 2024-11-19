@@ -8,7 +8,7 @@
 
 # Create screamshotter user (only on a new install)
 if [ "$2" = "" ]; then
-	adduser --system --group --home /opt/screamshotter --quiet screamshotter || true
+  useradd --system --create-home --home-dir /opt/screamshotter screamshotter || true
 fi
 
 db_get screamshotter/TIMEOUT; export TIMEOUT="$RET"
@@ -31,7 +31,7 @@ for f in custom.py env gunicorn-screamshotter.conf.py; do
 # or edit /opt/screamshotter/conf/$f.in
 END
   	envsubst < $CONF_DIR/$f.in >> $CONF_DIR/$f
-  	chown screamshotter.screamshotter $CONF_DIR/$f || true
+  	chown screamshotter:screamshotter $CONF_DIR/$f || true
 done
 
 systemctl stop screamshotter || true
