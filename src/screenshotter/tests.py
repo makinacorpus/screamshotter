@@ -63,7 +63,7 @@ class CaptureTestCase(SimpleTestCase):
     def test_timeout_screenshot(self):
         # We show that we can change timeout value. It's so small, this takes more than 1ms to generate the screenshot.
         # => It fails
-        with self.assertRaisesRegexp(ScreenshotterException, 'TimeoutError: Navigation timeout of 1 ms exceeded'):
+        with self.assertRaisesRegex(ScreenshotterException, 'TimeoutError: Navigation timeout of 1 ms exceeded'):
             take_screenshot('https://www.google.fr')
 
     @override_settings(SCREENSHOTTER={'BAD_SETTINGS': 'none'})
