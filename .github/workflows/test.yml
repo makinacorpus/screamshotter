@@ -124,13 +124,14 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
         matrix:
-            os: ['focal', 'jammy']
+            os: ['focal', 'jammy', 'noble']
             include:
                 - os: focal
                   version: '20.04'
                 - os: jammy
                   version: '22.04'
-
+                - os: noble
+                  version: '24.04'
     env:
       DISTRO: 'ubuntu:${{ matrix.os }}'
       CODE: ${{ matrix.version }}
@@ -207,7 +208,7 @@ jobs:
     needs: [ build_deb ]
     strategy:
         matrix:
-            version: ['20.04', '22.04']
+            version: ['20.04', '22.04', '24.04']
 
     steps:
       - uses: actions/download-artifact@v4
