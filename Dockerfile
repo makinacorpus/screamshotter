@@ -18,6 +18,7 @@ RUN chown django:django /app /opt
 
 RUN apt-get -qq update && apt-get install -qq -y \
     libappindicator3-1 \
+    libasound2-dev \
     libatk1.0-0 \
     libatk-bridge2.0-0 \
     libc6 \
