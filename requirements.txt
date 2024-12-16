@@ -11,7 +11,7 @@ backports-zoneinfo==0.2.1 ; python_version < "3.9"
     #   django
     #   djangorestframework
     #   screamshotter (setup.py)
-certifi==2024.8.30
+certifi==2024.12.14
     # via
     #   requests
     #   sentry-sdk
