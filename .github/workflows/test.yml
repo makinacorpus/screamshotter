@@ -33,15 +33,15 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: '3.8'  # lint with minimal version supported (3.8 in 20.04)
+
     - name: Install dependencies
       run: |
-        echo "${{ github.event_name }}! ${{ github.event.action }}"
-        python -m pip install --upgrade pip
-        python -m pip install flake8
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        python -m pip install flake8 -c requirements-dev.txt
+
     - name: Lint with flake8
       run: |
         flake8 src
+
   eslint:
     runs-on: ubuntu-latest
     name: Check javascript linting
@@ -259,6 +259,16 @@ jobs:
         with:
           name: 'debian-20.04'
 
+      - name: Download 22.04 debian artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: debian-22.04
+
+      - name: Download 24.04 debian artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: debian-24.04
+
       - name: Download docker image
         uses: ishworkh/docker-image-artifact-download@v2.1.0
         with:
@@ -270,19 +280,33 @@ jobs:
           username: ${{ secrets.DOCKER_LOGIN }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Publish Docker image (tag, v2, latest or dev)
-        run: |
-          if [[ "${{ github.ref }}" == *"dev"* ]]; then
-            export DOCKER_TAG=dev
-          else
-            docker tag screamshotter_ci:latest makinacorpus/screamshotter:v${{github.ref_name}}
-            docker push makinacorpus/screamshotter:v${{github.ref_name}}
-            docker tag screamshotter_ci:latest makinacorpus/screamshotter:v2
-            docker push makinacorpus/screamshotter:v2
-            export DOCKER_TAG=latest
-          fi
-          docker tag screamshotter_ci:latest makinacorpus/screamshotter:$DOCKER_TAG
-          docker push makinacorpus/screamshotter:$DOCKER_TAG
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images:  |
+            makinacorpus/convertit
+            ghcr.io/makinacorpus/convertit
+
+      - name: Build and push image
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          provenance: mode=max
+          sbom: true
+          builder: ${{ steps.buildx.outputs.name }}
+          tags: ${{ steps.meta.outputs.tags }}
 
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
@@ -290,36 +314,27 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
 
-      - name: Publish debian packages
-        run: |
-          if [[ "${{ github.ref }}" == *"dev"* ]]; then
-            export DEB_COMPONENT=dev
-          else
-            export DEB_COMPONENT=main
-          fi
-          echo "${{ github.ref }} : Publishing as $DEB_COMPONENT package"
-          scp -P ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no /home/runner/work/screamshotter/screamshotter/screamshotter_*_amd64.deb ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/srv/packages/incoming/$DEB_COMPONENT/
-          if [[ "${{ github.ref }}" == *"dev"* ]]; then
-            ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} make focal_dev -C /srv/packages
-            # ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} make jammy_dev -C /srv/packages
-          else
-            ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} make focal_main -C /srv/packages
-            # ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} make jammy_main -C /srv/packages
-          fi
-
-      - name: Download 22.04 debian artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: debian-22.04
-
-      - name: Download 24.04 debian artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: debian-24.04
+#       - name: Publish debian packages
+#         run: |
+#           if [[ "${{ github.ref }}" == *"dev"* ]]; then
+#             export DEB_COMPONENT=dev
+#           else
+#             export DEB_COMPONENT=main
+#           fi
+#           echo "${{ github.ref }} : Publishing as $DEB_COMPONENT package"
+#           scp -P ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no /home/runner/work/screamshotter/screamshotter/screamshotter_*_amd64.deb ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/srv/packages/incoming/$DEB_COMPONENT/
+#           if [[ "${{ github.ref }}" == *"dev"* ]]; then
+#             ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} make focal_dev -C /srv/packages
+#             ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} make jammy_dev -C /srv/packages
+#             ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} make noble_dev -C /srv/packages
+#           else
+#             ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} make focal_main -C /srv/packages
+#             ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} make jammy_main -C /srv/packages
+#             ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} make noble_main -C /srv/packages
+#           fi
 
       - name: Attach debian packages as release binaries
-        uses: skx/github-action-publish-binaries@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: AButler/upload-release-assets@v3.0
         with:
-          args: '*.deb'
+          files: "*.deb"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
