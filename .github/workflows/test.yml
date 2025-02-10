@@ -334,7 +334,8 @@ jobs:
           fi
 
       - name: Attach debian packages as release binaries
-        uses: AButler/upload-release-assets@v3.0
+        uses: skx/github-action-publish-binaries@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          files: "*.deb"
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          args: '*.deb'
