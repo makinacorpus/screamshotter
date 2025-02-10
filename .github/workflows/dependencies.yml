@@ -29,6 +29,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          pip3 install -U "pip<24.3"  # prevent relative bug path with pip 24.3 and pip-tools
           pip3 install -c requirements-dev.txt pip-tools
 
       - name: Check dependency graph
