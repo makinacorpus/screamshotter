@@ -1,10 +1,10 @@
 CHANGELOG
 =========
 
-2.2.5+dev    (XXXX-XX-XX)
+2.2.6        (2025-02-10)
 -------------------------
 
-* Add Ubuntu noble 24.04 support
+* Add Ubuntu 20.04 and 24.04 debian packages
 * Change base docker image to Noble
 
 
