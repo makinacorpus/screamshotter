@@ -77,7 +77,7 @@ RUN apt-get -qq update && apt-get install -qq -y \
 
 USER django
 RUN python3 -m venv /opt/venv
-RUN /opt/venv/bin/pip3 install --no-cache-dir pip setuptools wheel -U
+RUN /opt/venv/bin/pip3 install --no-cache-dir -U "pip<24.3" setuptools wheel
 
 COPY requirements.txt /app/
 RUN /opt/venv/bin/pip3 install --no-cache-dir -r /app/requirements.txt -U && rm /app/requirements.txt
