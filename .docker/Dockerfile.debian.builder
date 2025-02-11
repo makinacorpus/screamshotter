@@ -2,10 +2,9 @@ ARG DISTRO=ubuntu:focal
 
 FROM ${DISTRO} AS base
 
-
+RUN mkdir -p /root/.gnupg && echo "keyserver keys.openpgp.org" > /root/.gnupg/gpg.conf  # bypass current timeout gpg in docker build
 RUN apt-get update -qq -o Acquire::Languages=none && \
     env DEBIAN_FRONTEND=noninteractive apt-get install -yqq software-properties-common lsb-release && \
-    add-apt-repository ppa:deadsnakes/ppa && \
     if test "$(lsb_release -cs)" = 'focal' ; then \
        add-apt-repository ppa:jyrki-pulliainen/dh-virtualenv; fi &&\
     env DEBIAN_FRONTEND=noninteractive apt-get install -yqq \
