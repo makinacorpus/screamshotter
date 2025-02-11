@@ -296,8 +296,8 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images:  |
-            makinacorpus/convertit
-            ghcr.io/makinacorpus/convertit
+            makinacorpus/screamshotter
+            ghcr.io/makinacorpus/screamshotter
 
       - name: Build and push image
         uses: docker/build-push-action@v6
