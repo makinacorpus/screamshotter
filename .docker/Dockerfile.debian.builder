@@ -2,12 +2,11 @@ ARG DISTRO=ubuntu:focal
 
 FROM ${DISTRO} AS base
 
-RUN mkdir -p /root/.gnupg && echo "keyserver keys.openpgp.org" > /root/.gnupg/gpg.conf  # bypass current timeout gpg in docker build
 RUN apt-get update -qq -o Acquire::Languages=none && \
     env DEBIAN_FRONTEND=noninteractive apt-get install -yqq software-properties-common lsb-release && \
     if test "$(lsb_release -cs)" = 'focal' ; then \
-       add-apt-repository ppa:jyrki-pulliainen/dh-virtualenv; fi &&\
-    env DEBIAN_FRONTEND=noninteractive apt-get install -yqq \
+       echo "deb [trusted=yes] http://ppa.launchpad.net/jyrki-pulliainen/dh-virtualenv/ubuntu focal main" > /etc/apt/sources.list.d/dh-virtualenv.list; fi &&\
+    env DEBIAN_FRONTEND=noninteractive apt-get update -qq -o Acquire::Languages=none && apt-get install -yqq \
     dpkg-dev \
     debhelper \
     dh-virtualenv \
