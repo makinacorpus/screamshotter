@@ -44,7 +44,7 @@ requests==2.32.3
     # via coreapi
 sentry-sdk==2.20.0
     # via screamshotter (setup.py)
-sqlparse==0.5.1
+sqlparse==0.5.3
     # via django
 typing-extensions==4.12.2
     # via asgiref

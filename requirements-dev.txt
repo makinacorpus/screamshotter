@@ -42,7 +42,7 @@ pyproject-hooks==1.0.0
     #   pip-tools
 python-magic==0.4.27
     # via -r requirements-dev.in
-sqlparse==0.5.1
+sqlparse==0.5.3
     # via
     #   -c ./requirements.txt
     #   django
