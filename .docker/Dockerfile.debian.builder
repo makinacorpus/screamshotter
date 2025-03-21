@@ -1,11 +1,8 @@
-ARG DISTRO=ubuntu:focal
+ARG DISTRO=ubuntu:jammy
 
 FROM ${DISTRO} AS base
 
 RUN apt-get update -qq -o Acquire::Languages=none && \
-    env DEBIAN_FRONTEND=noninteractive apt-get install -yqq software-properties-common lsb-release && \
-    if test "$(lsb_release -cs)" = 'focal' ; then \
-       echo "deb [trusted=yes] http://ppa.launchpad.net/jyrki-pulliainen/dh-virtualenv/ubuntu focal main" > /etc/apt/sources.list.d/dh-virtualenv.list; fi &&\
     env DEBIAN_FRONTEND=noninteractive apt-get update -qq -o Acquire::Languages=none && apt-get install -yqq \
     dpkg-dev \
     debhelper \

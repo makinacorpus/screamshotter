@@ -5,7 +5,7 @@ services:
       target: dev
       args:
         NODE_ENV: development
-        BASE_IMAGE: focal
+        BASE_IMAGE: jammy
 
     volumes:
       - ./:/app/
