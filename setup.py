@@ -15,7 +15,6 @@ setup(
     scripts=['src/manage.py'],
     install_requires=[
         'django==4.2.*',
-        'backports.zoneinfo==0.2.1;python_version<"3.9"',
         'tzdata',
         'nodeenv',
         'djangorestframework',
