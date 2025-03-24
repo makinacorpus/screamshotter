@@ -32,7 +32,7 @@ idna==3.10
     # via requests
 itypes==1.2.0
     # via coreapi
-jinja2==3.1.5
+jinja2==3.1.6
     # via coreschema
 markupsafe==3.0.2
     # via jinja2
