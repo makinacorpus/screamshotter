@@ -50,7 +50,7 @@ typing-extensions==4.12.2
     # via asgiref
 tzdata==2025.2
     # via screamshotter (setup.py)
-uritemplate==4.1.1
+uritemplate==4.2.0
     # via coreapi
 urllib3==2.5.0
     # via
