@@ -22,7 +22,7 @@ django==4.2.20
     #   screamshotter (setup.py)
 djangorestframework==3.15.2
     # via screamshotter (setup.py)
-gevent==24.11.1
+gevent==25.5.1
     # via gunicorn
 greenlet==3.2.3
     # via gevent
