@@ -14,7 +14,7 @@ click==8.1.7
     # via pip-tools
 coverage==7.8.2
     # via -r requirements-dev.in
-django==4.2.20
+django==4.2.23
     # via
     #   -c ./requirements.txt
     #   django-debug-toolbar
@@ -28,7 +28,7 @@ packaging==24.1
     # via
     #   -c ./requirements.txt
     #   build
-pillow==11.2.1
+pillow==11.3.0
     # via -r requirements-dev.in
 pip-tools==7.4.1
     # via -r requirements-dev.in
