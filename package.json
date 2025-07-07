@@ -13,7 +13,7 @@
     "@sentry/node": "^9.30.0",
     "html-prettify": "^1.0.7",
     "minimist": "^1.2.8",
-    "puppeteer": "^21.9.0"
+    "puppeteer": "^24.11.2"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.27.5",
