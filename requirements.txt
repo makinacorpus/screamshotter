@@ -44,6 +44,8 @@ setuptools==84.0.0
     # via zope-event
 sqlparse==0.5.3
     # via django
+typing-extensions==4.15.0
+    # via asgiref
 tzdata==2025.3
     # via screamshotter (setup.py)
 uritemplate==4.2.0
