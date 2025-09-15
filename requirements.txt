@@ -42,7 +42,7 @@ packaging==24.1
     # via gunicorn
 requests==2.32.4
     # via coreapi
-sentry-sdk==2.29.1
+sentry-sdk==2.37.1
     # via screamshotter (setup.py)
 sqlparse==0.5.3
     # via django
