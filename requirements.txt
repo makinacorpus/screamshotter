@@ -24,7 +24,7 @@ djangorestframework==3.16.0
     # via screamshotter (setup.py)
 gevent==25.9.1
     # via gunicorn
-greenlet==3.2.3
+greenlet==3.2.4
     # via gevent
 gunicorn==23.0.0
     # via screamshotter (setup.py)
