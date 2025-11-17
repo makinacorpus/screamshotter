@@ -18,7 +18,7 @@ django==4.2.24
     # via
     #   -c ./requirements.txt
     #   django-debug-toolbar
-django-debug-toolbar==6.0.0
+django-debug-toolbar==6.1.0
     # via -r requirements-dev.in
 flake8==7.3.0
     # via -r requirements-dev.in
