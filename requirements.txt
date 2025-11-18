@@ -20,7 +20,7 @@ django==4.2.24
     # via
     #   djangorestframework
     #   screamshotter (setup.py)
-djangorestframework==3.16.0
+djangorestframework==3.16.1
     # via screamshotter (setup.py)
 gevent==25.9.1
     # via gunicorn
