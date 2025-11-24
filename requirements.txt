@@ -58,7 +58,7 @@ urllib3==2.5.0
     #   sentry-sdk
 whitenoise==6.9.0
     # via screamshotter (setup.py)
-zope-event==6.0
+zope-event==6.1
     # via gevent
 zope-interface==8.0.1
     # via gevent
