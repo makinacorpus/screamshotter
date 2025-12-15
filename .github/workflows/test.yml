@@ -212,7 +212,7 @@ jobs:
             version: ['22.04', '24.04']
 
     steps:
-      - uses: actions/download-artifact@v6
+      - uses: actions/download-artifact@v7
         with:
           name: debian-${{ matrix.version }}
 
@@ -254,12 +254,12 @@ jobs:
     if: ${{ github.event_name == 'release' && github.event.action == 'created' }}
     steps:
       - name: Download 22.04 debian artifact
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: debian-22.04
 
       - name: Download 24.04 debian artifact
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: debian-24.04
 
