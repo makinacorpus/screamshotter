@@ -150,7 +150,7 @@ jobs:
           cp ./dpkg/*.deb /home/runner/work/screamshotter/
 
       - name: Archive package artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: debian-${{ matrix.version }}
           path: |
@@ -197,7 +197,7 @@ jobs:
           fi
 
       - name: Archive result artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: result-docker
           path: |
@@ -241,7 +241,7 @@ jobs:
           fi
 
       - name: Archive result artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: result-${{ matrix.version }}
           path: |
