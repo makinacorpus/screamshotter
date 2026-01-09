@@ -8,6 +8,7 @@ asgiref==3.8.1
     # via
     #   -c ./requirements.txt
     #   django
+coverage==7.10.6
 build==1.0.3
     # via pip-tools
 click==8.1.7
@@ -30,8 +31,6 @@ packaging==24.1
     #   build
 pillow==12.1.0
     # via -r requirements-dev.in
-pip-tools==7.4.1
-    # via -r requirements-dev.in
 pycodestyle==2.14.0
     # via flake8
 pyflakes==3.4.0
@@ -39,7 +38,6 @@ pyflakes==3.4.0
 pyproject-hooks==1.0.0
     # via
     #   build
-    #   pip-tools
 python-magic==0.4.27
     # via -r requirements-dev.in
 sqlparse==0.5.3
@@ -50,14 +48,11 @@ sqlparse==0.5.3
 tomli==2.0.1
     # via
     #   build
-    #   pip-tools
     #   pyproject-hooks
 typing-extensions==4.12.2
     # via
     #   -c ./requirements.txt
     #   asgiref
-wheel==0.41.3
-    # via pip-tools
 
 # The following packages are considered to be unsafe in a requirements file:
 # pip

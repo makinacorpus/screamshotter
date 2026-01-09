@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cd /app/src || exit
+cd /opt/screamshotter/src || exit
 
 # Activate venv
 . /opt/venv/bin/activate

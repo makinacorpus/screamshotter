@@ -5,10 +5,10 @@ services:
       target: dev
       args:
         NODE_ENV: development
-        BASE_IMAGE: jammy
+        BASE_IMAGE: ubuntu:jammy
 
     volumes:
-      - ./:/app/
+      - ./src:/opt/screamshotter/src
     ports:
       - "8000:8000"
     environment:
