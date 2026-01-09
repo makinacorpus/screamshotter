@@ -95,7 +95,7 @@ class CaptureApiTestCase(APISimpleTestCase):
     def test_api_wrong_response(self):
         serializer = ScreenshotSerializer()
         data = serializer.data
-        data['url'] = "https://kikou.com"
+        data['url'] = "https://dodo"
         response = self.client.post(reverse('screenshotter:screenshot') + '?format=json', data=data)
         self.assertEqual(response.status_code, 500, response.json())
 
