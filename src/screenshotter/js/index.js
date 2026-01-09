@@ -1,15 +1,24 @@
 const Sentry = require('@sentry/node');
-
 const puppeteer = require('puppeteer');
 const parseArgs = require('minimist');
 const prettify = require('html-prettify');
 
 const args = parseArgs(process.argv);
 
-const { version, sentrydsn, sentryenv, sentrytracerate, url, path, selector, waitseconds, waitfor } = args;
+const {
+  version,
+  sentrydsn,
+  sentryenv,
+  sentrytracerate,
+  url,
+  path,
+  selector,
+  waitseconds,
+  waitfor
+} = args;
 
 try {
-  if (sentrydsn !== '') {
+  if (sentrydsn) {
     Sentry.init({
       dsn: sentrydsn,
       environment: sentryenv,
@@ -18,42 +27,43 @@ try {
     });
   }
 } catch (e) {
-  console.error(e);
+  console.error('Sentry init failed', e);
 }
 
-const headers = JSON.parse(args.headers);
-const viewportWidth = parseInt(args.vwidth, 10);
-const viewportHeight = parseInt(args.vheight, 10);
-const timeout = parseInt(args.timeout, 10);
-const screamshotterCssClass = args.screamshottercssclass;
-const waitSelectors = JSON.parse(args.waitselectors);
-const externalPuppeteer = args.external_puppeteer;
+const headers = JSON.parse(args.headers || '{}');
+const viewportWidth = parseInt(args.vwidth, 10) || 1280;
+const viewportHeight = parseInt(args.vheight, 10) || 800;
+const timeout = parseInt(args.timeout, 10) || 30000;
+const screamshotterCssClass = args.screamshottercssclass || '';
+const waitSelectors = JSON.parse(args.waitselectors || '[]');
+const externalPuppeteer = args.external_puppeteer || '';
 
 let browser;
 
 (async () => {
-  if (externalPuppeteer !== '') {
-    browser = await puppeteer.connect({
-      browserWSEndpoint: externalPuppeteer,
-      ignoreHTTPSErrors: true,
-    });
-  } else {
-    browser = await puppeteer.launch({
-      headless: 'new',
-      args: [
-        '--no-sandbox',
-        '--no-zygote',
-        '--disable-setuid-sandbox',
-        // https://github.com/GoogleChrome/puppeteer/blob/master/docs/troubleshooting.md#tips
-        '--disable-dev-shm-usage'],
-    });
-  }
-
-  const page = await browser.newPage();
-  await page.setDefaultNavigationTimeout(timeout);
-  await page.setDefaultTimeout(timeout);
-
   try {
+    if (externalPuppeteer) {
+      browser = await puppeteer.connect({
+        browserWSEndpoint: externalPuppeteer,
+        ignoreHTTPSErrors: true,
+      });
+    } else {
+      browser = await puppeteer.launch({
+        headless: 'new',
+        ignoreHTTPSErrors: true,
+        args: [
+          '--no-sandbox',
+          '--no-zygote',
+          '--disable-setuid-sandbox',
+          '--disable-dev-shm-usage'
+        ],
+      });
+    }
+
+    const page = await browser.newPage();
+    page.setDefaultNavigationTimeout(timeout);
+    page.setDefaultTimeout(timeout);
+
     await page.setViewport({
       width: viewportWidth,
       height: viewportHeight,
@@ -61,60 +71,80 @@ let browser;
 
     await page.setExtraHTTPHeaders(headers);
 
-    await page.goto(url, { waitUntil: 'networkidle0' });
+    await page.goto(url, { waitUntil: 'networkidle2' });
 
+    // wait multiple elements safely
     if (waitSelectors.length > 0) {
-      waitSelectors.forEach(async wait => {
-        await page.waitForSelector(wait);
-      });
+      await Promise.all(
+        waitSelectors.map(sel => page.waitForSelector(sel, { timeout }))
+      );
     }
 
-    if (waitfor !== '' && waitfor !== null) {
-      await page.waitForSelector(waitfor);
+    // optional single wait
+    if (waitfor) {
+      await page.waitForSelector(waitfor, { timeout });
     }
 
-    if (waitseconds !== 0) {
+    // wait X seconds if needed (convert to ms explicitly)
+    if (waitseconds && waitseconds > 0) {
       await page.waitForTimeout(waitseconds);
     }
 
-    const rect = await page.evaluate((aSelector, aScreamshotterCssClass) => {
-      // dynamic add screamshotterCssClass css class to permit css customization
-      console.error(aScreamshotterCssClass);
-      document.body.classList.add(aScreamshotterCssClass);
+    const rect = await page.evaluate((aSelector, cssClass) => {
+      document.body.classList.add(cssClass);
       const element = document.querySelector(aSelector);
-      if (element !== null) {
-        const { x, y, width, height } = element.getBoundingClientRect();
-        return { left: x, top: y, width, height, id: element.id };
+      if (!element) {
+        return { error: `Selector ${aSelector} not found` };
       }
-      const Exception = `The selector ${aSelector} was not found on this page`;
-      return { exception: Exception };
+
+      const { x, y, width, height } = element.getBoundingClientRect();
+      return { left: x, top: y, width, height };
     }, selector, screamshotterCssClass);
 
-    if (typeof rect.left !== 'undefined') {
-      await page.screenshot({
-        path,
-        clip: {
-          x: rect.left,
-          y: rect.top,
-          width: rect.width,
-          height: rect.height,
-        },
-      });
-    } else {
+    if (rect.error) {
       const bodyHTML = await page.evaluate(() => document.body.innerHTML);
-      throw new Error(`${rect.exception}: ${prettify(bodyHTML)}`);
+      throw new Error(`${rect.error}\n${prettify(bodyHTML)}`);
     }
-  } catch (e) {
-    console.error(e);
+
+    await page.screenshot({
+      path,
+      clip: {
+        x: rect.left,
+        y: rect.top,
+        width: rect.width,
+        height: rect.height,
+      },
+    });
+
+    console.log('Screenshot OK');
+  } catch (err) {
+    console.error('Capture failed:', err);
   } finally {
-    await page.close();
-    await browser.close();
     try {
-      // force killing chromium processes avoiding zombie processes
-      const pid = -browser.process().pid;
-      process.kill(pid, 'SIGKILL');
+      const pages = await browser?.pages?.();
+      if (pages) {
+        await Promise.all(
+          pages.map(async p => {
+            try {
+              await p.close();
+            } catch (_) {}
+          })
+        );
+      }
+    } catch (_) {}
+
+    try {
+      if (browser) {
+        await browser.close();
+      }
     } catch (e) {
-      // console.log('Kll browser processes');
+      console.error('browser.close() failed → force kill', e);
+
+      try {
+        if (browser?.process()) {
+          browser.process().kill('SIGKILL');
+        }
+      } catch (_) {}
     }
   }
 })();
