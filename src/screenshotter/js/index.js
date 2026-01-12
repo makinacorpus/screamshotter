@@ -14,7 +14,7 @@ const {
   path,
   selector,
   waitseconds,
-  waitfor
+  waitfor,
 } = args;
 
 try {
@@ -55,7 +55,7 @@ let browser;
           '--no-sandbox',
           '--no-zygote',
           '--disable-setuid-sandbox',
-          '--disable-dev-shm-usage'
+          '--disable-dev-shm-usage',
         ],
       });
     }
@@ -76,7 +76,7 @@ let browser;
     // wait multiple elements safely
     if (waitSelectors.length > 0) {
       await Promise.all(
-        waitSelectors.map(sel => page.waitForSelector(sel, { timeout }))
+        waitSelectors.map(sel => page.waitForSelector(sel, { timeout })),
       );
     }
 
@@ -127,11 +127,15 @@ let browser;
           pages.map(async p => {
             try {
               await p.close();
-            } catch (_) {}
-          })
+            } catch (e) {
+              console.error('page.close() failed → ignore');
+            }
+          }),
         );
       }
-    } catch (_) {}
+    } catch (e) {
+      console.error('browser.pages() failed → ignore');
+    }
 
     try {
       if (browser) {
@@ -144,7 +148,9 @@ let browser;
         if (browser?.process()) {
           browser.process().kill('SIGKILL');
         }
-      } catch (_) {}
+      } catch (_e) {
+        console.error('browser.process().kill() failed → ignore', _e);
+      }
     }
   }
 })();
