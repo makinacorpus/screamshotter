@@ -13,8 +13,8 @@ ENV MAX_REQUESTS=250
 ENV PUPPETEER_CACHE_DIR=/app/puppeteer/
 
 RUN useradd -ms /bin/bash django
-RUN mkdir -p /app/static /opt
-RUN chown django:django /app /opt
+RUN mkdir -p /app/static /opt /app/puppeteer
+RUN chown django:django -R /app /opt
 
 RUN apt-get -qq update && apt-get install -qq -y \
     libappindicator3-1 \
@@ -81,12 +81,13 @@ RUN /opt/venv/bin/pip3 install --no-cache-dir -U "pip<24.3" setuptools wheel
 
 COPY requirements.txt /app/
 RUN /opt/venv/bin/pip3 install --no-cache-dir -r /app/requirements.txt -U && rm /app/requirements.txt
-RUN /opt/venv/bin/nodeenv /app/venv/ -C '' -p -n 20.9.0
+RUN /opt/venv/bin/nodeenv /app/venv/ -C '' -p -n 22.19.0
 
 # upgrade npm & requirements
 COPY package.json /app/package.json
 COPY package-lock.json /app/package-lock.json
 RUN . /opt/venv/bin/activate && npm ci && rm /app/*.json
+RUN . /opt/venv/bin/activate && npx puppeteer browsers install chrome
 
 FROM build AS dev
 
