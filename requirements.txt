@@ -38,7 +38,7 @@ markupsafe==3.0.3
     # via jinja2
 nodeenv==1.9.1
     # via screamshotter (setup.py)
-packaging==24.1
+packaging==25.0
     # via gunicorn
 requests==2.32.5
     # via coreapi
