@@ -48,7 +48,7 @@ sqlparse==0.5.3
     # via django
 typing-extensions==4.12.2
     # via asgiref
-tzdata==2025.2
+tzdata==2025.3
     # via screamshotter (setup.py)
 uritemplate==4.2.0
     # via coreapi
