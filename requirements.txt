@@ -46,7 +46,7 @@ sentry-sdk==2.45.0
     # via screamshotter (setup.py)
 sqlparse==0.5.3
     # via django
-typing-extensions==4.12.2
+typing-extensions==4.15.0
     # via asgiref
 tzdata==2025.2
     # via screamshotter (setup.py)
