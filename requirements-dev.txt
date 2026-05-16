@@ -6,7 +6,7 @@
 #
 asgiref==3.8.1
     # via
-    #   -c ./requirements.txt
+    #   -c requirements.txt
     #   django
 build==1.0.3
     # via pip-tools
@@ -16,7 +16,7 @@ coverage==7.13.1
     # via -r requirements-dev.in
 django==4.2.27
     # via
-    #   -c ./requirements.txt
+    #   -c requirements.txt
     #   django-debug-toolbar
 django-debug-toolbar==6.1.0
     # via -r requirements-dev.in
@@ -26,9 +26,9 @@ mccabe==0.7.0
     # via flake8
 packaging==24.1
     # via
-    #   -c ./requirements.txt
+    #   -c requirements.txt
     #   build
-pillow==12.1.0
+pillow==12.2.0
     # via -r requirements-dev.in
 pip-tools==7.4.1
     # via -r requirements-dev.in
@@ -44,7 +44,7 @@ python-magic==0.4.27
     # via -r requirements-dev.in
 sqlparse==0.5.3
     # via
-    #   -c ./requirements.txt
+    #   -c requirements.txt
     #   django
     #   django-debug-toolbar
 tomli==2.0.1
@@ -54,7 +54,7 @@ tomli==2.0.1
     #   pyproject-hooks
 typing-extensions==4.12.2
     # via
-    #   -c ./requirements.txt
+    #   -c requirements.txt
     #   asgiref
 wheel==0.41.3
     # via pip-tools
