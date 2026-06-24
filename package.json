@@ -10,14 +10,14 @@
   "author": "JEC",
   "license": "ISC",
   "dependencies": {
-    "@babel/core": "^7.28.5",
+    "@babel/core": "^8.0.1",
     "@sentry/node": "^10.27.0",
     "html-prettify": "^1.0.7",
     "minimist": "^1.2.8",
     "puppeteer": "^21.9.0"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.28.6",
+    "@babel/eslint-parser": "^8.0.1",
     "eslint": "^8.56.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.31.0"
