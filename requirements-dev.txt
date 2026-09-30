@@ -8,7 +8,6 @@ asgiref==3.8.1
     # via
     #   -c ./requirements.txt
     #   django
-coverage==7.10.6
 build==1.0.3
     # via pip-tools
 click==8.1.7

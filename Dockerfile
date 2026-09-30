@@ -136,6 +136,7 @@ COPY --from=build /opt/venv /opt/venv
 COPY --from=build /opt/screamshotter/node_modules /opt/screamshotter/node_modules
 COPY --from=build /opt/screamshotter/puppeteer /opt/screamshotter/puppeteer
 COPY src /opt/screamshotter/src
+COPY setup.py /opt/screamshotter/setup.py
 
 RUN mkdir -p /opt/screamshotter/static && chown -R screamshotter:screamshotter /opt/screamshotter
 

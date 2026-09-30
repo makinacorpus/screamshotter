@@ -5,7 +5,6 @@ services:
       target: dev
       args:
         NODE_ENV: development
-        BASE_IMAGE: ubuntu:jammy
 
     volumes:
       - ./src:/opt/screamshotter/src
