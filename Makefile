@@ -14,4 +14,4 @@ build_deb:
 	docker rm screamshotter_deb_run
 
 deps:
-	docker compose run --remove-orphans --no-deps --rm web bash -c "uv pip compile setup.py -o requirements.txt && uv pip compile requirements-dev.in -o requirements-dev.txt"
+	docker compose run --remove-orphans --no-deps --rm web bash -c "cd .. && uv pip compile setup.py -o requirements.txt && uv pip compile requirements-dev.in -o requirements-dev.txt"
