@@ -66,12 +66,10 @@ jobs:
       matrix:
         os: ['ubuntu-22.04', 'ubuntu-24.04']
         include:
-
-
           - os: 'ubuntu-22.04'
-            python-version: '3.10'  # default python version in 22.04
+            python-version: '3.14'  # default python version in 22.04
           - os: 'ubuntu-24.04'
-            python-version: '3.12'  # default python version in 22.04
+            python-version: '3.14'  # default python version in 22.04
 
     steps:
     - uses: actions/checkout@v6
@@ -220,7 +218,7 @@ jobs:
 
       - uses: actions/setup-python@v6
         with:
-          python-version: "3.12"
+          python-version: "3.14"
 
       - name: Check result
         run: |

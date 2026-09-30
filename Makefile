@@ -1,5 +1,5 @@
 DISTRO ?= debian:bookworm
-PYTHON_VERSION ?= 3.12
+PYTHON_VERSION ?= 3.14
 VERSION ?= $(shell tr -d '[:space:]' < src/screamshotter/VERSION 2>/dev/null || echo "2.2.6")
 
 build_deb:

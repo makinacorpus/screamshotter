@@ -6,7 +6,7 @@ git config --global --add safe.directory /workspace 2>/dev/null || true
 
 TARGET_DIR="/opt/screamshotter"
 PKG_ROOT="/tmp/pkg-dist"
-PYTHON_VERSION="${PYTHON_VERSION:-3.12}"
+PYTHON_VERSION="${PYTHON_VERSION:-3.14}"
 
 # Détermination robuste de la version du paquet Debian
 VERSION=""

@@ -1,5 +1,5 @@
-ARG BASE_IMAGE=ubuntu:noble
-ARG PYTHON_VERSION=3.12
+ARG BASE_IMAGE=ubuntu:resolute
+ARG PYTHON_VERSION=3.14
 
 FROM ${BASE_IMAGE} AS base
 
@@ -33,18 +33,18 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     apt-get -qq update && apt-get install -qq -y \
         libappindicator3-1 \
         libasound2-dev \
-        libatk1.0-0 \
+        libatk1.0-0t64 \
         libatk-bridge2.0-0 \
         libc6 \
         libcairo2 \
-        libcups2 \
+        libcups2t64 \
         libdbus-1-3 \
         libexpat1 \
         libfontconfig1 \
-        libgcc1 \
-        libgdk-pixbuf2.0-0 \
+        libgcc-s1 \
+        libgdk-pixbuf-2.0-0 \
         libglib2.0-0 \
-        libgtk-3-0 \
+        libgtk-3-0t64 \
         libnspr4 \
         libpango-1.0-0 \
         libpangocairo-1.0-0 \
@@ -81,7 +81,7 @@ ENTRYPOINT ["entrypoint.sh"]
 FROM base AS build
 
 ARG NODE_ENV=production
-ARG PYTHON_VERSION=3.12
+ARG PYTHON_VERSION=3.14
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
@@ -105,7 +105,7 @@ RUN --mount=type=bind,src=./requirements.txt,dst=/requirements.txt \
     uv pip install --python /opt/venv/bin/python "setuptools<81" wheel && \
     uv pip install --python /opt/venv/bin/python -r /requirements.txt
 
-RUN /opt/venv/bin/nodeenv -C '' -p -n 22.19.0 --with-npm
+RUN /opt/venv/bin/nodeenv -C '' -p -n 24.21.0 --with-npm
 
 WORKDIR /opt/screamshotter
 COPY package.json /opt/screamshotter/package.json
@@ -114,7 +114,7 @@ COPY package-lock.json /opt/screamshotter/package-lock.json
 RUN --mount=type=cache,target=/root/.npm \
     export PATH="/opt/venv/bin:$PATH" && \
     export PUPPETEER_CACHE_DIR=/opt/screamshotter/puppeteer/ && \
-    npm ci --omit=dev --unsafe-perm=true --foreground-scripts && rm -f /opt/screamshotter/*.json
+    npm ci --omit=dev --foreground-scripts && rm -f /opt/screamshotter/*.json
 
 COPY setup.py /opt/screamshotter/setup.py
 COPY src /opt/screamshotter/src
