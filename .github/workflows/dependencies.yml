@@ -17,25 +17,23 @@ jobs:
     strategy:
       matrix:
         os: ['ubuntu-latest']
-        python-version: ['3.10']
+        python-version: ['3.12']
 
     steps:
       - uses: actions/checkout@v6
 
-      - uses: actions/setup-python@v6
+      - uses: astral-sh/setup-uv@v6
         with:
-          cache: 'pip'
-          python-version: '3.10'
+          enable-cache: true
 
-      - name: Install dependencies
+      - name: Set up Python
         run: |
-          pip3 install -U "pip<24.3"  # prevent relative bug path with pip 24.3 and pip-tools
-          pip3 install -c requirements-dev.txt pip-tools
+          uv python install ${{ matrix.python-version }}
 
       - name: Check dependency graph
         run: |
-          pip-compile -q --strip-extras
-          pip-compile -q --strip-extras requirements-dev.in
+          uv pip compile -q --strip-extras setup.py -o requirements.txt
+          uv pip compile -q --strip-extras requirements-dev.in -o requirements-dev.txt
 
       - name: Verify dependency graph is ok
         uses: tj-actions/verify-changed-files@v20
