@@ -159,8 +159,10 @@ jobs:
     name: Tests E2E ${{ matrix.distro }}
     strategy:
       matrix:
-        distro: [ noble, jammy, docker ]
+        distro: [ resolute, noble, jammy, docker ]
         include:
+          - distro: resolute
+            version: '26.04'
           - distro: noble
             version: '24.04'
           - distro: jammy
