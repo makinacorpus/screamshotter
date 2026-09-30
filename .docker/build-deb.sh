@@ -102,12 +102,12 @@ uv pip install -r requirements.txt --python "${TARGET_DIR}/bin/python"
 uv pip install --no-deps . --python "${TARGET_DIR}/bin/python"
 
 echo "Installation de Node.js via nodeenv et dépendances npm..."
-"${TARGET_DIR}/bin/python" "${TARGET_DIR}/bin/nodeenv" -C '' -p -n 22.19.0 --with-npm
+"${TARGET_DIR}/bin/python" "${TARGET_DIR}/bin/nodeenv" -C '' -p -n 24.21.0 --with-npm
 
 cp package.json package-lock.json "${TARGET_DIR}/"
 export PUPPETEER_CACHE_DIR="${TARGET_DIR}/puppeteer/"
 export PATH="${TARGET_DIR}/bin:$PATH"
-(cd "${TARGET_DIR}" && npm ci --omit=dev --unsafe-perm=true --foreground-scripts)
+(cd "${TARGET_DIR}" && npm ci --omit=dev --foreground-scripts)
 rm -f "${TARGET_DIR}/package.json" "${TARGET_DIR}/package-lock.json"
 
 echo "=== 4. Optimisation de l'arborescence ==="

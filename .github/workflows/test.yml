@@ -64,28 +64,25 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: ['ubuntu-22.04', 'ubuntu-24.04']
+        os: ['ubuntu-22.04', 'ubuntu-24.04', 'ubuntu-26.06']
         include:
           - os: 'ubuntu-22.04'
-            python-version: '3.14'  # default python version in 22.04
           - os: 'ubuntu-24.04'
-            python-version: '3.14'  # default python version in 22.04
 
     steps:
     - uses: actions/checkout@v6
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v6
+
+    - uses: astral-sh/setup-uv@v7
       with:
-        python-version: ${{ matrix.python-version }}
-        cache: pip
+        version: "latest"
+        python-version: 3.14
 
     - name: Install dependencies
       run: |
         sudo apt-get update -q
         sudo apt-get -q -y install nodejs npm ca-certificates
-        python -m pip install --upgrade pip setuptools wheel
-        pip install -r requirements.txt -U
-        pip install -r requirements-dev.txt
+        uv pip install -r requirements.txt -U
+        uv pip install -r requirements-dev.txt
         npm ci
 
     - name: Test with coverage
