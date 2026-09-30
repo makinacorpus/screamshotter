@@ -102,136 +102,129 @@ jobs:
         cd src
         codecov
 
-  build_docker_image:
-    name: Build docker image
+  build:
+    name: Build ${{ matrix.version }}
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        version: [debian, docker]
+
     steps:
       - uses: actions/checkout@v6
 
+      - name: Prepare debian versioning
+        if: ${{ matrix.version != 'docker' }}
+        run: |
+          RAW_VER="$(cat src/screamshotter/VERSION | tr -d '[:space:]')"
+          BASE_VER="$(echo "$RAW_VER" | sed -E 's/[-+]dev.*//; s/^v//')"
+          if [[ "${{ github.event_name }}" == "release" ]]; then
+            PKG_VER="${BASE_VER}"
+          else
+            PKG_VER="${BASE_VER}~dev${GITHUB_RUN_ID}"
+          fi
+          echo "$PKG_VER" > src/screamshotter/VERSION
+          sed -i "1s/screamshotter (\([^)]*\)) [^;]*;/screamshotter (${PKG_VER}) stable;/" debian/changelog
+
+      - name: Build package
+        if: ${{ matrix.version != 'docker' }}
+        run: |
+          VERSION="$(cat src/screamshotter/VERSION)" make build_deb
+          cp ./dpkg/*.deb /home/runner/work/screamshotter/ 2>/dev/null || true
+          cp ./dpkg/*.deb ./ 2>/dev/null || true
+
+      - name: Archive package artifact
+        if: ${{ matrix.version != 'docker' }}
+        uses: actions/upload-artifact@v6
+        with:
+          name: debian-package
+          path: |
+            ./dpkg/*.deb
+
       - name: Set up Docker Buildx
+        if: ${{ matrix.version == 'docker' }}
         id: buildx
         uses: docker/setup-buildx-action@v3
 
       - name: Build Docker image
+        if: ${{ matrix.version == 'docker' }}
         run: |
           docker build -t screamshotter_ci:latest .
 
       - name: Upload image
+        if: ${{ matrix.version == 'docker' }}
         uses: ishworkh/container-image-artifact-upload@v2.0.0
         with:
           image: "screamshotter_ci:latest"
 
-  build_deb:
-    name: Build debian package
-    runs-on: ubuntu-latest
+  e2e:
+    name: Tests E2E ${{ matrix.distro }}
     strategy:
-        matrix:
-            os: ['jammy', 'noble']
-            include:
-                - os: jammy
-                  version: '22.04'
-                - os: noble
-                  version: '24.04'
-    env:
-        OS: ${{ matrix.os }}
-        DISTRO: 'ubuntu:${{ matrix.os }}'
-        CODE: ${{ matrix.version }}
+      matrix:
+        distro: [ noble, jammy, docker ]
+        include:
+          - distro: noble
+            version: '24.04'
+          - distro: jammy
+            version: '22.04'
+          - distro: docker
+            version: latest
 
+    runs-on: ubuntu-${{ matrix.version }}
+    needs: [ build ]
     steps:
       - uses: actions/checkout@v6
-      - name: Prepare versioning
-        run: |
-          sed -i 's/+dev/.ubuntu'$CODE'~dev'$GITHUB_RUN_ID'/' debian/changelog
-          sed -i 's/screamshotter (\([0-9]\+\.[0-9]\+\.[0-9]\+\)\(.*\)) RELEASED;/screamshotter (\1.ubuntu'$CODE'\2) '$OS';/' debian/changelog
 
-      - name: Build package
-        run: |
-          make build_deb
-          cp ./dpkg/*.deb /home/runner/work/screamshotter/
-
-      - name: Archive package artifact
-        uses: actions/upload-artifact@v6
+      - uses: actions/download-artifact@v7
+        if: ${{ matrix.distro != 'docker' }}
         with:
-          name: debian-${{ matrix.version }}
-          path: |
-            /home/runner/work/screamshotter/*.deb
+          name: debian-package
+          path: /home/runner/work/screamshotter/screamshotter/
 
-  e2e_docker_image:
-    name: Tests E2E docker
-    runs-on: ubuntu-latest
-    needs: [build_docker_image]
-
-    steps:
       - name: Download image
+        if: ${{ matrix.distro == 'docker' }}
         uses: ishworkh/container-image-artifact-download@v2.1.0
         with:
           image: "screamshotter_ci:latest"
 
-      - name: Launch service
-        run: |
-          docker run -d -p 8000:8000 screamshotter_ci:latest
-          echo "Waiting for container..."
-          while ! nc -z "127.0.0.1" "8000"; do
-            sleep 0.1
-          done
-
-      - name: E2E test
-        run: |
-          sleep 2
-          curl -d url=https://google.com http://localhost:8000 > google.png
-
-      - uses: actions/setup-python@v6
-        with:
-          python-version: "3.10"
-
-      - name: Check result
-        run: |
-          pip install filetype
-          if filetype -f google.png |grep -q 'image/png'; then
-            echo "File is PNG";
-            exit 0;
-          else
-            echo "File is not PNG";
-            filetype -f google.png;
-            exit 1;
-          fi
-
-      - name: Archive result artifact
-        uses: actions/upload-artifact@v6
-        with:
-          name: result-docker
-          path: |
-            /home/runner/work/screamshotter/screamshotter/google.png
-
-  e2e_deb:
-    name: Tests E2E debian packages
-    runs-on: ubuntu-${{ matrix.version }}
-    needs: [ build_deb ]
-    strategy:
-        matrix:
-            version: ['22.04', '24.04']
-
-    steps:
-      - uses: actions/download-artifact@v7
-        with:
-          name: debian-${{ matrix.version }}
-
       - name: Install package
+        if: ${{ matrix.distro != 'docker' }}
         run: |
+          sudo apt-get -qq update
           sudo apt-get install -y /home/runner/work/screamshotter/screamshotter/*.deb
 
+      - name: Run docker image (if required)
+        if: ${{ matrix.distro == 'docker' }}
+        run: |
+          docker run -d -p 8000:8000 screamshotter_ci:latest
+
+      - name: Wait for screamshotter service
+        run: |
+          echo "Waiting for service..."
+          for i in {1..30}; do
+            if curl -s http://127.0.0.1:8000/ >/dev/null 2>&1 || wget -q -O- http://127.0.0.1:8000/ >/dev/null 2>&1; then
+              echo "screamshotter service is ready!"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "screamshotter service failed to start within 30s"
+          if command -v systemctl >/dev/null 2>&1; then
+            sudo journalctl -u screamshotter.service --no-pager 2>/dev/null || true
+          fi
+          exit 1
+
       - name: E2E test
         run: |
-          curl -d url=https://google.com http://localhost:8000 > google.png
+          curl -d url=https://example.com http://127.0.0.1:8000 > google.png
 
       - uses: actions/setup-python@v6
         with:
-          python-version: "3.10"
+          python-version: "3.12"
 
       - name: Check result
         run: |
           pip install filetype
-          if filetype -f google.png |grep -q 'image/png'; then
+          if filetype -f google.png | grep -q 'image/png'; then
             echo "File is PNG";
             exit 0;
           else
@@ -243,25 +236,23 @@ jobs:
       - name: Archive result artifact
         uses: actions/upload-artifact@v6
         with:
-          name: result-${{ matrix.version }}
+          name: result-${{ matrix.distro }}
           path: |
-            /home/runner/work/screamshotter/screamshotter/google.png
+            google.png
 
   deploy:
     name: Publish (on release only)
     runs-on: ubuntu-latest
-    needs: [ flake8, eslint, test, e2e_docker_image, e2e_deb ]
+    needs: [ flake8, eslint, test, e2e ]
     if: ${{ github.event_name == 'release' && github.event.action == 'created' }}
     steps:
-      - name: Download 22.04 debian artifact
-        uses: actions/download-artifact@v7
-        with:
-          name: debian-22.04
+      - uses: actions/checkout@v6
 
-      - name: Download 24.04 debian artifact
+      - name: Download debian artifact
         uses: actions/download-artifact@v7
         with:
-          name: debian-24.04
+          name: debian-package
+          path: /home/runner/work/screamshotter/screamshotter/
 
       - name: Download docker image
         uses: ishworkh/container-image-artifact-download@v2.1.0
@@ -289,7 +280,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images:  |
+          images: |
             makinacorpus/screamshotter
             ghcr.io/makinacorpus/screamshotter
 
@@ -318,16 +309,13 @@ jobs:
           echo "${{ github.ref }} : Publishing as $DEB_COMPONENT package"
           scp -P ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no /home/runner/work/screamshotter/screamshotter/screamshotter_*_amd64.deb ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/srv/packages/incoming/$DEB_COMPONENT/
           if [[ "${{ github.ref }}" == *"dev"* ]]; then
-            ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} make jammy_dev -C /srv/packages
-            ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} make noble_dev -C /srv/packages
+            ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} make debian_dev -C /srv/packages
           else
-            ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} make jammy_main -C /srv/packages
-            ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} make noble_main -C /srv/packages
+            ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} make debian_main -C /srv/packages
           fi
 
-      - name: Attach debian packages as release binaries
-        uses: skx/github-action-publish-binaries@master
+      - name: Upload assets to release
+        if: ${{ github.event_name == 'release' && github.event.action == 'created' }}
+        run: gh release upload "${{ github.ref_name }}" /home/runner/work/screamshotter/screamshotter/*.deb --clobber
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          args: '*.deb'

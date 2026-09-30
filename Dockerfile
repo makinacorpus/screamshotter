@@ -5,7 +5,7 @@ FROM ${BASE_IMAGE} AS base
 
 # add labels
 LABEL org.opencontainers.image.authors="Makina Corpus"
-LABEL org.opencontainers.image.source="https://github.com/makinacorus/screamshotter/"
+LABEL org.opencontainers.image.source="https://github.com/makinacorpus/screamshotter/"
 LABEL org.opencontainers.image.vendor="Makina Corpus"
 LABEL org.opencontainers.image.licenses="BSD-2-Clause"
 LABEL org.opencontainers.image.title="Screamshotter"
@@ -20,17 +20,13 @@ ENV TIMEOUT=60
 ENV WORKERS=1
 ENV MAX_REQUESTS=250
 ENV PUPPETEER_CACHE_DIR=/opt/screamshotter/puppeteer/
-ENV UV_PYTHON_INSTALL_DIR=/opt
+ENV NODE_PATH=/opt/screamshotter/node_modules/
+ENV NODE_BIN_PATH=/opt/venv/bin/node
+ENV PATH=/opt/venv/bin:$PATH
 
 WORKDIR /opt/screamshotter
-RUN mkdir -p /opt/screamshotter/var/log /opt/screamshotter/var/cache
+RUN mkdir -p /opt/screamshotter/var/log /opt/screamshotter/var/cache /opt/screamshotter/puppeteer /opt/screamshotter/static
 RUN useradd -m -d /opt/screamshotter -s /bin/false -u 1001 screamshotter && chown screamshotter:screamshotter -R /opt
-
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
-
-USER screamshotter
-RUN uv python install ${PYTHON_VERSION}
-USER root
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
@@ -72,14 +68,14 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         lsb-release \
         xdg-utils \
         git wget less nano curl \
-        ca-certificates \
         gettext \
         libgbm-dev
 
 COPY .docker/entrypoint.sh /usr/local/bin
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
 EXPOSE 8000
-WORKDIR /app/src
+WORKDIR /opt/screamshotter/src
 ENTRYPOINT ["entrypoint.sh"]
 
 FROM base AS build
@@ -93,29 +89,36 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         build-essential \
         libmagic1
 
-USER screamshotter
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
-RUN uv venv -p $PYTHON_VERSION /opt/venv
+ENV UV_PYTHON_INSTALL_DIR=/opt/python
+
+RUN uv python install ${PYTHON_VERSION} --install-dir ${UV_PYTHON_INSTALL_DIR}
+
+RUN uv venv /opt/venv --python ${PYTHON_VERSION}
 ENV UV_PYTHON=/opt/venv/bin/python
 ENV UV_LINK_MODE=copy
 ENV UV_CACHE_DIR=/opt/screamshotter/var/cache/
 
 RUN --mount=type=bind,src=./requirements.txt,dst=/requirements.txt \
     --mount=type=cache,target=/opt/screamshotter/var/cache/,sharing=locked,uid=1001,gid=1001 \
-    uv pip install -r /requirements.txt && /opt/venv/bin/nodeenv /opt/venv/ -C '' -p -n 20.9.0
-COPY requirements.txt /app/
-RUN /opt/venv/bin/pip3 install --no-cache-dir -r /app/requirements.txt -U && rm /app/requirements.txt
-RUN /opt/venv/bin/nodeenv /app/venv/ -C '' -p -n 22.19.0
+    uv pip install --python /opt/venv/bin/python "setuptools<81" wheel && \
+    uv pip install --python /opt/venv/bin/python -r /requirements.txt
 
-# upgrade npm & requirements
-COPY package.json /app/package.json
-COPY package-lock.json /app/package-lock.json
-RUN . /opt/venv/bin/activate && npm ci && rm /app/*.json
-RUN . /opt/venv/bin/activate && npx puppeteer browsers install chrome
+RUN /opt/venv/bin/nodeenv -C '' -p -n 22.19.0 --with-npm
+
+WORKDIR /opt/screamshotter
 COPY package.json /opt/screamshotter/package.json
 COPY package-lock.json /opt/screamshotter/package-lock.json
-WORKDIR /opt/screamshotter
-RUN . /opt/venv/bin/activate && npm ci && rm /opt/screamshotter/*.json
+
+RUN --mount=type=cache,target=/root/.npm \
+    export PATH="/opt/venv/bin:$PATH" && \
+    export PUPPETEER_CACHE_DIR=/opt/screamshotter/puppeteer/ && \
+    npm ci --omit=dev --unsafe-perm=true --foreground-scripts && rm -f /opt/screamshotter/*.json
+
+COPY setup.py /opt/screamshotter/setup.py
+COPY src /opt/screamshotter/src
+RUN uv pip install --no-cache --no-deps --python /opt/venv/bin/python /opt/screamshotter
 
 FROM build AS dev
 
@@ -128,18 +131,21 @@ CMD ["./manage.py", "runserver", "0.0.0.0:8000"]
 
 FROM base AS prod
 
+COPY --from=build /opt/python /opt/python
 COPY --from=build /opt/venv /opt/venv
-COPY --from=build /app/node_modules /app/node_modules
-COPY --from=build /app/puppeteer /app/puppeteer
-COPY src /app/src
+COPY --from=build /opt/screamshotter/node_modules /opt/screamshotter/node_modules
+COPY --from=build /opt/screamshotter/puppeteer /opt/screamshotter/puppeteer
+COPY src /opt/screamshotter/src
 
-RUN mkdir -p /app/static && chown django:django /app/static
+RUN mkdir -p /opt/screamshotter/static && chown -R screamshotter:screamshotter /opt/screamshotter
 
 RUN apt-get -qq update && apt-get upgrade -qq -y && \
     apt-get clean all && rm -rf /var/apt/lists/* && rm -rf /var/cache/apt/*
 
-VOLUME /app/static
+VOLUME /opt/screamshotter/static
 
 USER screamshotter
 
-CMD gunicorn screamshotter.wsgi:application -w $WORKERS --max-requests $MAX_REQUESTS  --timeout `expr $TIMEOUT + 10` --bind 0.0.0.0:8000 --worker-tmp-dir /dev/shm
+WORKDIR /opt/screamshotter/src
+
+CMD gunicorn screamshotter.wsgi:application -w $WORKERS --max-requests $MAX_REQUESTS --timeout `expr $TIMEOUT + 10` --bind 0.0.0.0:8000 --worker-tmp-dir /dev/shm

@@ -1,26 +1,36 @@
-ARG DISTRO=ubuntu:jammy
+ARG DISTRO=debian:bookworm
+
+FROM ghcr.io/astral-sh/uv:latest AS uv
 
 FROM ${DISTRO} AS base
 
+ENV DEBIAN_FRONTEND=noninteractive
+
 RUN apt-get update -qq -o Acquire::Languages=none && \
-    env DEBIAN_FRONTEND=noninteractive apt-get update -qq -o Acquire::Languages=none && apt-get install -yqq \
+    apt-get install -yqq --no-install-recommends \
     dpkg-dev \
     debhelper \
-    dh-virtualenv \
     git \
     devscripts \
-    equivs
+    equivs \
+    ca-certificates \
+    lsb-release \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /dpkg-build
-COPY ../debian ./debian
+COPY --from=uv /uv /usr/local/bin/uv
 
-RUN env DEBIAN_FRONTEND=noninteractive mk-build-deps --install --tool='apt-get -o Debug::pkgProblemResolver=yes --no-install-recommends --yes' debian/control
+WORKDIR /workspace
+COPY . /workspace
 
-COPY .. ./
-WORKDIR /dpkg-build
+ARG PYTHON_VERSION=3.12
+ENV PYTHON_VERSION=${PYTHON_VERSION}
 
-RUN sed -i -re "1s/..UNRELEASED/.ubuntu$(lsb_release -rs)) $(lsb_release -cs)/" debian/changelog \
-    && chmod a-x debian/screamshotter.* \
-    && dpkg-buildpackage -us -uc -b && mkdir -p /dpkg && cp -pl /screamshotter[-_]* /dpkg \
-    && dpkg-deb -I /dpkg/screamshotter*.deb
+ARG VERSION=""
+ENV DEB_VERSION=${VERSION}
+
+RUN --mount=type=cache,target=/root/.cache/uv \
+    --mount=type=cache,target=/root/.npm \
+    chmod +x .docker/build-deb.sh && .docker/build-deb.sh
+
 WORKDIR /dpkg

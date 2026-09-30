@@ -9,6 +9,7 @@ ExecStart=/opt/screamshotter/bin/gunicorn --config=/opt/screamshotter/conf/gunic
 Environment=NODE_PATH=/opt/screamshotter/node_modules/
 Environment=NODE_BIN_PATH=/opt/screamshotter/bin/node
 Environment=PUPPETEER_CACHE_DIR=/opt/screamshotter/puppeteer/
+Environment=HOME=/opt/screamshotter
 Restart=on-failure
 User=screamshotter
 Group=screamshotter
