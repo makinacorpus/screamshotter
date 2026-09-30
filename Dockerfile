@@ -126,6 +126,7 @@ RUN --mount=type=bind,src=./requirements-dev.txt,dst=/requirements-dev.txt \
     --mount=type=cache,target=/opt/screamshotter/var/cache/,sharing=locked,uid=1001,gid=1001 \
     uv pip install -r /requirements-dev.txt
 
+
 WORKDIR /opt/screamshotter/src
 CMD ["./manage.py", "runserver", "0.0.0.0:8000"]
 
