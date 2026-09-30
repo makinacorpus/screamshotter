@@ -122,7 +122,6 @@ jobs:
           else
             PKG_VER="${BASE_VER}~dev${GITHUB_RUN_ID}"
           fi
-          echo "$PKG_VER" > src/screamshotter/VERSION
           sed -i "1s/screamshotter (\([^)]*\)) [^;]*;/screamshotter (${PKG_VER}) stable;/" debian/changelog
 
       - name: Build package
