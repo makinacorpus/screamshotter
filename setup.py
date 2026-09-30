@@ -14,7 +14,7 @@ setup(
     description="Takes captures of HTML pages",
     scripts=['src/manage.py'],
     install_requires=[
-        'django==4.2.*',
+        'django==5.2.*',
         'tzdata',
         'nodeenv',
         'djangorestframework',
