@@ -1,6 +1,14 @@
 CHANGELOG
 =========
 
+2.2.7        (2026-10-01)
+-------------------------
+
+* Update django to 5.2
+* Use embedded python version
+* Debian package is now universal for all debian based distributions (Ubuntu, Debian, Mint, etc.)
+
+
 2.2.6        (2025-02-10)
 -------------------------
 
@@ -12,7 +20,6 @@ CHANGELOG
 -------------------------
 
 * Hotfix sentry dependencies
-
 
 
 2.2.4        (2024-10-07)
