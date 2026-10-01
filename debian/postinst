@@ -38,5 +38,6 @@ systemctl stop screamshotter || true
 usermod -d /opt/screamshotter screamshotter || true # set home directory for old installation without
 
 screamshotter collectstatic --no-input
+chown -R screamshotter:screamshotter /opt/screamshotter || true
 
 #DEBHELPER#

@@ -107,8 +107,16 @@ echo "Installation de Node.js via nodeenv et dépendances npm..."
 cp package.json package-lock.json "${TARGET_DIR}/"
 export PUPPETEER_CACHE_DIR="${TARGET_DIR}/puppeteer/"
 export PATH="${TARGET_DIR}/bin:$PATH"
-(cd "${TARGET_DIR}" && npm ci --omit=dev --foreground-scripts)
+(cd "${TARGET_DIR}" && npm ci --omit=dev --ignore-scripts && node -e "import('puppeteer/internal/node/install.js').then(m => m.downloadBrowser()).then(() => process.exit(0))")
 rm -f "${TARGET_DIR}/package.json" "${TARGET_DIR}/package-lock.json"
+
+CHROME_BIN=$(find "${TARGET_DIR}/puppeteer" -name chrome -perm -111 2>/dev/null | head -n 1)
+if [ -z "${CHROME_BIN}" ]; then
+    echo "ERREUR : Binaire Chrome introuvable dans ${TARGET_DIR}/puppeteer" >&2
+    exit 1
+fi
+echo "Chrome installé avec succès dans : ${CHROME_BIN}"
+chmod -R a+rX "${TARGET_DIR}/puppeteer"
 
 echo "=== 4. Optimisation de l'arborescence ==="
 find "${TARGET_DIR}/runtime" -type d -name "test" -prune -exec rm -rf {} + 2>/dev/null || true
@@ -225,7 +233,7 @@ chmod 644 "${PKG_ROOT}/DEBIAN/control"
 echo "=== 6. Construction du paquet .deb ==="
 mkdir -p /dpkg
 DEB_FILE="/dpkg/screamshotter_${VERSION}_amd64.deb"
-dpkg-deb -Zxz --build --root-owner-group "${PKG_ROOT}" "${DEB_FILE}"
+dpkg-deb -Zxz -z1 --build --root-owner-group "${PKG_ROOT}" "${DEB_FILE}"
 
 echo "=== Inspection du paquet généré ==="
 dpkg-deb -I "${DEB_FILE}"

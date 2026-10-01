@@ -64,7 +64,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: ['ubuntu-22.04', 'ubuntu-24.04', 'ubuntu-26.06']
+        os: ['ubuntu-22.04', 'ubuntu-24.04', 'ubuntu-26.04']
         include:
           - os: 'ubuntu-22.04'
           - os: 'ubuntu-24.04'
@@ -228,6 +228,12 @@ jobs:
           else
             echo "File is not PNG";
             filetype -f google.png;
+            echo "=== Response body (first 50 lines) ===";
+            head -n 50 google.png || true;
+            if command -v systemctl >/dev/null 2>&1; then
+              echo "=== journalctl screamshotter.service ===";
+              sudo journalctl -u screamshotter.service -n 100 --no-pager || true;
+            fi
             exit 1;
           fi
 

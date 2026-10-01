@@ -49,3 +49,4 @@ docs/_build/
 /debian/screamshotter.substvars
 /puppeteer/
 /dpkg/
+/build/

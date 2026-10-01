@@ -10,6 +10,7 @@ Environment=NODE_PATH=/opt/screamshotter/node_modules/
 Environment=NODE_BIN_PATH=/opt/screamshotter/bin/node
 Environment=PUPPETEER_CACHE_DIR=/opt/screamshotter/puppeteer/
 Environment=HOME=/opt/screamshotter
+Environment=PATH=/opt/screamshotter/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 Restart=on-failure
 User=screamshotter
 Group=screamshotter

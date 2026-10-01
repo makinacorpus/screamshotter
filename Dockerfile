@@ -114,7 +114,10 @@ COPY package-lock.json /opt/screamshotter/package-lock.json
 RUN --mount=type=cache,target=/root/.npm \
     export PATH="/opt/venv/bin:$PATH" && \
     export PUPPETEER_CACHE_DIR=/opt/screamshotter/puppeteer/ && \
-    npm ci --omit=dev --foreground-scripts && rm -f /opt/screamshotter/*.json
+    npm ci --omit=dev --ignore-scripts && \
+    node -e "import('puppeteer/internal/node/install.js').then(m => m.downloadBrowser()).then(() => process.exit(0))" && \
+    chmod -R a+rX /opt/screamshotter/puppeteer && \
+    rm -f /opt/screamshotter/*.json
 
 COPY setup.py /opt/screamshotter/setup.py
 COPY src /opt/screamshotter/src
