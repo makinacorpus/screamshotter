@@ -36,7 +36,7 @@ nodeenv==1.11.0
     # via screamshotter (setup.py)
 packaging==24.1
     # via gunicorn
-requests==2.32.5
+requests==2.34.2
     # via coreapi
 sentry-sdk==2.45.0
     # via screamshotter (setup.py)
