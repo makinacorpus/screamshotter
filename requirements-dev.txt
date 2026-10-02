@@ -24,7 +24,7 @@ pyflakes==3.4.0
     # via flake8
 python-magic==0.4.27
     # via -r requirements-dev.in
-sqlparse==0.5.3
+sqlparse==0.6.0
     # via
     #   -c requirements.txt
     #   django
