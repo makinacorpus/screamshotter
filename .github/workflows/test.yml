@@ -59,7 +59,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm ci --no-audit
+          npm ci --no-fund --no-audit
 
       - name: Lint with eslint
         run: |
@@ -101,7 +101,7 @@ jobs:
 
     - name: Install nodejs dependencies
       run: |
-        npm ci --no-audit
+        npm ci --no-fund --no-audit
 
     - name: Test with coverage
       run: |
