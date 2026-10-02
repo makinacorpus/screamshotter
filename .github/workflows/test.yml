@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: Set up Python 3.10
       uses: actions/setup-python@v6
       with:
@@ -47,10 +47,11 @@ jobs:
     name: Check javascript linting
     env:
       PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
+      CI: true
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Setup node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: 22
       - name: Install dependencies
@@ -61,13 +62,15 @@ jobs:
           npm run lint
   test:
     name: Python Unittests
+    env:
+      CI: true
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: ['ubuntu-22.04', 'ubuntu-24.04', 'ubuntu-26.04']
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
 
     - uses: astral-sh/setup-uv@v7
       with:
@@ -82,7 +85,7 @@ jobs:
         uv pip install -r requirements-dev.txt
 
     - name: Setup nodejs
-      uses: actions/setup-node@v6
+      uses: actions/setup-node@v7
       with:
         node-version: 22
 
@@ -110,7 +113,7 @@ jobs:
         version: [debian, docker]
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Prepare debian versioning
         if: ${{ matrix.version != 'docker' }}
@@ -173,7 +176,7 @@ jobs:
     runs-on: ubuntu-${{ matrix.version }}
     needs: [ build ]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - uses: actions/download-artifact@v7
         if: ${{ matrix.distro != 'docker' }}
@@ -253,7 +256,7 @@ jobs:
     needs: [ flake8, eslint, test, e2e ]
     if: ${{ github.event_name == 'release' && github.event.action == 'created' }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Download debian artifact
         uses: actions/download-artifact@v7
