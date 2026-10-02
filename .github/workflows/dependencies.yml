@@ -10,6 +10,10 @@ on:
 env:
   DEBIAN_FRONTEND: noninteractive
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   quality:
     name: Checking dependency graph
