@@ -107,7 +107,7 @@ echo "Installation de Node.js via nodeenv et dépendances npm..."
 cp package.json package-lock.json "${TARGET_DIR}/"
 export PUPPETEER_CACHE_DIR="${TARGET_DIR}/puppeteer/"
 export PATH="${TARGET_DIR}/bin:$PATH"
-(cd "${TARGET_DIR}" && npm ci --omit=dev --ignore-scripts && node -e "import('puppeteer/internal/node/install.js').then(m => m.downloadBrowser()).then(() => process.exit(0))")
+(cd "${TARGET_DIR}" && npm --no-audit ci --omit=dev --ignore-scripts && node -e "import('puppeteer/internal/node/install.js').then(m => m.downloadBrowser()).then(() => process.exit(0))")
 rm -f "${TARGET_DIR}/package.json" "${TARGET_DIR}/package-lock.json"
 
 CHROME_BIN=$(find "${TARGET_DIR}/puppeteer" -name chrome -perm -111 2>/dev/null | head -n 1)
