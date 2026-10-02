@@ -45,11 +45,13 @@ let browser;
     if (externalPuppeteer) {
       browser = await puppeteer.connect({
         browserWSEndpoint: externalPuppeteer,
+        acceptInsecureCerts: true,
         ignoreHTTPSErrors: true,
       });
     } else {
       browser = await puppeteer.launch({
-        headless: 'new',
+        headless: true,
+        acceptInsecureCerts: true,
         ignoreHTTPSErrors: true,
         args: [
           '--no-sandbox',
@@ -87,7 +89,9 @@ let browser;
 
     // wait X seconds if needed (convert to ms explicitly)
     if (waitseconds && waitseconds > 0) {
-      await page.waitForTimeout(waitseconds);
+      await new Promise(resolve => {
+        setTimeout(resolve, waitseconds);
+      });
     }
 
     const rect = await page.evaluate((aSelector, cssClass) => {

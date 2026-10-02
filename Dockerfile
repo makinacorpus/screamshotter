@@ -87,7 +87,8 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     apt-get -qq update && apt-get install -qq -y \
         build-essential \
-        libmagic1
+        libmagic1 \
+        unzip
 
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
@@ -114,8 +115,9 @@ COPY package-lock.json /opt/screamshotter/package-lock.json
 RUN --mount=type=cache,target=/root/.npm \
     export PATH="/opt/venv/bin:$PATH" && \
     export PUPPETEER_CACHE_DIR=/opt/screamshotter/puppeteer/ && \
+    export PUPPETEER_CHROME_HEADLESS_SHELL_SKIP_DOWNLOAD=true && \
     npm ci --no-audit --omit=dev --ignore-scripts && \
-    node -e "import('puppeteer/internal/node/install.js').then(m => m.downloadBrowser()).then(() => process.exit(0))" && \
+    node -e "import('puppeteer/internal/node/install.js').then(m => m.downloadBrowsers()).catch(err => { console.error(err); process.exit(1); })" && \
     chmod -R a+rX /opt/screamshotter/puppeteer && \
     rm -f /opt/screamshotter/*.json
 
