@@ -18,7 +18,7 @@ django==5.2.17
     #   djangorestframework
 djangorestframework==3.18.1
     # via screamshotter (setup.py)
-gevent==25.9.1
+gevent==26.9.0
     # via gunicorn
 greenlet==3.2.4
     # via gevent
