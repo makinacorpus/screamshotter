@@ -56,5 +56,5 @@ whitenoise==6.9.0
     # via screamshotter (setup.py)
 zope-event==6.0
     # via gevent
-zope-interface==8.1.1
+zope-interface==8.6
     # via gevent
