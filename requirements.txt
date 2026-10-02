@@ -38,7 +38,7 @@ packaging==26.3
     # via gunicorn
 requests==2.34.2
     # via coreapi
-sentry-sdk==2.45.0
+sentry-sdk==2.71.0
     # via screamshotter (setup.py)
 setuptools==84.0.0
     # via zope-event
