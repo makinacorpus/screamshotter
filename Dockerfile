@@ -69,14 +69,15 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         xdg-utils \
         git wget less nano curl \
         gettext \
-        libgbm-dev
+        libgbm-dev \
+        tini
 
 COPY .docker/entrypoint.sh /usr/local/bin
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 EXPOSE 8000
 WORKDIR /opt/screamshotter/src
-ENTRYPOINT ["entrypoint.sh"]
+ENTRYPOINT ["/usr/bin/tini", "--", "entrypoint.sh"]
 
 FROM base AS build
 

@@ -1,4 +1,4 @@
-DISTRO ?= debian:bookworm
+DISTRO ?= ubuntu:jammy
 PYTHON_VERSION ?= 3.14
 VERSION ?= $(shell tr -d '[:space:]' < src/screamshotter/VERSION 2>/dev/null || echo "2.2.6")
 
