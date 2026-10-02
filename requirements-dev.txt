@@ -12,15 +12,15 @@ django==5.2.17
     #   django-debug-toolbar
 django-debug-toolbar==6.1.0
     # via -r requirements-dev.in
-flake8==7.3.0
+flake8==7.4.1
     # via -r requirements-dev.in
 mccabe==0.7.0
     # via flake8
 pillow==12.3.0
     # via -r requirements-dev.in
-pycodestyle==2.14.0
+pycodestyle==2.15.0
     # via flake8
-pyflakes==3.4.0
+pyflakes==4.0.1
     # via flake8
 python-magic==0.4.27
     # via -r requirements-dev.in
