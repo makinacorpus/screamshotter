@@ -16,6 +16,7 @@ RUN apt-get update -qq -o Acquire::Languages=none && \
     ca-certificates \
     lsb-release \
     build-essential \
+    unzip \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=uv /uv /usr/local/bin/uv

@@ -106,11 +106,12 @@ echo "Installation de Node.js via nodeenv et dépendances npm..."
 
 cp package.json package-lock.json "${TARGET_DIR}/"
 export PUPPETEER_CACHE_DIR="${TARGET_DIR}/puppeteer/"
+export PUPPETEER_CHROME_HEADLESS_SHELL_SKIP_DOWNLOAD=true
 export PATH="${TARGET_DIR}/bin:$PATH"
-(cd "${TARGET_DIR}" && npm --no-audit ci --omit=dev --ignore-scripts && node -e "import('puppeteer/internal/node/install.js').then(m => m.downloadBrowser()).then(() => process.exit(0))")
+(cd "${TARGET_DIR}" && npm --no-audit ci --omit=dev --ignore-scripts && node -e "import('puppeteer/internal/node/install.js').then(m => m.downloadBrowsers()).catch(err => { console.error(err); process.exit(1); })")
 rm -f "${TARGET_DIR}/package.json" "${TARGET_DIR}/package-lock.json"
 
-CHROME_BIN=$(find "${TARGET_DIR}/puppeteer" -name chrome -perm -111 2>/dev/null | head -n 1)
+CHROME_BIN=$(find "${TARGET_DIR}/puppeteer" -name chrome -type f -perm -111 2>/dev/null | head -n 1)
 if [ -z "${CHROME_BIN}" ]; then
     echo "ERREUR : Binaire Chrome introuvable dans ${TARGET_DIR}/puppeteer" >&2
     exit 1

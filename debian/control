@@ -6,7 +6,8 @@ Standards-Version: 3.9.6
 Build-Depends:
  debhelper (>= 9),
  git,
- ca-certificates
+ ca-certificates,
+ unzip
 Homepage: https://github.com/makinacorpus/screamshotter
 
 Package: screamshotter
