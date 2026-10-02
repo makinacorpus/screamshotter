@@ -71,6 +71,7 @@ jobs:
       CI: true
       PUPPETEER_SKIP_DOWNLOAD: true
       PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
+      OS: ${{ matrix.os }}
 
     runs-on: ${{ matrix.os }}
     strategy:
@@ -108,12 +109,14 @@ jobs:
         cd src
         coverage run ./manage.py test
         coverage run -a ./manage.py test --settings screamshotter.settings.test_timeout screenshotter.tests.CaptureTestCase.test_timeout_screenshot
+        coverage xml -o coverage.xml
 
-    - name: Coverage upload
-      run: |
-        pip install codecov
-        cd src
-        codecov
+    - uses: codecov/codecov-action@v7
+      with:
+          files: ./coverage.xml
+          env_vars: OS
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true # optional (default = false)
 
   build:
     name: Build ${{ matrix.version }}
