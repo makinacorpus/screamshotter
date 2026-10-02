@@ -54,9 +54,11 @@ jobs:
         uses: actions/setup-node@v7
         with:
           node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
       - name: Install dependencies
         run: |
-          npm ci --no-audit
+          npm ci --verbose --no-audit
       - name: Lint with eslint
         run: |
           npm run lint
@@ -88,10 +90,12 @@ jobs:
       uses: actions/setup-node@v7
       with:
         node-version: 22
+        cache: npm
+        cache-dependency-path: package-lock.json
 
     - name: Install nodejs dependencies
       run: |
-        npm ci --no-audit
+        npm ci --verbose --no-audit
 
     - name: Test with coverage
       run: |
