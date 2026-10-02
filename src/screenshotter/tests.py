@@ -1,18 +1,25 @@
+import importlib
+import os
+import subprocess
+import sys
 from tempfile import TemporaryDirectory
+import types
 from unittest import skipIf
+from unittest.mock import MagicMock, patch
 
-import magic
-from PIL import Image
+from django.apps import apps
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.test import SimpleTestCase, override_settings
 from django.urls import reverse
+import magic
+from PIL import Image
 from rest_framework.serializers import Serializer
 from rest_framework.test import APISimpleTestCase
 
 from .exceptions import ScreenshotterException
-from .puppeteer import take_screenshot
+from .puppeteer import _preexec_fn, _reap_zombies, take_screenshot
 from .serializer import ScreenshotSerializer
 from .views import ScreenshotAPIView
 
@@ -84,6 +91,12 @@ class CaptureApiTestCase(APISimpleTestCase):
         self.assertEqual(response.status_code, 200, data)
         self.assertIn('base64', data)
 
+    def test_api_good_get_request_json(self):
+        response = self.client.get(reverse('screenshotter:screenshot') + '?format=json&url=https://www.google.fr')
+        data = response.json()
+        self.assertEqual(response.status_code, 200, data)
+        self.assertIn('base64', data)
+
     def test_api_bad_request(self):
         serializer = ScreenshotSerializer()
         response = self.client.post(reverse('screenshotter:screenshot') + '?format=json', data=serializer.data)
@@ -91,6 +104,13 @@ class CaptureApiTestCase(APISimpleTestCase):
         self.assertEqual(response.status_code, 400)
         self.assertIn('url', data)
         self.assertEqual(['This field may not be blank.'], data['url'])
+
+    def test_api_bad_get_request(self):
+        response = self.client.get(reverse('screenshotter:screenshot') + '?format=json')
+        data = response.json()
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('url', data)
+        self.assertEqual(['This field is required.'], data['url'])
 
     def test_api_wrong_response(self):
         serializer = ScreenshotSerializer()
@@ -119,3 +139,118 @@ class CaptureApiTestCase(APISimpleTestCase):
         self.assertEqual(response.status_code, 200)
         mime = magic.from_buffer(response.content, mime=True)
         self.assertEqual(mime, "image/png")
+
+
+class ProcessManagementTestCase(SimpleTestCase):
+    def test_reap_zombies_normal(self):
+        with patch('os.waitpid', side_effect=[(1234, 0), (0, 0)]):
+            _reap_zombies()
+
+    def test_reap_zombies_child_process_error(self):
+        with patch('os.waitpid', side_effect=ChildProcessError):
+            _reap_zombies()
+
+    def test_reap_zombies_os_error(self):
+        with patch('os.waitpid', side_effect=OSError):
+            _reap_zombies()
+
+    def test_preexec_fn(self):
+        with patch('os.setsid') as mock_setsid, patch('ctypes.CDLL') as mock_cdll:
+            _preexec_fn()
+            mock_setsid.assert_called_once()
+            mock_cdll.assert_called_once_with('libc.so.6')
+
+    def test_preexec_fn_exception(self):
+        with patch('os.setsid'), patch('ctypes.CDLL', side_effect=Exception("libc error")):
+            _preexec_fn()
+
+    def test_apps_ready(self):
+        config = apps.get_app_config('screenshotter')
+        with patch('ctypes.CDLL') as mock_cdll:
+            config.ready()
+            mock_cdll.assert_called_once_with('libc.so.6')
+
+    def test_apps_ready_exception(self):
+        config = apps.get_app_config('screenshotter')
+        with patch('ctypes.CDLL', side_effect=Exception("error")):
+            config.ready()
+
+    def test_take_screenshot_invalid_timeout(self):
+        with patch('subprocess.Popen') as mock_popen:
+            mock_proc = MagicMock()
+            mock_proc.returncode = 0
+
+            def fake_communicate(*args, **kwargs):
+                cmd_args = mock_popen.call_args[0][0]
+                path_idx = cmd_args.index('--path') + 1
+                with open(cmd_args[path_idx], 'wb') as f:
+                    f.write(b"fake-png")
+                return (b"", b"")
+
+            mock_proc.communicate.side_effect = fake_communicate
+            mock_popen.return_value = mock_proc
+            png = take_screenshot('https://www.google.fr', timeout='invalid')
+            self.assertEqual(png, b"fake-png")
+
+    def test_take_screenshot_timeout_expired(self):
+        with patch('subprocess.Popen') as mock_popen:
+            mock_proc = MagicMock()
+            mock_proc.pid = 9999
+            mock_proc.communicate.side_effect = subprocess.TimeoutExpired(cmd='node', timeout=1)
+            mock_popen.return_value = mock_proc
+            with patch('os.killpg') as mock_killpg:
+                with self.assertRaisesRegex(ScreenshotterException, 'Screenshot process timed out'):
+                    take_screenshot('https://www.google.fr', timeout=1)
+                self.assertTrue(mock_killpg.called)
+
+    def test_take_screenshot_timeout_expired_lookup_error(self):
+        with patch('subprocess.Popen') as mock_popen:
+            mock_proc = MagicMock()
+            mock_proc.pid = 9999
+            mock_proc.communicate.side_effect = subprocess.TimeoutExpired(cmd='node', timeout=1)
+            mock_popen.return_value = mock_proc
+            with patch('os.killpg', side_effect=ProcessLookupError):
+                with self.assertRaisesRegex(ScreenshotterException, 'Screenshot process timed out'):
+                    take_screenshot('https://www.google.fr', timeout=1)
+
+    def test_take_screenshot_unexpected_exception(self):
+        with patch('subprocess.Popen') as mock_popen:
+            mock_proc = MagicMock()
+            mock_proc.pid = 9999
+            mock_proc.communicate.side_effect = RuntimeError("Crash")
+            mock_popen.return_value = mock_proc
+            with patch('os.killpg') as mock_killpg:
+                with self.assertRaises(RuntimeError):
+                    take_screenshot('https://www.google.fr')
+                self.assertTrue(mock_killpg.called)
+
+    def test_take_screenshot_unexpected_exception_lookup_error(self):
+        with patch('subprocess.Popen') as mock_popen:
+            mock_proc = MagicMock()
+            mock_proc.pid = 9999
+            mock_proc.communicate.side_effect = RuntimeError("Crash")
+            mock_popen.return_value = mock_proc
+            with patch('os.killpg', side_effect=ProcessLookupError):
+                with self.assertRaises(RuntimeError):
+                    take_screenshot('https://www.google.fr')
+
+    def test_take_screenshot_empty_file(self):
+        with patch('subprocess.Popen') as mock_popen:
+            mock_proc = MagicMock()
+            mock_proc.returncode = 0
+            mock_proc.communicate.return_value = (b"", b"Warning")
+            mock_popen.return_value = mock_proc
+            with patch('os.path.exists', return_value=True), patch('os.path.getsize', return_value=0):
+                with self.assertRaises(ScreenshotterException):
+                    take_screenshot('https://www.google.fr')
+
+    def test_urls_debug_toolbar(self):
+        import screamshotter.urls
+        with patch.dict(os.environ, {'DJANGO_SETTINGS_MODULE': 'screamshotter.settings.dev'}), override_settings(DEBUG=True):
+            mock_dt = types.ModuleType('debug_toolbar')
+            mock_dt_urls = types.ModuleType('debug_toolbar.urls')
+            mock_dt_urls.urlpatterns = []
+            mock_dt.urls = mock_dt_urls
+            with patch.dict(sys.modules, {'debug_toolbar': mock_dt, 'debug_toolbar.urls': mock_dt_urls}):
+                importlib.reload(screamshotter.urls)
+        importlib.reload(screamshotter.urls)
