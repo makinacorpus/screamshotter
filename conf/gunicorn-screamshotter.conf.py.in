@@ -1,7 +1,7 @@
 import os
 
 bind = "127.0.0.1:8000"
-timeout = ${TIMEOUT} + 15
+timeout = ${TIMEOUT} + 25
 max_requests = ${MAX_REQUESTS}
 
 

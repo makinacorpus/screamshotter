@@ -156,4 +156,4 @@ USER screamshotter
 
 WORKDIR /opt/screamshotter/src
 
-CMD gunicorn screamshotter.wsgi:application -w $WORKERS --max-requests $MAX_REQUESTS --timeout `expr $TIMEOUT + 10` --bind 0.0.0.0:8000 --worker-tmp-dir /dev/shm
+CMD gunicorn screamshotter.wsgi:application -w $WORKERS --max-requests $MAX_REQUESTS --timeout `expr $TIMEOUT + 25` --bind 0.0.0.0:8000 --worker-tmp-dir /dev/shm

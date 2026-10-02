@@ -47,7 +47,7 @@ def take_screenshot(url, width=1920, height=1080, waitfor='body', wait_selectors
         timeout_val = float(timeout)
     except (TypeError, ValueError):
         timeout_val = 60.0
-    node_timeout = max(timeout_val + 15.0, 5.0)
+    node_timeout = max(timeout_val + 20.0, 5.0)
 
     # We send sentry informations and version : when we use screamshotter as a package, informations are in settings only
     with NamedTemporaryFile(suffix='.png') as screenshot_file:
