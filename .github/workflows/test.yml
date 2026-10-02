@@ -188,7 +188,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         if: ${{ matrix.distro != 'docker' }}
         with:
           name: debian-package
@@ -269,7 +269,7 @@ jobs:
       - uses: actions/checkout@v7
 
       - name: Download debian artifact
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: debian-package
           path: /home/runner/work/screamshotter/screamshotter/
