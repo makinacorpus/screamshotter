@@ -46,7 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Check javascript linting
     env:
-      PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
+      PUPPETEER_SKIP_DOWNLOAD: true
       CI: true
     steps:
       - uses: actions/checkout@v7
