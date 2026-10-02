@@ -62,10 +62,14 @@ jobs:
       - name: Lint with eslint
         run: |
           npm run lint
+
   test:
     name: Python Unittests
     env:
       CI: true
+      PUPPETEER_SKIP_DOWNLOAD: true
+      PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
+
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
