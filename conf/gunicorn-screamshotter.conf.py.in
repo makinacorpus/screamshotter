@@ -1,3 +1,28 @@
+import os
+
 bind = "127.0.0.1:8000"
-timeout = ${TIMEOUT}
+timeout = ${TIMEOUT} + 25
 max_requests = ${MAX_REQUESTS}
+
+
+def post_fork(server, worker):
+    # Set worker as subreaper on Linux so orphaned grandchildren are reparented
+    # to this worker rather than leaking to PID 1
+    try:
+        import ctypes
+        libc = ctypes.CDLL('libc.so.6')
+        PR_SET_CHILD_SUBREAPER = 36
+        libc.prctl(PR_SET_CHILD_SUBREAPER, 1)
+    except Exception:
+        pass
+
+
+def worker_exit(server, worker):
+    # Reap any lingering child processes on worker exit
+    try:
+        while True:
+            pid, _ = os.waitpid(-1, os.WNOHANG)
+            if pid <= 0:
+                break
+    except (ChildProcessError, OSError):
+        pass
