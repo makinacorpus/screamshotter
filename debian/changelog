@@ -1,3 +1,15 @@
+screamshotter (2.2.8) RELEASED; urgency=medium
+
+  * New release
+
+ -- Jean-Etienne Castagnede <jean-etienne.castagnede@makina-corpus.com>  Thu, 15 Oct 2026 10:26:00 +0200
+
+screamshotter (2.2.7) RELEASED; urgency=medium
+
+  * New release
+
+ -- Jean-Etienne Castagnede <jean-etienne.castagnede@makina-corpus.com>  Thu, 1 Oct 2026 11:45:00 +0200
+
 screamshotter (2.2.6) RELEASED; urgency=medium
 
   * Support Ubuntu 22.04 and 24.04

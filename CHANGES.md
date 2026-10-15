@@ -1,11 +1,13 @@
 CHANGELOG
 =========
 
-2.2.8        (2026-10-02)
+2.2.8        (2026-10-15)
 -------------------------
 
 * Update node to 24
 * Fix zombie processes
+* Update Puppeteer and chromium
+* Update many dependencies
 
 
 2.2.7        (2026-10-01)
