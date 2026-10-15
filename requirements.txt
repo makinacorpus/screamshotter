@@ -30,7 +30,7 @@ itypes==1.2.0
     # via coreapi
 jinja2==3.1.6
     # via coreschema
-markupsafe==3.0.3
+markupsafe==3.0.4
     # via jinja2
 nodeenv==1.11.0
     # via screamshotter (setup.py)
