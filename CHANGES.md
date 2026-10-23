@@ -1,6 +1,17 @@
 CHANGELOG
 =========
 
+2.3.0        (2026-10-24)
+-------------------------
+
+* Add UI to get screenshots from a web page
+* Update node to 24.22.1
+* Update Puppeteer and chromium
+* Update to ESLint 10
+* Move from setup.py to pyproject.toml
+* Move from flake8 to ruff
+
+
 2.2.8        (2026-10-15)
 -------------------------
 
