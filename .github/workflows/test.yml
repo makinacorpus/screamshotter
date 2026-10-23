@@ -29,10 +29,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v7
-    - name: Set up Python 3.10
+    - name: Set up Python 3.4
       uses: actions/setup-python@v7
       with:
-        python-version: '3.10'  # lint with minimal version supported (3.10 in 22.04)
+        python-version: '3.14'  # lint with minimal version supported (3.10 in 22.04)
 
     - name: Install dependencies
       run: |
