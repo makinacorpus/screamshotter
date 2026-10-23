@@ -14,4 +14,15 @@ build_deb:
 	docker rm screamshotter_deb_run
 
 deps:
-	docker compose run --remove-orphans --no-deps --rm web bash -c "cd .. && uv pip compile --strip-extras setup.py -o requirements.txt && uv pip compile --strip-extras requirements-dev.in -o requirements-dev.txt"
+	docker compose run --remove-orphans --no-deps --rm web bash -c "cd .. && uv pip compile --strip-extras pyproject.toml -o requirements.txt && uv pip compile --strip-extras --group dev -c requirements.txt -o requirements-dev.txt"
+
+format:
+	docker compose run --remove-orphans --no-deps --rm web ruff format ../src
+
+lint:
+	docker compose run --remove-orphans --no-deps --rm web ruff check --fix ../src
+
+force_lint:
+	docker compose run --remove-orphans --no-deps --rm web ruff check --fix --unsafe-fixes ../src
+
+quality: lint format

@@ -122,7 +122,7 @@ RUN --mount=type=cache,target=/root/.npm \
     chmod -R a+rX /opt/screamshotter/puppeteer && \
     rm -f /opt/screamshotter/*.json
 
-COPY setup.py /opt/screamshotter/setup.py
+COPY pyproject.toml /opt/screamshotter/pyproject.toml
 COPY src /opt/screamshotter/src
 RUN uv pip install --no-cache --no-deps --python /opt/venv/bin/python /opt/screamshotter
 
@@ -143,7 +143,7 @@ COPY --from=build /opt/venv /opt/venv
 COPY --from=build /opt/screamshotter/node_modules /opt/screamshotter/node_modules
 COPY --from=build /opt/screamshotter/puppeteer /opt/screamshotter/puppeteer
 COPY src /opt/screamshotter/src
-COPY setup.py /opt/screamshotter/setup.py
+COPY pyproject.toml /opt/screamshotter/pyproject.toml
 
 RUN mkdir -p /opt/screamshotter/static && chown -R screamshotter:screamshotter /opt/screamshotter
 
