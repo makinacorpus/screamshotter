@@ -20,6 +20,7 @@ from rest_framework.test import APISimpleTestCase
 
 from .exceptions import ScreenshotterException
 from .puppeteer import _preexec_fn, _reap_zombies, take_screenshot
+from .renderers import ScreamBrowsableAPIRenderer
 from .serializer import ScreenshotSerializer
 from .views import ScreenshotAPIView
 
@@ -206,6 +207,43 @@ class WebPageTestCase(APISimpleTestCase):
             self.assertEqual(response.status_code, 500)
             self.assertIn(b'Screenshot generation failed', response.content)
             self.assertIn(b'Custom Puppeteer failure', response.content)
+
+    def test_renderer_get_context_dict_base64(self):
+        renderer = ScreamBrowsableAPIRenderer()
+        resp = type('Response', (), {'status_code': 200, 'status_text': 'OK', 'items': lambda self: []})()
+        view = ScreenshotAPIView()
+        request = self.client.get('/?format=api').wsgi_request
+        drf_request = view.initialize_request(request)
+        view.setup(drf_request)
+        renderer.accepted_media_type = 'text/html'
+        renderer.renderer_context = {'view': view, 'request': drf_request, 'response': resp}
+
+        context = renderer.get_context({'base64': 'custom-base64-string'}, 'text/html', renderer.renderer_context)
+        self.assertEqual(context.get('image_base64'), 'custom-base64-string')
+
+    def test_renderer_get_context_dict_errors(self):
+        renderer = ScreamBrowsableAPIRenderer()
+        resp = type('Response', (), {'status_code': 500, 'status_text': 'Internal Server Error', 'items': lambda self: []})()
+        view = ScreenshotAPIView()
+        request = self.client.get('/?format=api').wsgi_request
+        drf_request = view.initialize_request(request)
+        view.setup(drf_request)
+        renderer.accepted_media_type = 'text/html'
+        renderer.renderer_context = {'view': view, 'request': drf_request, 'response': resp}
+
+        context = renderer.get_context({'errors': 'custom-error-string'}, 'text/html', renderer.renderer_context)
+        self.assertEqual(context.get('capture_errors'), 'custom-error-string')
+
+    def test_view_get_serializer_unbound(self):
+        view = ScreenshotAPIView()
+        serializer = view.get_serializer()
+        self.assertFalse(hasattr(serializer, 'initial_data'))
+
+    def test_view_get_serializer_with_explicit_data(self):
+        view = ScreenshotAPIView()
+        serializer = view.get_serializer(data={'url': 'https://explicit.com'})
+        self.assertTrue(serializer.is_valid())
+        self.assertEqual(serializer.validated_data['url'], 'https://explicit.com')
 
 
 class ProcessManagementTestCase(SimpleTestCase):

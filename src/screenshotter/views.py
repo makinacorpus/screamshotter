@@ -17,11 +17,10 @@ class ScreenshotAPIView(APIView):
         """
         Keep this method to see json structure in API html view
         """
-        if 'data' not in kwargs:
-            if hasattr(self, 'request') and self.request:
-                if self.request.method == 'GET' and 'url' in self.request.GET:
-                    kwargs['data'] = self.request.GET
-        return self.serializer_class(*args, **kwargs)
+        serializer = self.serializer_class(*args, **kwargs)
+        if 'data' in kwargs:
+            serializer.is_valid()
+        return serializer
 
     def serializer_invalid(self, serializer):
         return Response(serializer.errors, status=http_status.HTTP_400_BAD_REQUEST)
