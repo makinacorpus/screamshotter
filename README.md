@@ -77,8 +77,14 @@ docker run -d -p 8000:8000 makinacorpus/screamshotter:latest
 curl -d url=https://google.com http://127.0.0.1:8000 > google.png
 ```
 
-## access test browsable api
+## Web test page / Browsable API
 
+You can test and use Screamshotter directly in your web browser:
+
+```
+http://127.0.0.1:8000/
+```
+or
 ```
 http://127.0.0.1:8000/?format=api
 ```

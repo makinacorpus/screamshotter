@@ -141,6 +141,73 @@ class CaptureApiTestCase(APISimpleTestCase):
         self.assertEqual(mime, "image/png")
 
 
+class WebPageTestCase(APISimpleTestCase):
+    def test_web_page_get_empty_form(self):
+        response = self.client.get(reverse('screenshotter:screenshot'), HTTP_ACCEPT='text/html')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Take a Screenshot', response.content)
+        self.assertIn(b'name="url"', response.content)
+        self.assertIn(b'name="width"', response.content)
+        self.assertIn(b'name="height"', response.content)
+        self.assertNotIn(b'This field is required.', response.content)
+
+    def test_web_page_get_format_api(self):
+        response = self.client.get(reverse('screenshotter:screenshot') + '?format=api')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Take a Screenshot', response.content)
+        self.assertIn(b'name="url"', response.content)
+        self.assertNotIn(b'This field is required.', response.content)
+
+    def test_web_page_test_endpoint(self):
+        response = self.client.get(reverse('screenshotter:screenshot-test'), HTTP_ACCEPT='text/html')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Take a Screenshot', response.content)
+        self.assertIn(b'name="url"', response.content)
+
+    def test_web_page_post_success_displays_image(self):
+        with patch('screenshotter.views.take_screenshot', return_value=b'test-fake-png-content'):
+            response = self.client.post(
+                reverse('screenshotter:screenshot') + '?format=api',
+                data={'url': 'https://www.google.fr'}
+            )
+            self.assertEqual(response.status_code, 200)
+            self.assertIn(b'Captured Screenshot', response.content)
+            self.assertIn(b'data:image/png;base64,', response.content)
+            # base64 of 'test-fake-png-content' is 'dGVzdC1mYWtlLXBuZy1jb250ZW50'
+            self.assertIn(b'dGVzdC1mYWtlLXBuZy1jb250ZW50', response.content)
+            self.assertIn(b'download="screenshot.png"', response.content)
+
+    def test_web_page_get_with_url_displays_image(self):
+        with patch('screenshotter.views.take_screenshot', return_value=b'test-fake-png-content'):
+            response = self.client.get(
+                reverse('screenshotter:screenshot') + '?format=api&url=https://www.google.fr'
+            )
+            self.assertEqual(response.status_code, 200)
+            self.assertIn(b'Captured Screenshot', response.content)
+            self.assertIn(b'data:image/png;base64,', response.content)
+            self.assertIn(b'dGVzdC1mYWtlLXBuZy1jb250ZW50', response.content)
+
+    def test_web_page_post_validation_error(self):
+        response = self.client.post(
+            reverse('screenshotter:screenshot') + '?format=api',
+            data={'url': ''}
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertIn(b'Take a Screenshot', response.content)
+        self.assertIn(b'This field may not be blank.', response.content)
+        self.assertNotIn(b'Captured Screenshot', response.content)
+
+    def test_web_page_post_capture_error(self):
+        with patch('screenshotter.views.take_screenshot', side_effect=Exception('Custom Puppeteer failure')):
+            response = self.client.post(
+                reverse('screenshotter:screenshot') + '?format=api',
+                data={'url': 'https://www.google.fr'}
+            )
+            self.assertEqual(response.status_code, 500)
+            self.assertIn(b'Screenshot generation failed', response.content)
+            self.assertIn(b'Custom Puppeteer failure', response.content)
+
+
 class ProcessManagementTestCase(SimpleTestCase):
     def test_reap_zombies_normal(self):
         with patch('os.waitpid', side_effect=[(1234, 0), (0, 0)]):
