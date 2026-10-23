@@ -104,10 +104,9 @@ ENV UV_CACHE_DIR=/opt/screamshotter/var/cache/
 
 RUN --mount=type=bind,src=./requirements.txt,dst=/requirements.txt \
     --mount=type=cache,target=/opt/screamshotter/var/cache/,sharing=locked,uid=1001,gid=1001 \
-    uv pip install --python /opt/venv/bin/python "setuptools<81" wheel && \
     uv pip install --python /opt/venv/bin/python -r /requirements.txt
 
-RUN /opt/venv/bin/nodeenv -C '' -p -n 24.21.0 --with-npm
+RUN /opt/venv/bin/nodeenv -C '' -p -n 24.22.1 --with-npm
 
 WORKDIR /opt/screamshotter
 COPY package.json /opt/screamshotter/package.json
