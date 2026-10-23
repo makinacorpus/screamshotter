@@ -2,7 +2,7 @@
 #    uv pip compile --strip-extras pyproject.toml -o requirements.txt
 asgiref==3.12.1
     # via django
-certifi==2026.7.22
+certifi==2026.10.19
     # via
     #   requests
     #   sentry-sdk
