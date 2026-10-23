@@ -4,9 +4,11 @@
 
 {% block branding %}
     <a class="navbar-brand" rel="nofollow" href="#">
-        <img src="{% static 'img/logo.svg' %}" style="height: 20px;"/>
+        <img src="{% static 'img/logo_makina.svg' %}" style="height: 20px; display: inline;"/>
     </a>
-    <a class="navbar-brand" rel="nofollow" href="#">
-        Screenshotter &#x1f4f7;&#x1f5bc;
-    </a>
+{% endblock %}
+
+{% block description %}
+    <img src="{% static 'img/logo_screamshotter_light.jpeg' %}" style="height: 80px;"/>
+    {{ block.super }}
 {% endblock %}

@@ -1,6 +1,8 @@
 [![codecov](https://codecov.io/gh/makinacorpus/screamshotter/branch/master/graph/badge.svg?token=Vk72Ni1u8F)](https://codecov.io/gh/makinacorpus/screamshotter)
 ![github actions](https://github.com/makinacorpus/screamshotter/actions/workflows/test.yml/badge.svg)
 
+<img src="src/screamshotter/static/img/logo_screamshotter_light.jpeg" alt="Screamshotter" style="max-width: 200px; height: auto;">
+
 # Screamshotter : microservice to take webpage screenshots
 
 ### Powered by Django / Node / Puppeteer / Chromium
