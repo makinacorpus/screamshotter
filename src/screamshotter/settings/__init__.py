@@ -13,12 +13,10 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 import os
 from uuid import uuid4
 
-
-from screamshotter import __version__
-
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
+from screamshotter import __version__
 
 # Build paths inside the screamshotter like this: os.path.join(BASE_DIR, ...)
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -29,29 +27,27 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY', str(uuid4()))
+SECRET_KEY = os.getenv("SECRET_KEY", str(uuid4()))
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = [
-    os.getenv('ALLOWED_HOSTS', '*')
-]
+ALLOWED_HOSTS = [os.getenv("ALLOWED_HOSTS", "*")]
 
 # Application definition
 INSTALLED_APPS = [
-    'django.contrib.contenttypes',
-    'django.contrib.staticfiles',
-    'rest_framework',
-    'screenshotter',
+    "django.contrib.contenttypes",
+    "django.contrib.staticfiles",
+    "rest_framework",
+    "screenshotter",
 ]
 
 MIDDLEWARE = (
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 )
 
 # Database
@@ -59,27 +55,29 @@ MIDDLEWARE = (
 
 DATABASES = {}
 
-ROOT_URLCONF = 'screamshotter.urls'
+ROOT_URLCONF = "screamshotter.urls"
 
-TEMPLATES = [{
-    'BACKEND': 'django.template.backends.django.DjangoTemplates',
-    'DIRS': [os.path.join(PROJECT_DIR, 'templates')],
-    'APP_DIRS': True,
-    'OPTIONS': {
-        'context_processors': [
-            'django.template.context_processors.debug',
-            'django.template.context_processors.request',
-        ],
+TEMPLATES = [
+    {
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [os.path.join(PROJECT_DIR, "templates")],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+            ],
+        },
     },
-}, ]
+]
 
-WSGI_APPLICATION = 'screamshotter.wsgi.application'
+WSGI_APPLICATION = "screamshotter.wsgi.application"
 
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
-LANGUAGE_CODE = os.getenv('LANGUAGE_CODE', 'en-us')
-TIME_ZONE = os.getenv('TIME_ZONE', 'UTC')
+LANGUAGE_CODE = os.getenv("LANGUAGE_CODE", "en-us")
+TIME_ZONE = os.getenv("TIME_ZONE", "UTC")
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
@@ -87,30 +85,28 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
-STATIC_URL = '/static/'
-STATICFILES_DIRS = (
-    os.path.join(PROJECT_DIR, 'static'),
-)
-STATIC_ROOT = os.path.join(os.path.dirname(os.path.dirname(PROJECT_DIR)), 'static')
+STATIC_URL = "/static/"
+STATICFILES_DIRS = (os.path.join(PROJECT_DIR, "static"),)
+STATIC_ROOT = os.path.join(os.path.dirname(os.path.dirname(PROJECT_DIR)), "static")
 
 REST_FRAMEWORK = {
-    'DEFAULT_RENDERER_CLASSES': (
-        'rest_framework.renderers.JSONRenderer',
-        'rest_framework.renderers.BrowsableAPIRenderer',
+    "DEFAULT_RENDERER_CLASSES": (
+        "rest_framework.renderers.JSONRenderer",
+        "rest_framework.renderers.BrowsableAPIRenderer",
     ),
-    'UNAUTHENTICATED_USER': None,
-    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
+    "UNAUTHENTICATED_USER": None,
+    "TEST_REQUEST_DEFAULT_FORMAT": "json",
 }
 
-TIMEOUT = int(os.getenv('TIMEOUT', 60))  # unit : second
+TIMEOUT = int(os.getenv("TIMEOUT", 60))  # unit : second
 # Override with custom settings
 
-SENTRY_DSN = os.getenv('SCREAMSHOTTER_SENTRY_DSN')
-SENTRY_ENVIRONMENT = os.getenv('SCREAMSHOTTER_SENTRY_ENVIRONMENT', 'screamshotter')
-SENTRY_TRACE_SAMPLE = os.getenv('SCREAMSHOTTER_SENTRY_TRACE_SAMPLE', '0.2')
+SENTRY_DSN = os.getenv("SCREAMSHOTTER_SENTRY_DSN")
+SENTRY_ENVIRONMENT = os.getenv("SCREAMSHOTTER_SENTRY_ENVIRONMENT", "screamshotter")
+SENTRY_TRACE_SAMPLE = os.getenv("SCREAMSHOTTER_SENTRY_TRACE_SAMPLE", "0.2")
 
 try:
-    with open(os.path.join('/opt', 'screamshotter', 'conf', 'custom.py'), 'r') as f:
+    with open(os.path.join("/opt", "screamshotter", "conf", "custom.py"), "r") as f:
         exec(f.read())
 except FileNotFoundError:
     pass
@@ -119,7 +115,9 @@ if SENTRY_DSN:
     sentry_sdk.init(
         dsn=SENTRY_DSN,
         environment=SENTRY_ENVIRONMENT,  # ex : cd30 / cd44 / PNRHJ etc
-        integrations=[DjangoIntegration(), ],
+        integrations=[
+            DjangoIntegration(),
+        ],
         # If you wish to associate users to errors (assuming you are using
         # django.contrib.auth) you may enable sending PII data.
         send_default_pii=True,

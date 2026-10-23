@@ -112,11 +112,12 @@ pip-compile --upgrade
 
 ## Quality
 
-### flake8
+### ruff
 
 ```bash
-# pip install flake8
-flake8 src
+# pip install ruff
+ruff check src
+ruff format --check src
 ```
 
 ### eslint

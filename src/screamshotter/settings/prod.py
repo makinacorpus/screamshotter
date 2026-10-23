@@ -1,9 +1,9 @@
 from . import *  # NOQA
 
 # SECURITY
-if os.getenv('DOMAIN_NAME'):
+if os.getenv("DOMAIN_NAME"):
     ALLOWED_HOSTS = [
-        os.getenv('DOMAIN_NAME'),
+        os.getenv("DOMAIN_NAME"),
     ]
 
 SECURE_CONTENT_TYPE_NOSNIFF = True
@@ -11,4 +11,4 @@ SECURE_BROWSER_XSS_FILTER = True
 CSRF_COOKIE_HTTPONLY = True
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")

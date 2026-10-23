@@ -104,10 +104,9 @@ ENV UV_CACHE_DIR=/opt/screamshotter/var/cache/
 
 RUN --mount=type=bind,src=./requirements.txt,dst=/requirements.txt \
     --mount=type=cache,target=/opt/screamshotter/var/cache/,sharing=locked,uid=1001,gid=1001 \
-    uv pip install --python /opt/venv/bin/python "setuptools<81" wheel && \
     uv pip install --python /opt/venv/bin/python -r /requirements.txt
 
-RUN /opt/venv/bin/nodeenv -C '' -p -n 24.21.0 --with-npm
+RUN /opt/venv/bin/nodeenv -C '' -p -n 24.22.1 --with-npm
 
 WORKDIR /opt/screamshotter
 COPY package.json /opt/screamshotter/package.json
@@ -122,7 +121,7 @@ RUN --mount=type=cache,target=/root/.npm \
     chmod -R a+rX /opt/screamshotter/puppeteer && \
     rm -f /opt/screamshotter/*.json
 
-COPY setup.py /opt/screamshotter/setup.py
+COPY pyproject.toml /opt/screamshotter/pyproject.toml
 COPY src /opt/screamshotter/src
 RUN uv pip install --no-cache --no-deps --python /opt/venv/bin/python /opt/screamshotter
 
@@ -143,7 +142,7 @@ COPY --from=build /opt/venv /opt/venv
 COPY --from=build /opt/screamshotter/node_modules /opt/screamshotter/node_modules
 COPY --from=build /opt/screamshotter/puppeteer /opt/screamshotter/puppeteer
 COPY src /opt/screamshotter/src
-COPY setup.py /opt/screamshotter/setup.py
+COPY pyproject.toml /opt/screamshotter/pyproject.toml
 
 RUN mkdir -p /opt/screamshotter/static && chown -R screamshotter:screamshotter /opt/screamshotter
 

@@ -5,10 +5,10 @@ from rest_framework.renderers import BrowsableAPIRenderer
 
 
 class PNGRenderer(renderers.BaseRenderer):
-    media_type = 'image/png'
-    format = 'png'
+    media_type = "image/png"
+    format = "png"
     charset = None
-    render_style = 'binary'
+    render_style = "binary"
 
     def render(self, data, media_type=None, renderer_context=None):
         return data
@@ -19,9 +19,13 @@ class Base64JSONRenderer(renderers.JSONRenderer):
         if isinstance(data, dict):
             json_ready = data
         else:
-            base64_encoded_data = base64.b64encode(data).decode('utf-8')
+            base64_encoded_data = base64.b64encode(data).decode("utf-8")
             json_ready = {"base64": base64_encoded_data}
-        return super().render(json_ready, accepted_media_type=accepted_media_type, renderer_context=renderer_context)
+        return super().render(
+            json_ready,
+            accepted_media_type=accepted_media_type,
+            renderer_context=renderer_context,
+        )
 
 
 class ScreamBrowsableAPIRenderer(BrowsableAPIRenderer):
@@ -32,10 +36,10 @@ class ScreamBrowsableAPIRenderer(BrowsableAPIRenderer):
     def get_context(self, data, accepted_media_type, renderer_context):
         context = super().get_context(data, accepted_media_type, renderer_context)
         if isinstance(data, (bytes, bytearray)):
-            context['image_base64'] = base64.b64encode(data).decode('utf-8')
+            context["image_base64"] = base64.b64encode(data).decode("utf-8")
         elif isinstance(data, dict):
-            if 'base64' in data:
-                context['image_base64'] = data['base64']
-            if 'errors' in data:
-                context['capture_errors'] = data['errors']
+            if "base64" in data:
+                context["image_base64"] = data["base64"]
+            if "errors" in data:
+                context["capture_errors"] = data["errors"]
         return context

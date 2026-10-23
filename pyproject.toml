@@ -1,0 +1,68 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "screamshotter"
+dynamic = ["version"]
+description = "Takes captures of HTML pages"
+readme = "README.md"
+license = "BSD-2-Clause"
+authors = [
+    {name = "Makina Corpus", email = "support.geotrek@makina-corpus.com"},
+]
+urls = {Homepage = "https://makina-corpus.com"}
+dependencies = [
+    "django==5.2.*",
+    "tzdata",
+    "nodeenv",
+    "djangorestframework",
+    "coreapi",
+    "whitenoise",
+    # prod
+    "gunicorn[gevent]",
+    "sentry-sdk",
+]
+
+[dependency-groups]
+dev = [
+    "coverage",
+    "ruff",
+    "Pillow",
+    "python-magic",
+    "django-debug-toolbar",
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+]
+ignore = [
+    "E501",  # line too long (handled by formatter)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"src/screamshotter/settings/*" = ["F403", "F405"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["screamshotter", "screenshotter"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.setuptools]
+script-files = ["src/manage.py"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.dynamic]
+version = {file = "src/screamshotter/VERSION"}
