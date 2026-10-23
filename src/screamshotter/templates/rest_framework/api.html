@@ -1,0 +1,203 @@
+{% extends "rest_framework/base.html" %}
+{% load i18n %}
+{% load static %}
+{% load rest_framework %}
+
+{% block style %}
+  {{ block.super }}
+  <style>
+    .scream-header {
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #eee;
+    }
+    .scream-panel {
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      margin-bottom: 25px;
+    }
+    .scream-panel .panel-heading {
+      font-weight: 600;
+      font-size: 16px;
+    }
+    .screenshot-preview-wrapper {
+      background: #f4f6f8;
+      border: 1px solid #e1e4e8;
+      border-radius: 6px;
+      padding: 20px;
+      margin-top: 15px;
+      text-align: center;
+    }
+    .screenshot-img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+      display: inline-block;
+    }
+    .screenshot-actions {
+      margin-bottom: 15px;
+    }
+    .screenshot-actions .btn {
+      margin-right: 8px;
+    }
+    .glyphicon-spin {
+      -webkit-animation: spin 1s infinite linear;
+      animation: spin 1s infinite linear;
+    }
+    @-webkit-keyframes spin {
+      0% { -webkit-transform: rotate(0deg); }
+      100% { -webkit-transform: rotate(359deg); }
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(359deg); }
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="scream-header clearfix">
+    <div class="pull-right">
+      {% block request_forms %}
+        {% if 'GET' in allowed_methods %}
+          <form id="get-form" class="pull-right">
+            <fieldset>
+              <div class="btn-group format-selection">
+                <a class="btn btn-default js-tooltip" href="{{ request.get_full_path }}" rel="nofollow" title="Make a GET request">GET</a>
+                <button class="btn btn-default dropdown-toggle js-tooltip" data-toggle="dropdown" title="Specify format">
+                  <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  {% for format in available_formats %}
+                    <li>
+                      <a class="js-tooltip format-option" href="{% add_query_param request api_settings.URL_FORMAT_OVERRIDE format %}">{{ format }}</a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </fieldset>
+          </form>
+        {% endif %}
+      {% endblock request_forms %}
+    </div>
+
+    <div>
+        <img src="{% static 'img/logo_screamshotter_light.jpeg' %}" style="height: 80px;"/>
+        <p class="text-muted" style="font-size: 15px;">Microservice to take webpage screenshots powered by Puppeteer & Chromium.</p>
+    </div>
+  </div>
+
+  {# 1. SCREENSHOT RESULT (if image captured) #}
+  {% if image_base64 %}
+    <div class="panel panel-success scream-panel" id="screenshot-result-panel">
+      <div class="panel-heading clearfix">
+        <span class="glyphicon glyphicon-picture"></span> {% trans "Captured Screenshot" %}
+        <div class="pull-right">
+          <a href="data:image/png;base64,{{ image_base64 }}" download="screenshot.png" class="btn btn-xs btn-primary">
+            <span class="glyphicon glyphicon-download-alt"></span> {% trans "Download PNG" %}
+          </a>
+          <a href="data:image/png;base64,{{ image_base64 }}" target="_blank" class="btn btn-xs btn-default">
+            <span class="glyphicon glyphicon-new-window"></span> {% trans "Open in New Tab" %}
+          </a>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="screenshot-actions text-center">
+          <a href="data:image/png;base64,{{ image_base64 }}" download="screenshot.png" class="btn btn-primary">
+            <span class="glyphicon glyphicon-download-alt"></span> {% trans "Download PNG" %}
+          </a>
+          <a href="data:image/png;base64,{{ image_base64 }}" target="_blank" class="btn btn-default">
+            <span class="glyphicon glyphicon-fullscreen"></span> {% trans "View Full Size" %}
+          </a>
+        </div>
+        <div class="screenshot-preview-wrapper">
+          <img src="data:image/png;base64,{{ image_base64 }}" alt="Captured screenshot" class="screenshot-img img-responsive center-block" />
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  {# 2. CAPTURE ERRORS (if any) #}
+  {% if capture_errors %}
+    <div class="alert alert-danger" role="alert">
+      <h4><span class="glyphicon glyphicon-exclamation-sign"></span> {% trans "Screenshot generation failed" %}</h4>
+      <p>{{ capture_errors }}</p>
+    </div>
+  {% endif %}
+
+  {# 3. SCREENSHOT FORM (generated from serializer) #}
+  <div class="panel panel-default scream-panel" id="screenshot-form-panel">
+    <div class="panel-heading">
+      <span class="glyphicon glyphicon-camera"></span> {% trans "Take a Screenshot" %}
+    </div>
+    <div class="panel-body">
+      {% if post_form %}
+        <form id="screenshot-form" action="{{ request.get_full_path }}" method="POST" enctype="multipart/form-data" class="form-horizontal">
+          <fieldset>
+            {% csrf_token %}
+            {% if post_form.non_field_errors %}
+              <div class="alert alert-danger">
+                {{ post_form.non_field_errors }}
+              </div>
+            {% endif %}
+
+            {{ post_form }}
+
+            <div class="form-group" style="margin-top: 20px;">
+              <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" id="btn-submit" class="btn btn-primary btn-lg">
+                  <span class="glyphicon glyphicon-camera"></span> {% trans "Take Screenshot" %}
+                </button>
+                <span id="loading-spinner" style="display:none; margin-left: 15px; font-weight: bold; color: #337ab7;">
+                  <span class="glyphicon glyphicon-refresh glyphicon-spin"></span> {% trans "Capturing screenshot, please wait..." %}
+                </span>
+              </div>
+            </div>
+          </fieldset>
+        </form>
+      {% endif %}
+    </div>
+  </div>
+
+  {# 4. TECHNICAL DETAILS (collapsible) #}
+  <div class="panel panel-default" style="margin-top: 20px;">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" href="#collapse-api" class="collapsed" style="text-decoration: none;">
+          <span class="glyphicon glyphicon-console"></span> {% trans "API Request & Response Details" %} <span class="caret"></span>
+        </a>
+      </h4>
+    </div>
+    <div id="collapse-api" class="panel-collapse collapse">
+      <div class="panel-body">
+        <div class="request-info" aria-label="{% trans "request info" %}">
+          <pre class="prettyprint"><b>{{ request.method }}</b> {{ request.get_full_path }}</pre>
+        </div>
+        <div class="response-info" aria-label="{% trans "response info" %}">
+          <pre class="prettyprint"><span class="meta nocode"><b>HTTP {{ response.status_code }} {{ response.status_text }}</b>{% for key, val in response_headers.items %}
+<b>{{ key }}:</b> <span class="lit">{{ val|urlize }}</span>{% endfor %}
+
+</span>{{ content|urlize }}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+
+{% block script %}
+  {{ block.super }}
+  <script>
+    (function() {
+      var form = document.getElementById('screenshot-form');
+      if (form) {
+        form.addEventListener('submit', function() {
+          var spinner = document.getElementById('loading-spinner');
+          var btn = document.getElementById('btn-submit');
+          if (spinner) spinner.style.display = 'inline-block';
+          if (btn) btn.disabled = true;
+        });
+      }
+    })();
+  </script>
+{% endblock %}

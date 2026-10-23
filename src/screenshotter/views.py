@@ -17,7 +17,10 @@ class ScreenshotAPIView(APIView):
         """
         Keep this method to see json structure in API html view
         """
-        return self.serializer_class()
+        serializer = self.serializer_class(*args, **kwargs)
+        if 'data' in kwargs:
+            serializer.is_valid()
+        return serializer
 
     def serializer_invalid(self, serializer):
         return Response(serializer.errors, status=http_status.HTTP_400_BAD_REQUEST)
@@ -38,6 +41,8 @@ class ScreenshotAPIView(APIView):
             if serializer.is_valid() else self.serializer_invalid(serializer)
 
     def get(self, request, *args, **kwargs):
+        if request.accepted_renderer.format in ('html', 'api') and 'url' not in request.GET:
+            return Response({'message': 'Enter a URL in the form below to take a screenshot.'}, status=http_status.HTTP_200_OK)
         serializer = self.serializer_class(data=request.GET)
         return self.serializer_valid(serializer) \
             if serializer.is_valid() else self.serializer_invalid(serializer)

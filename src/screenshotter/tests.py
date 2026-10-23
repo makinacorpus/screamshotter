@@ -20,6 +20,7 @@ from rest_framework.test import APISimpleTestCase
 
 from .exceptions import ScreenshotterException
 from .puppeteer import _preexec_fn, _reap_zombies, take_screenshot
+from .renderers import ScreamBrowsableAPIRenderer
 from .serializer import ScreenshotSerializer
 from .views import ScreenshotAPIView
 
@@ -139,6 +140,110 @@ class CaptureApiTestCase(APISimpleTestCase):
         self.assertEqual(response.status_code, 200)
         mime = magic.from_buffer(response.content, mime=True)
         self.assertEqual(mime, "image/png")
+
+
+class WebPageTestCase(APISimpleTestCase):
+    def test_web_page_get_empty_form(self):
+        response = self.client.get(reverse('screenshotter:screenshot'), HTTP_ACCEPT='text/html')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Take a Screenshot', response.content)
+        self.assertIn(b'name="url"', response.content)
+        self.assertIn(b'name="width"', response.content)
+        self.assertIn(b'name="height"', response.content)
+        self.assertNotIn(b'This field is required.', response.content)
+
+    def test_web_page_get_format_api(self):
+        response = self.client.get(reverse('screenshotter:screenshot') + '?format=api')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Take a Screenshot', response.content)
+        self.assertIn(b'name="url"', response.content)
+        self.assertNotIn(b'This field is required.', response.content)
+
+    def test_web_page_test_endpoint(self):
+        response = self.client.get(reverse('screenshotter:screenshot-test'), HTTP_ACCEPT='text/html')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Take a Screenshot', response.content)
+        self.assertIn(b'name="url"', response.content)
+
+    def test_web_page_post_success_displays_image(self):
+        with patch('screenshotter.views.take_screenshot', return_value=b'test-fake-png-content'):
+            response = self.client.post(
+                reverse('screenshotter:screenshot') + '?format=api',
+                data={'url': 'https://www.google.fr'}
+            )
+            self.assertEqual(response.status_code, 200)
+            self.assertIn(b'Captured Screenshot', response.content)
+            self.assertIn(b'data:image/png;base64,', response.content)
+            # base64 of 'test-fake-png-content' is 'dGVzdC1mYWtlLXBuZy1jb250ZW50'
+            self.assertIn(b'dGVzdC1mYWtlLXBuZy1jb250ZW50', response.content)
+            self.assertIn(b'download="screenshot.png"', response.content)
+
+    def test_web_page_get_with_url_displays_image(self):
+        with patch('screenshotter.views.take_screenshot', return_value=b'test-fake-png-content'):
+            response = self.client.get(
+                reverse('screenshotter:screenshot') + '?format=api&url=https://www.google.fr'
+            )
+            self.assertEqual(response.status_code, 200)
+            self.assertIn(b'Captured Screenshot', response.content)
+            self.assertIn(b'data:image/png;base64,', response.content)
+            self.assertIn(b'dGVzdC1mYWtlLXBuZy1jb250ZW50', response.content)
+
+    def test_web_page_post_validation_error(self):
+        response = self.client.post(
+            reverse('screenshotter:screenshot') + '?format=api',
+            data={'url': ''}
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertIn(b'Take a Screenshot', response.content)
+        self.assertIn(b'This field may not be blank.', response.content)
+        self.assertNotIn(b'Captured Screenshot', response.content)
+
+    def test_web_page_post_capture_error(self):
+        with patch('screenshotter.views.take_screenshot', side_effect=Exception('Custom Puppeteer failure')):
+            response = self.client.post(
+                reverse('screenshotter:screenshot') + '?format=api',
+                data={'url': 'https://www.google.fr'}
+            )
+            self.assertEqual(response.status_code, 500)
+            self.assertIn(b'Screenshot generation failed', response.content)
+            self.assertIn(b'Custom Puppeteer failure', response.content)
+
+    def test_renderer_get_context_dict_base64(self):
+        renderer = ScreamBrowsableAPIRenderer()
+        resp = type('Response', (), {'status_code': 200, 'status_text': 'OK', 'items': lambda self: []})()
+        view = ScreenshotAPIView()
+        request = self.client.get('/?format=api').wsgi_request
+        drf_request = view.initialize_request(request)
+        view.setup(drf_request)
+        renderer.accepted_media_type = 'text/html'
+        renderer.renderer_context = {'view': view, 'request': drf_request, 'response': resp}
+
+        context = renderer.get_context({'base64': 'custom-base64-string'}, 'text/html', renderer.renderer_context)
+        self.assertEqual(context.get('image_base64'), 'custom-base64-string')
+
+    def test_renderer_get_context_dict_errors(self):
+        renderer = ScreamBrowsableAPIRenderer()
+        resp = type('Response', (), {'status_code': 500, 'status_text': 'Internal Server Error', 'items': lambda self: []})()
+        view = ScreenshotAPIView()
+        request = self.client.get('/?format=api').wsgi_request
+        drf_request = view.initialize_request(request)
+        view.setup(drf_request)
+        renderer.accepted_media_type = 'text/html'
+        renderer.renderer_context = {'view': view, 'request': drf_request, 'response': resp}
+
+        context = renderer.get_context({'errors': 'custom-error-string'}, 'text/html', renderer.renderer_context)
+        self.assertEqual(context.get('capture_errors'), 'custom-error-string')
+
+    def test_view_get_serializer_unbound(self):
+        view = ScreenshotAPIView()
+        serializer = view.get_serializer()
+        self.assertFalse(hasattr(serializer, 'initial_data'))
+
+    def test_view_get_serializer_with_explicit_data(self):
+        view = ScreenshotAPIView()
+        serializer = view.get_serializer(data={'url': 'https://explicit.com'})
+        self.assertTrue(serializer.is_valid())
+        self.assertEqual(serializer.validated_data['url'], 'https://explicit.com')
 
 
 class ProcessManagementTestCase(SimpleTestCase):
