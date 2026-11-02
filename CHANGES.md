@@ -1,8 +1,10 @@
 CHANGELOG
 =========
 
-2.3.0+dev    (XXXX-XX-XX)
+2.3.1        (2026-11-02)
 -------------------------
+
+* Embedded chromium is now 156.0.8078.47. It is patched to fix a security vulnerability (CVE-2026-111497).
 
 
 2.3.0        (2026-10-24)
