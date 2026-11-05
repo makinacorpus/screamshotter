@@ -307,8 +307,10 @@ jobs:
           images: |
             makinacorpus/screamshotter
             ghcr.io/makinacorpus/screamshotter
+          flavor: |
+            latest=auto
           tags: |
-            type=raw,value=v2
+            type=semver,pattern=v{{major}}
 
       - name: Build and push image
         uses: docker/build-push-action@v7
