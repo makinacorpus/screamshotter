@@ -18,7 +18,7 @@ python-magic==0.4.27
     # via screamshotter (pyproject.toml:dev)
 ruff==0.17.4
     # via screamshotter (pyproject.toml:dev)
-sqlparse==0.6.0
+sqlparse==0.6.1
     # via
     #   -c requirements.txt
     #   django
