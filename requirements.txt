@@ -42,7 +42,7 @@ sentry-sdk==2.74.0
     # via screamshotter (pyproject.toml)
 setuptools==84.2.1
     # via zope-event
-sqlparse==0.6.0
+sqlparse==0.6.1
     # via django
 tzdata==2026.6
     # via screamshotter (pyproject.toml)
