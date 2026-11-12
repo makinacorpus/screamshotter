@@ -102,7 +102,8 @@ uv pip install -r requirements.txt --python "${TARGET_DIR}/bin/python"
 uv pip install --no-deps . --python "${TARGET_DIR}/bin/python"
 
 echo "Installation de Node.js via nodeenv et dépendances npm..."
-"${TARGET_DIR}/bin/python" "${TARGET_DIR}/bin/nodeenv" -C '' -p -n 24.22.1 --with-npm
+NODE_VERSION="$(tr -d 'v[:space:]' < .nvmrc)"
+"${TARGET_DIR}/bin/python" "${TARGET_DIR}/bin/nodeenv" -C '' -p -n "${NODE_VERSION}" --with-npm
 
 cp package.json package-lock.json "${TARGET_DIR}/"
 export PUPPETEER_CACHE_DIR="${TARGET_DIR}/puppeteer/"

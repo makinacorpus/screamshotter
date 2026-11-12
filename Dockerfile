@@ -106,7 +106,8 @@ RUN --mount=type=bind,src=./requirements.txt,dst=/requirements.txt \
     --mount=type=cache,target=/opt/screamshotter/var/cache/,sharing=locked,uid=1001,gid=1001 \
     uv pip install --python /opt/venv/bin/python -r /requirements.txt
 
-RUN /opt/venv/bin/nodeenv -C '' -p -n 24.22.1 --with-npm
+RUN --mount=type=bind,src=.nvmrc,dst=/.nvmrc \
+    /opt/venv/bin/nodeenv -C '' -p -n "$(tr -d 'v[:space:]' < /.nvmrc)" --with-npm
 
 WORKDIR /opt/screamshotter
 COPY package.json /opt/screamshotter/package.json
