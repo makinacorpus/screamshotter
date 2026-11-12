@@ -513,6 +513,6 @@ make build_deb
 
 ## License
 
-This project is licensed under the **BSD-2-Clause License** - see the LICENSE file for details.
+This project is licensed under the **GPL v3 License** - see the LICENSE file for details.
 
 Maintained with ❤️ by [Makina Corpus](https://makina-corpus.com).
