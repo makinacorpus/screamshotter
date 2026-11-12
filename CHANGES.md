@@ -5,6 +5,7 @@ CHANGELOG
 -------------------------
 
 * Fix docker tag
+* Update node to 24.22.3
 
 
 2.3.1        (2026-11-02)
