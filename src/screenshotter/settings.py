@@ -1,13 +1,8 @@
-import os
-
 from django.conf import settings
 from django.test.signals import setting_changed
 
 DEFAULTS = {
-    "PUPPETEER_JAVASCRIPT_FILEPATH": os.path.join(
-        os.path.abspath(os.path.dirname(__file__)), "js", "index.js"
-    ),
-    "CHROMIUM_BROWSER_FILEPATH": "chromium-browser",
+    "CHROMIUM_BROWSER_FILEPATH": None,
 }
 
 
@@ -16,7 +11,7 @@ class APPSettings(object):
     A settings object, that allows API settings to be accessed as properties.
     For example:
         from screenshotter.settings import app_settings
-        print(app_settings.PUPPETEER_JAVASCRIPT_FILEPATH)
+        print(app_settings.CHROMIUM_BROWSER_FILEPATH)
     """
 
     def __init__(self, defaults=None):

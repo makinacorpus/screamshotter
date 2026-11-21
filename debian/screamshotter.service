@@ -6,9 +6,7 @@ StartLimitBurst=2
 [Service]
 WorkingDirectory=/opt/screamshotter
 ExecStart=/opt/screamshotter/bin/gunicorn --config=/opt/screamshotter/conf/gunicorn-screamshotter.conf.py screamshotter.wsgi:application
-Environment=NODE_PATH=/opt/screamshotter/node_modules/
-Environment=NODE_BIN_PATH=/opt/screamshotter/bin/node
-Environment=PUPPETEER_CACHE_DIR=/opt/screamshotter/puppeteer/
+Environment=PLAYWRIGHT_BROWSERS_PATH=/opt/screamshotter/playwright/
 Environment=HOME=/opt/screamshotter
 Environment=PATH=/opt/screamshotter/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 Restart=on-failure

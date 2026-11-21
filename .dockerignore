@@ -5,8 +5,7 @@ __pycache__
 *.pyo
 *.pyd
 .pytest_cache
-node_modules
-puppeteer
+playwright
 dpkg
 temp
 cache

@@ -21,7 +21,9 @@ djangorestframework==3.18.3
 gevent==26.9.0
     # via gunicorn
 greenlet==3.5.6
-    # via gevent
+    # via
+    #   gevent
+    #   playwright
 gunicorn==27.0.1
     # via screamshotter (pyproject.toml)
 idna==3.20
@@ -32,10 +34,10 @@ jinja2==3.1.6
     # via coreschema
 markupsafe==3.0.4
     # via jinja2
-nodeenv==1.12.0
-    # via screamshotter (pyproject.toml)
 packaging==26.3
     # via gunicorn
+playwright==1.65.2
+    # via screamshotter (pyproject.toml)
 requests==2.34.2
     # via coreapi
 sentry-sdk==2.75.0

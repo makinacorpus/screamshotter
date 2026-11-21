@@ -11,7 +11,7 @@
 
 **Screamshotter** is a high-performance HTTP microservice designed to capture pixel-perfect screenshots of dynamic webpages and single-page applications (SPAs).
 
-Built with **Django REST Framework**, **Node.js**, **Puppeteer**, and headless **Chromium**, Screamshotter handles modern web stacks seamlessly (client-side rendering, web fonts, animations, lazy loading) with built-in zombie-process reaping, request sandboxing, and customizable CSS/header injections.
+Built with **Django REST Framework**, **Playwright**, and headless **Chromium**, Screamshotter handles modern web stacks seamlessly (client-side rendering, web fonts, animations, lazy loading) with built-in zombie-process reaping, request sandboxing, and customizable CSS/header injections.
 
 ---
 
@@ -34,7 +34,7 @@ Built with **Django REST Framework**, **Node.js**, **Puppeteer**, and headless *
   - [Single Page Apps (SPAs) & Async Loading](#single-page-apps-spas--async-loading)
   - [CSS Customization & Hiding Banners (`screamshotter_css_class`)](#css-customization--hiding-banners-screamshotter_css_class)
   - [Forwarding Authentication & Custom Headers](#forwarding-authentication--custom-headers)
-  - [Remote Puppeteer / Browserless Integration](#remote-puppeteer--browserless-integration)
+  - [Remote Browser / Browserless Integration](#remote-browser--browserless-integration)
 - [Configuration & Environment Variables](#configuration--environment-variables)
 - [Installation Options](#installation-options)
   - [Docker (Recommended)](#docker-recommended)
@@ -54,9 +54,9 @@ Built with **Django REST Framework**, **Node.js**, **Puppeteer**, and headless *
   - Raw binary image (`image/png`)
   - Base64 JSON payload (`application/json`)
   - Interactive Web UI (`text/html`) with live preview and download
-- **Production Ready & Resilient**: Built-in Linux subreaper process isolation, process group cleanup, and watchdog timeouts to prevent zombie Chromium instances.
-- **External Puppeteer / Browserless Support**: Offload rendering to an external browser cluster over WebSockets (`EXTERNAL_PUPPETEER`).
-- **Observability**: Native integration with Sentry across both Django and Node/Puppeteer workers.
+- **Production Ready & Resilient**: Built-in Linux subreaper process isolation and cleanup to prevent zombie Chromium instances.
+- **External Browser / Browserless Support**: Offload rendering to an external browser cluster over WebSockets (`EXTERNAL_PLAYWRIGHT`).
+- **Observability**: Native integration with Sentry.
 
 ---
 
@@ -258,7 +258,7 @@ image_bytes = base64.b64decode(b64_data)
 #### Using Screamshotter as an Internal Python Package
 If Screamshotter is installed in your Python environment or Django project:
 ```python
-from screenshotter.puppeteer import take_screenshot
+from screenshotter.playwright import take_screenshot
 
 png_bytes = take_screenshot(
     url="https://makina-corpus.com",
@@ -379,13 +379,13 @@ Use `forward_headers` to authenticate the headless browser against secured endpo
 
 ---
 
-### Remote Puppeteer / Browserless Integration
+### Remote Browser / Browserless Integration
 
 If you run Screamshotter in environments where running local Chromium is undesirable (e.g. lightweight Kubernetes pods or serverless environments), you can delegate browser execution to an external browser cluster:
 
-Set the `EXTERNAL_PUPPETEER` environment variable to your WebSocket endpoint:
+Set the `EXTERNAL_PLAYWRIGHT` environment variable to your CDP/WebSocket endpoint:
 ```bash
-EXTERNAL_PUPPETEER=wss://chrome.browserless.io?token=YOUR_TOKEN
+EXTERNAL_PLAYWRIGHT=wss://chrome.browserless.io?token=YOUR_TOKEN
 ```
 Or with docker-compose:
 ```yaml
@@ -393,10 +393,10 @@ services:
   web:
     image: makinacorpus/screamshotter:latest
     environment:
-      - EXTERNAL_PUPPETEER=wss://your-browserless-instance:3000
+      - EXTERNAL_PLAYWRIGHT=wss://your-browserless-instance:3000
 ```
 
-When set, Screamshotter will call `puppeteer.connect({ browserWSEndpoint: EXTERNAL_PUPPETEER })` instead of launching a local Chromium process.
+When set, Screamshotter will call `playwright.chromium.connect_over_cdp(EXTERNAL_PLAYWRIGHT)` instead of launching a local Chromium process.
 
 ---
 
@@ -409,13 +409,12 @@ When set, Screamshotter will call `puppeteer.connect({ browserWSEndpoint: EXTERN
 | `SECRET_KEY` | *(Random UUID)* | Django secret key. |
 | `WORKERS` | `1` | Number of Gunicorn worker processes. |
 | `MAX_REQUESTS` | `250` | Gunicorn maximum requests per worker before recycling (guards against memory leaks). |
-| `EXTERNAL_PUPPETEER` | `""` | WebSocket endpoint (`wss://...`) to delegate Chromium tasks to a remote cluster. |
-| `SCREAMSHOTTER_SENTRY_DSN` | `""` | Sentry DSN for monitoring both Django and Puppeteer errors. |
+| `EXTERNAL_PLAYWRIGHT` | `""` | CDP/WebSocket endpoint (`wss://...`) to delegate Chromium tasks to a remote cluster. |
+| `SCREAMSHOTTER_SENTRY_DSN` | `""` | Sentry DSN for monitoring errors. |
 | `SCREAMSHOTTER_SENTRY_ENVIRONMENT`| `"screamshotter"` | Sentry environment name (e.g. `production`, `staging`). |
 | `SCREAMSHOTTER_SENTRY_TRACE_SAMPLE`| `"0.2"` | Sentry performance traces sample rate (between `0.0` and `1.0`). |
 | `COLLECTSTATIC` | `1` | Runs `collectstatic --no-input` on container startup. Set to `0` in dev mounts. |
-| `NODE_BIN_PATH` | `/opt/venv/bin/node` | Path to the Node.js executable invoked by Django. |
-| `PUPPETEER_CACHE_DIR` | `/opt/screamshotter/puppeteer/` | Directory where downloaded Chromium binaries reside. |
+| `PLAYWRIGHT_BROWSERS_PATH` | `/opt/screamshotter/playwright/` | Directory where downloaded Chromium binaries reside. |
 
 ### Custom Django Settings
 For package installations on Ubuntu/Debian, custom configurations can be loaded from `/opt/screamshotter/conf/custom.py`.
@@ -481,8 +480,7 @@ screamshotter/
 │       ├── views.py          # DRF API View (ScreenshotAPIView)
 │       ├── serializer.py     # Input parameters validation
 │       ├── renderers.py      # Binary PNG, Base64 JSON, Browsable API
-│       ├── puppeteer.py      # Subprocess runner & process management
-│       └── js/index.js       # Node.js + Puppeteer script
+│       └── playwright.py     # Playwright Chromium screenshot runner
 ├── Dockerfile
 ├── docker-compose.yml
 └── Makefile

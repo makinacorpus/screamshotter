@@ -15,12 +15,12 @@ urls = {Homepage = "https://makina-corpus.com"}
 dependencies = [
     "django==5.2.*",
     "tzdata",
-    "nodeenv",
+    "playwright",
     "djangorestframework",
     "coreapi",
     "whitenoise",
     # prod
-    "gunicorn[gevent]",
+    "gunicorn",
     "sentry-sdk",
 ]
 

@@ -3,8 +3,6 @@ services:
     build:
       context: .
       target: dev
-      args:
-        NODE_ENV: development
 
     volumes:
       - .:/opt/screamshotter
@@ -13,5 +11,5 @@ services:
     environment:
       - DJANGO_SETTINGS_MODULE=screamshotter.settings.dev
       - COLLECTSTATIC=0
-      #- EXTERNAL_PUPPETEER=wss://chrome.paas.kasta.ovh:443
+      #- EXTERNAL_PLAYWRIGHT=wss://chrome.paas.kasta.ovh:443
 

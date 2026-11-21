@@ -31,7 +31,6 @@ ARG VERSION=""
 ENV DEB_VERSION=${VERSION}
 
 RUN --mount=type=cache,target=/root/.cache/uv \
-    --mount=type=cache,target=/root/.npm \
     chmod +x .docker/build-deb.sh && .docker/build-deb.sh
 
 WORKDIR /dpkg

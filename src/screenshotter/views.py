@@ -4,7 +4,7 @@ from rest_framework import status as http_status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .puppeteer import take_screenshot
+from .playwright import take_screenshot
 from .renderers import Base64JSONRenderer, PNGRenderer, ScreamBrowsableAPIRenderer
 from .serializer import ScreenshotSerializer
 
