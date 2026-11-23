@@ -16,7 +16,7 @@ pillow==13.0.0
     # via screamshotter (pyproject.toml:dev)
 python-magic==0.4.27
     # via screamshotter (pyproject.toml:dev)
-ruff==0.17.5
+ruff==0.17.6
     # via screamshotter (pyproject.toml:dev)
 sqlparse==0.6.1
     # via
