@@ -21,10 +21,12 @@ Depends:
  libasound2t64 | libasound2,
  libatk-bridge2.0-0t64 | libatk-bridge2.0-0,
  libatk1.0-0t64 | libatk1.0-0,
+ libatspi2.0-0t64 | libatspi2.0-0,
  libc6,
  libcairo2,
  libcups2t64 | libcups2,
  libdbus-1-3,
+ libdrm2,
  libexpat1,
  libfontconfig1,
  libgbm1,
@@ -45,6 +47,7 @@ Depends:
  libxext6,
  libxfixes3,
  libxi6,
+ libxkbcommon0,
  libxrandr2,
  libxrender1,
  libxss1,
@@ -53,4 +56,4 @@ Depends:
  wget,
  xdg-utils
 Description: Takes captures of HTML pages
- Screamshotter is a webservice that takes screenshots of web pages using Puppeteer.
+ Screamshotter is a webservice that takes screenshots of web pages using Playwright.

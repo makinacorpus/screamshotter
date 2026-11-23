@@ -1,6 +1,5 @@
 import importlib
 import os
-import subprocess
 import sys
 import types
 from tempfile import TemporaryDirectory
@@ -19,7 +18,7 @@ from rest_framework.serializers import Serializer
 from rest_framework.test import APISimpleTestCase
 
 from .exceptions import ScreenshotterException
-from .puppeteer import _preexec_fn, _reap_zombies, take_screenshot
+from .playwright import _dismiss_dialog, _reap_zombies, take_screenshot
 from .renderers import ScreamBrowsableAPIRenderer
 from .serializer import ScreenshotSerializer
 from .views import ScreenshotAPIView
@@ -66,8 +65,10 @@ class CaptureTestCase(SimpleTestCase):
         self.assertTrue(hasattr(view, "get_serializer"))
         self.assertTrue(isinstance(view.get_serializer(), Serializer))
 
-    @override_settings(SCREENSHOTTER={"PUPPETEER_JAVASCRIPT_FILEPATH": "none"})
-    def test_bad_script_path(self):
+    @override_settings(
+        SCREENSHOTTER={"CHROMIUM_BROWSER_FILEPATH": "/nonexistent/chrome"}
+    )
+    def test_bad_browser_path(self):
         with self.assertRaises(ScreenshotterException):
             take_screenshot("https://www.google.fr")
 
@@ -77,7 +78,7 @@ class CaptureTestCase(SimpleTestCase):
         # We show that we can change timeout value. It's so small, this takes more than 1ms to generate the screenshot.
         # => It fails
         with self.assertRaisesRegex(
-            ScreenshotterException, "TimeoutError: Navigation timeout of 1 ms exceeded"
+            ScreenshotterException, r"Timeout 1(\.0)?ms exceeded"
         ):
             take_screenshot("https://www.google.fr")
 
@@ -228,7 +229,7 @@ class WebPageTestCase(APISimpleTestCase):
     def test_web_page_post_capture_error(self):
         with patch(
             "screenshotter.views.take_screenshot",
-            side_effect=Exception("Custom Puppeteer failure"),
+            side_effect=Exception("Custom Playwright failure"),
         ):
             response = self.client.post(
                 reverse("screenshotter:screenshot") + "?format=api",
@@ -236,7 +237,7 @@ class WebPageTestCase(APISimpleTestCase):
             )
             self.assertEqual(response.status_code, 500)
             self.assertIn(b"Screenshot generation failed", response.content)
-            self.assertIn(b"Custom Puppeteer failure", response.content)
+            self.assertIn(b"Custom Playwright failure", response.content)
 
     def test_renderer_get_context_dict_base64(self):
         renderer = ScreamBrowsableAPIRenderer()
@@ -313,18 +314,15 @@ class ProcessManagementTestCase(SimpleTestCase):
         with patch("os.waitpid", side_effect=OSError):
             _reap_zombies()
 
-    def test_preexec_fn(self):
-        with patch("os.setsid") as mock_setsid, patch("ctypes.CDLL") as mock_cdll:
-            _preexec_fn()
-            mock_setsid.assert_called_once()
-            mock_cdll.assert_called_once_with("libc.so.6")
+    def test_dismiss_dialog(self):
+        dialog = MagicMock()
+        _dismiss_dialog(dialog)
+        dialog.dismiss.assert_called_once()
 
-    def test_preexec_fn_exception(self):
-        with (
-            patch("os.setsid"),
-            patch("ctypes.CDLL", side_effect=Exception("libc error")),
-        ):
-            _preexec_fn()
+    def test_dismiss_dialog_exception(self):
+        dialog = MagicMock()
+        dialog.dismiss.side_effect = RuntimeError("closed")
+        _dismiss_dialog(dialog)
 
     def test_apps_ready(self):
         config = apps.get_app_config("screenshotter")
@@ -337,85 +335,87 @@ class ProcessManagementTestCase(SimpleTestCase):
         with patch("ctypes.CDLL", side_effect=Exception("error")):
             config.ready()
 
+    def _mock_playwright(self):
+        mock_page = MagicMock()
+        mock_page.evaluate.return_value = {
+            "left": 0,
+            "top": 0,
+            "width": 1280,
+            "height": 720,
+        }
+        mock_page.screenshot.return_value = b"fake-png"
+
+        mock_context = MagicMock()
+        mock_context.new_page.return_value = mock_page
+
+        mock_browser = MagicMock()
+        mock_browser.new_context.return_value = mock_context
+
+        mock_p = MagicMock()
+        mock_p.chromium.launch.return_value = mock_browser
+        mock_p.chromium.connect_over_cdp.return_value = mock_browser
+
+        mock_cm = MagicMock()
+        mock_cm.__enter__.return_value = mock_p
+        mock_cm.__exit__.return_value = False
+        return mock_cm, mock_p, mock_browser, mock_context, mock_page
+
     def test_take_screenshot_invalid_timeout(self):
-        with patch("subprocess.Popen") as mock_popen:
-            mock_proc = MagicMock()
-            mock_proc.returncode = 0
-
-            def fake_communicate(*args, **kwargs):
-                cmd_args = mock_popen.call_args[0][0]
-                path_idx = cmd_args.index("--path") + 1
-                with open(cmd_args[path_idx], "wb") as f:
-                    f.write(b"fake-png")
-                return (b"", b"")
-
-            mock_proc.communicate.side_effect = fake_communicate
-            mock_popen.return_value = mock_proc
-            png = take_screenshot("https://www.google.fr", timeout="invalid")
+        mock_cm, _, _, _, mock_page = self._mock_playwright()
+        with patch("screenshotter.playwright.sync_playwright", return_value=mock_cm):
+            png = take_screenshot(
+                "https://www.google.fr",
+                timeout="invalid",
+                wait_selectors=[".ready"],
+                wait_seconds=1,
+                forward_headers={"X-Test": "1"},
+            )
             self.assertEqual(png, b"fake-png")
+            mock_page.set_default_timeout.assert_called_once_with(60000.0)
+            mock_page.wait_for_selector.assert_any_call(".ready", timeout=60000.0)
+            mock_page.wait_for_timeout.assert_called_once_with(1000)
 
-    def test_take_screenshot_timeout_expired(self):
-        with patch("subprocess.Popen") as mock_popen:
-            mock_proc = MagicMock()
-            mock_proc.pid = 9999
-            mock_proc.communicate.side_effect = subprocess.TimeoutExpired(
-                cmd="node", timeout=1
+    def test_take_screenshot_external_playwright(self):
+        mock_cm, mock_p, _, _, _ = self._mock_playwright()
+        with (
+            patch("screenshotter.playwright.sync_playwright", return_value=mock_cm),
+            patch.dict(os.environ, {"EXTERNAL_PLAYWRIGHT": "wss://remote:3000"}),
+        ):
+            png = take_screenshot("https://www.google.fr")
+            self.assertEqual(png, b"fake-png")
+            mock_p.chromium.connect_over_cdp.assert_called_once_with(
+                "wss://remote:3000"
             )
-            mock_popen.return_value = mock_proc
-            with patch("os.killpg") as mock_killpg:
-                with self.assertRaisesRegex(
-                    ScreenshotterException, "Screenshot process timed out"
-                ):
-                    take_screenshot("https://www.google.fr", timeout=1)
-                self.assertTrue(mock_killpg.called)
+            mock_p.chromium.launch.assert_not_called()
 
-    def test_take_screenshot_timeout_expired_lookup_error(self):
-        with patch("subprocess.Popen") as mock_popen:
-            mock_proc = MagicMock()
-            mock_proc.pid = 9999
-            mock_proc.communicate.side_effect = subprocess.TimeoutExpired(
-                cmd="node", timeout=1
-            )
-            mock_popen.return_value = mock_proc
-            with patch("os.killpg", side_effect=ProcessLookupError):
-                with self.assertRaisesRegex(
-                    ScreenshotterException, "Screenshot process timed out"
-                ):
-                    take_screenshot("https://www.google.fr", timeout=1)
-
-    def test_take_screenshot_unexpected_exception(self):
-        with patch("subprocess.Popen") as mock_popen:
-            mock_proc = MagicMock()
-            mock_proc.pid = 9999
-            mock_proc.communicate.side_effect = RuntimeError("Crash")
-            mock_popen.return_value = mock_proc
-            with patch("os.killpg") as mock_killpg:
-                with self.assertRaises(RuntimeError):
-                    take_screenshot("https://www.google.fr")
-                self.assertTrue(mock_killpg.called)
-
-    def test_take_screenshot_unexpected_exception_lookup_error(self):
-        with patch("subprocess.Popen") as mock_popen:
-            mock_proc = MagicMock()
-            mock_proc.pid = 9999
-            mock_proc.communicate.side_effect = RuntimeError("Crash")
-            mock_popen.return_value = mock_proc
-            with patch("os.killpg", side_effect=ProcessLookupError):
-                with self.assertRaises(RuntimeError):
-                    take_screenshot("https://www.google.fr")
+    def test_take_screenshot_selector_not_found(self):
+        mock_cm, _, _, _, mock_page = self._mock_playwright()
+        mock_page.evaluate.side_effect = [
+            {"error": "Selector #missing not found"},
+            "<body>empty</body>",
+        ]
+        with patch("screenshotter.playwright.sync_playwright", return_value=mock_cm):
+            with self.assertRaisesRegex(
+                ScreenshotterException, "Selector #missing not found"
+            ):
+                take_screenshot("https://www.google.fr", selector="#missing")
 
     def test_take_screenshot_empty_file(self):
-        with patch("subprocess.Popen") as mock_popen:
-            mock_proc = MagicMock()
-            mock_proc.returncode = 0
-            mock_proc.communicate.return_value = (b"", b"Warning")
-            mock_popen.return_value = mock_proc
-            with (
-                patch("os.path.exists", return_value=True),
-                patch("os.path.getsize", return_value=0),
+        mock_cm, _, _, _, mock_page = self._mock_playwright()
+        mock_page.screenshot.return_value = b""
+        with patch("screenshotter.playwright.sync_playwright", return_value=mock_cm):
+            with self.assertRaisesRegex(
+                ScreenshotterException, "Empty screenshot generated"
             ):
-                with self.assertRaises(ScreenshotterException):
-                    take_screenshot("https://www.google.fr")
+                take_screenshot("https://www.google.fr")
+
+    def test_take_screenshot_unexpected_exception(self):
+        mock_cm, _, mock_browser, _, mock_page = self._mock_playwright()
+        mock_page.goto.side_effect = RuntimeError("Crash")
+        with patch("screenshotter.playwright.sync_playwright", return_value=mock_cm):
+            with self.assertRaisesRegex(ScreenshotterException, "Crash"):
+                take_screenshot("https://www.google.fr")
+            mock_browser.close.assert_called_once()
 
     def test_urls_debug_toolbar(self):
         import screamshotter.urls

@@ -101,24 +101,17 @@ uv pip install --python "${TARGET_DIR}/bin/python" "setuptools<81" wheel
 uv pip install -r requirements.txt --python "${TARGET_DIR}/bin/python"
 uv pip install --no-deps . --python "${TARGET_DIR}/bin/python"
 
-echo "Installation de Node.js via nodeenv et dépendances npm..."
-NODE_VERSION="$(tr -d 'v[:space:]' < .nvmrc)"
-"${TARGET_DIR}/bin/python" "${TARGET_DIR}/bin/nodeenv" -C '' -p -n "${NODE_VERSION}" --with-npm
+echo "Installation de Chromium via Playwright..."
+export PLAYWRIGHT_BROWSERS_PATH="${TARGET_DIR}/playwright/"
+"${TARGET_DIR}/bin/playwright" install chromium
 
-cp package.json package-lock.json "${TARGET_DIR}/"
-export PUPPETEER_CACHE_DIR="${TARGET_DIR}/puppeteer/"
-export PUPPETEER_CHROME_HEADLESS_SHELL_SKIP_DOWNLOAD=true
-export PATH="${TARGET_DIR}/bin:$PATH"
-(cd "${TARGET_DIR}" && npm --no-audit ci --omit=dev --ignore-scripts && node -e "import('puppeteer/internal/node/install.js').then(m => m.downloadBrowsers()).catch(err => { console.error(err); process.exit(1); })")
-rm -f "${TARGET_DIR}/package.json" "${TARGET_DIR}/package-lock.json"
-
-CHROME_BIN=$(find "${TARGET_DIR}/puppeteer" -name chrome -type f -perm -111 2>/dev/null | head -n 1)
+CHROME_BIN=$(find "${TARGET_DIR}/playwright" -name chrome -type f -perm -111 2>/dev/null | head -n 1)
 if [ -z "${CHROME_BIN}" ]; then
-    echo "ERREUR : Binaire Chrome introuvable dans ${TARGET_DIR}/puppeteer" >&2
+    echo "ERREUR : Binaire Chrome introuvable dans ${TARGET_DIR}/playwright" >&2
     exit 1
 fi
 echo "Chrome installé avec succès dans : ${CHROME_BIN}"
-chmod -R a+rX "${TARGET_DIR}/puppeteer"
+chmod -R a+rX "${TARGET_DIR}/playwright"
 
 echo "=== 4. Optimisation de l'arborescence ==="
 find "${TARGET_DIR}/runtime" -type d -name "test" -prune -exec rm -rf {} + 2>/dev/null || true
@@ -228,7 +221,7 @@ Section: misc
 Priority: optional
 Homepage: https://github.com/makinacorpus/screamshotter
 Description: Takes captures of HTML pages
- Screamshotter is a webservice that takes screenshots of web pages using Puppeteer.
+ Screamshotter is a webservice that takes screenshots of web pages using Playwright.
 EOF
 chmod 644 "${PKG_ROOT}/DEBIAN/control"
 

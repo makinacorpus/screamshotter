@@ -18,10 +18,8 @@ django==5.2.19
     #   djangorestframework
 djangorestframework==3.18.3
     # via screamshotter (pyproject.toml)
-gevent==26.9.0
-    # via gunicorn
 greenlet==3.5.6
-    # via gevent
+    # via playwright
 gunicorn==27.0.1
     # via screamshotter (pyproject.toml)
 idna==3.20
@@ -32,16 +30,12 @@ jinja2==3.1.6
     # via coreschema
 markupsafe==3.0.4
     # via jinja2
-nodeenv==1.12.0
+playwright==1.65.2
     # via screamshotter (pyproject.toml)
-packaging==26.3
-    # via gunicorn
 requests==2.34.2
     # via coreapi
 sentry-sdk==2.75.0
     # via screamshotter (pyproject.toml)
-setuptools==84.2.1
-    # via zope-event
 sqlparse==0.6.1
     # via django
 tzdata==2026.6
@@ -54,7 +48,3 @@ urllib3==2.8.0
     #   sentry-sdk
 whitenoise==6.12.0
     # via screamshotter (pyproject.toml)
-zope-event==6.0
-    # via gevent
-zope-interface==8.7
-    # via gevent
