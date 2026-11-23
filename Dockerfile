@@ -76,7 +76,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 WORKDIR /opt/screamshotter
 COPY pyproject.toml /opt/screamshotter/pyproject.toml
 COPY src /opt/screamshotter/src
-RUN uv pip install --no-cache --no-deps --python /opt/venv/bin/python /opt/screamshotter
+
 
 FROM build AS dev
 

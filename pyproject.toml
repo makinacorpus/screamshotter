@@ -35,7 +35,7 @@ dev = [
 
 [tool.ruff]
 line-length = 88
-target-version = "py310"
+target-version = "py314"
 
 [tool.ruff.lint]
 select = [
@@ -64,5 +64,22 @@ script-files = ["src/manage.py"]
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.setuptools.package-data]
+screamshotter = ["VERSION", "static/**/*", "templates/**/*"]
+
 [tool.setuptools.dynamic]
 version = {file = "src/screamshotter/VERSION"}
+
+[tool.coverage.paths]
+source = ["."]
+
+[tool.coverage.report]
+omit = [
+    "*project/*",
+    "manage.py",
+    "*/tests*",
+    "*/migrations*",
+    "*/settings/*",
+    "*/lib/*",
+]
+ignore_errors = true

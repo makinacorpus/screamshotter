@@ -76,9 +76,9 @@ jobs:
     - name: Test with coverage
       run: |
         cd src
-        coverage run ./manage.py test
-        coverage run -a ./manage.py test --settings screamshotter.settings.test_timeout screenshotter.tests.CaptureTestCase.test_timeout_screenshot
-        coverage xml -o coverage.xml
+        coverage run --rcfile=../pyproject.toml ./manage.py test
+        coverage run --rcfile=../pyproject.toml -a ./manage.py test --settings screamshotter.settings.test_timeout screenshotter.tests.CaptureTestCase.test_timeout_screenshot
+        coverage xml --rcfile=../pyproject.toml -o coverage.xml
 
     - uses: codecov/codecov-action@v7
       with:

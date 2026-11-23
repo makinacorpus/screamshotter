@@ -44,7 +44,7 @@ def _reap_zombies():
             pid, _ = os.waitpid(-1, os.WNOHANG)
             if pid <= 0:
                 break
-    except (ChildProcessError, OSError):
+    except ChildProcessError, OSError:
         pass
 
 
@@ -74,7 +74,7 @@ def take_screenshot(
 
     try:
         timeout_val = float(timeout)
-    except (TypeError, ValueError):
+    except TypeError, ValueError:
         timeout_val = 60.0
     timeout_ms = max(timeout_val * 1000.0, 1.0)
 
